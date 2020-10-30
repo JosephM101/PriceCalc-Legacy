@@ -1,2 +1,2 @@
 # PriceCalc
- A price calculator that brings tax charges into the mix.
+ A price calculator that also calculates tax.
