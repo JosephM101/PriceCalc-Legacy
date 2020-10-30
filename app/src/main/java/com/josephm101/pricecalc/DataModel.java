@@ -30,4 +30,7 @@ public class DataModel implements Serializable {
     public String getItemQuantity() {
         return itemQuantity;
     }
+
+    //Item name, price, BoolTaxable, quantity
+    //Use Integer.parseInt() to convert string to int.
 }
