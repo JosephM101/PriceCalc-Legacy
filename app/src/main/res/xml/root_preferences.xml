@@ -5,13 +5,14 @@
         <EditTextPreference
             android:dialogTitle="Enter Tax Rate"
             android:key="taxRate_Preference"
+            android:positiveButtonText="Save"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:summary="Edit the tax rate to match that of your current location."
+            android:summary="Edit the tax rate to match that of your current location. If you don't know what that is, look up the tax rate for your location (Europe, U.S., etc.)"
             android:title="Tax Rate"
+            app:defaultValue="6.25"
             app:dialogMessage="Enter the tax rate below for your area. (Example: 6.25)"
             app:singleLineTitle="true"
-            app:defaultValue="6.25"
             app:title="Tax Rate" />
     </PreferenceCategory>
 </PreferenceScreen>
