@@ -1,11 +1,23 @@
 package com.josephm101.pricecalc;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import androidx.preference.PreferenceManager;
+
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 public class PriceHandling {
     private static DecimalFormat priceFormat = new DecimalFormat("0.00");
-    public static double DefaultTaxDeductionPercentage = 6.25;
+    //public static double DefaultTaxDeductionPercentage = 6.25;
+
+    public static double getDefaultTaxDeductionPercentage(Context context)
+    {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        String value = sharedPreferences.getString("taxRate_Preference", "6.25"); //Default tax rate for U.S.
+        return Double.parseDouble(value);
+    }
 
     public static String calculatePrice(double itemCost, double taxRatePercentage) {
         double taxPrice = getTaxCost(itemCost, taxRatePercentage);
@@ -15,8 +27,7 @@ public class PriceHandling {
 
     public static Double calculatePriceDouble(double itemCost, double taxRatePercentage) {
         double taxPrice = getTaxCost(itemCost, taxRatePercentage);
-        double totalCost = itemCost + taxPrice;
-        return totalCost;
+        return itemCost + taxPrice;
     }
 
     public static String calculatePrice(double itemCost, double taxRatePercentage, int quantity) {

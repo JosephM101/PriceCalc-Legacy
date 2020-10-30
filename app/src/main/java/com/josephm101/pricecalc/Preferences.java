@@ -1,5 +1,7 @@
 package com.josephm101.pricecalc;
 
+//Extra preferences for other parts of the app
+
 public class Preferences {
     public static class BetaMode
     {

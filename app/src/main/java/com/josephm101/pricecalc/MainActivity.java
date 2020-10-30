@@ -121,6 +121,10 @@ public class MainActivity extends AppCompatActivity {
                 RefreshEverything();
                 Toast.makeText(this, "Refresh done.", Toast.LENGTH_SHORT);
                 break;
+            case R.id.settings_menuItem:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -138,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
             }
             Log.d("MATH_LOG", "Has tax deduction:" + BooleanHandling.BoolToString(item.getIsTaxable(), "Yes", "No"));
         }
-        TotalCost = costsWithoutDeductible + PriceHandling.calculatePriceDouble(costsWithDeductible, PriceHandling.DefaultTaxDeductionPercentage);
+        TotalCost = costsWithoutDeductible + PriceHandling.calculatePriceDouble(costsWithDeductible, PriceHandling.getDefaultTaxDeductionPercentage(this));
         SetDashText(PriceHandling.PriceToString(TotalCost));
     }
 
