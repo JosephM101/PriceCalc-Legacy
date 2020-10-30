@@ -13,6 +13,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTitle("Settings");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
         getSupportFragmentManager()
