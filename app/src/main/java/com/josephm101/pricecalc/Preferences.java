@@ -8,6 +8,10 @@ public class Preferences {
         public static String PreferenceGroup = "BETA_MODE_MESSAGE";
         public static String ENTRY_BETA_MODE_MSG_PREF = "doNotShowAgain";
     }
+    public static class DefaultValues
+    {
+        public static String DefaultTaxRate = "6.25";
+    }
 
     public static void SetPreference(String preferenceString, int value)
     {

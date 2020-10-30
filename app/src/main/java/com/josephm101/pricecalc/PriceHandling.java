@@ -15,7 +15,7 @@ public class PriceHandling {
     public static double getDefaultTaxDeductionPercentage(Context context)
     {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-        String value = sharedPreferences.getString("taxRate_Preference", "6.25"); //Default tax rate for U.S.
+        String value = sharedPreferences.getString("taxRate_Preference", Preferences.DefaultValues.DefaultTaxRate); //Default tax rate for U.S.
         return Double.parseDouble(value);
     }
 
