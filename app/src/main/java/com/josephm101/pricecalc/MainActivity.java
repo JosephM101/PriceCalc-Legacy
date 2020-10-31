@@ -158,4 +158,3 @@ public class MainActivity extends AppCompatActivity {
         totalCostLabel.setText(text);
     }
 }
-//CN
