@@ -5,15 +5,13 @@ import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 public class PriceHandling {
-    private static DecimalFormat priceFormat = new DecimalFormat("0.00");
+    private static final DecimalFormat priceFormat = new DecimalFormat("0.00");
     //public static double DefaultTaxDeductionPercentage = 6.25;
 
-    public static double getDefaultTaxDeductionPercentage(Context context)
-    {
+    public static double getDefaultTaxDeductionPercentage(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         String value = sharedPreferences.getString("taxRate_Preference", Preferences.DefaultValues.DefaultTaxRate); //Default tax rate for U.S.
         return Double.parseDouble(value);
@@ -45,7 +43,7 @@ public class PriceHandling {
     }
 
     private static double getTaxCost(double cost, double taxRate) {
-        return (double) ((taxRate * cost) / 100);
+        return (taxRate * cost) / 100;
     }
 }
 

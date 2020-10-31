@@ -13,13 +13,16 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<DataModel> listItems = new ArrayList<DataModel>();
-    private static CustomAdapter adapter;
+    private CustomAdapter adapter;
     ListView listView;
     FloatingActionButton addItem_FloatingActionButton;
     private int AddNew_RequestCode = 1;
@@ -113,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.refreshView_menuItem:
                 RefreshEverything();
-                Toast.makeText(this, "Refresh done.", Toast.LENGTH_SHORT);
+                Toast.makeText(this, "Refresh done.", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.settings_menuItem:
                 Intent intent = new Intent(this, SettingsActivity.class);
@@ -129,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         double costsWithoutDeductible = 0;
         for (DataModel item : listItems) {
             double totalForItem = Double.parseDouble(item.getItemPrice()) * Integer.parseInt(item.itemQuantity);
-            if (item.getIsTaxable() == true) {
+            if (item.getIsTaxable()) {
                 costsWithDeductible += totalForItem;
             } else {
                 costsWithoutDeductible += totalForItem;

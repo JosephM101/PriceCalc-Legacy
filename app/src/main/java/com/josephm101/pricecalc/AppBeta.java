@@ -7,11 +7,10 @@ import android.content.SharedPreferences;
 
 public class AppBeta {
 
-    public static void ShowBetaMessage(final Context context)
-    {
+    public static void ShowBetaMessage(final Context context) {
         SharedPreferences settings = context.getApplicationContext().getSharedPreferences(Preferences.BetaMode.PreferenceGroup, 0);
         int showMessage = settings.getInt(Preferences.BetaMode.ENTRY_BETA_MODE_MSG_PREF, 0);
-        if(showMessage != 1) {
+        if (showMessage != 1) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(context)
                     .setTitle("Beta Mode")
                     .setMessage("This app is still currently in beta, and is (at the moment) intended for testing purposes only. As a result, issues such as instability, inconsistencies, and occasional bugs will be present throughout the application. \r\nAlso, any data such as settings and lists will be lost when the app is closed.\r\n \r\nYou have been warned.")

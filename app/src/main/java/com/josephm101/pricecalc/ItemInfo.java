@@ -1,12 +1,11 @@
 package com.josephm101.pricecalc;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.ActionBar;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class ItemInfo extends AppCompatActivity {
     DataModel importedDataModel;

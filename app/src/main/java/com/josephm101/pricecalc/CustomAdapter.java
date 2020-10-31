@@ -13,15 +13,9 @@ import java.util.ArrayList;
 
 public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnClickListener {
 
-    private ArrayList<DataModel> dataSet;
     Context mContext;
-
-    // View lookup cache
-    private static class ViewHolder {
-        TextView txtName;
-        TextView txtPrice;
-        TextView txtDeductible;
-    }
+    private final ArrayList<DataModel> dataSet;
+    private int lastPosition = -1;
 
     public CustomAdapter(ArrayList<DataModel> data, Context context) {
         super(context, R.layout.row_item, data);
@@ -32,16 +26,13 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
     @Override
     public void onClick(View v) {
         int position = (Integer) v.getTag();
-        Object object = getItem(position);
-        DataModel dataModel = (DataModel) object;
+        DataModel dataModel = getItem(position);
         switch (v.getId()) {
             case R.id.itemName:
                 //Do whatever you want here.
                 break;
         }
     }
-
-    private int lastPosition = -1;
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -55,9 +46,9 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.row_item, parent, false);
-            viewHolder.txtName = (TextView) convertView.findViewById(R.id.itemName);
-            viewHolder.txtPrice = (TextView) convertView.findViewById(R.id.itemCost);
-            viewHolder.txtDeductible = (TextView) convertView.findViewById(R.id.isTaxable);
+            viewHolder.txtName = convertView.findViewById(R.id.itemName);
+            viewHolder.txtPrice = convertView.findViewById(R.id.itemCost);
+            viewHolder.txtDeductible = convertView.findViewById(R.id.isTaxable);
             //viewHolder.txtTotal = (TextView) convertView.findViewById(R.id.itemCostTotal);
 
             result = convertView;
@@ -82,5 +73,12 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
         viewHolder.txtPrice.setText(stringBuilder.toString());
         viewHolder.txtDeductible.setText("Is Taxable: " + BooleanHandling.BoolToString(dataModel.getIsTaxable(), "Yes", "No"));
         return convertView;
+    }
+
+    // View lookup cache
+    private static class ViewHolder {
+        TextView txtName;
+        TextView txtPrice;
+        TextView txtDeductible;
     }
 }

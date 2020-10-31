@@ -1,7 +1,6 @@
 package com.josephm101.pricecalc;
 
 import android.content.Context;
-import android.os.VibrationEffect;
 import android.os.Vibrator;
 
 public class VibrateController {
@@ -10,13 +9,6 @@ public class VibrateController {
     int shortVibrate = 300;
     int pauseVibrate = 100;
     int longVibrate = 500;
-
-    public enum VibrateEffect
-    {
-        TAP,
-        DOUBLE_TAP,
-        NOTIFICATION_PATTERN
-    }
 
     public VibrateController(Context context) {
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
@@ -28,6 +20,12 @@ public class VibrateController {
 
     public void doVibrate(int duration) {
         vibrator.vibrate(duration);
+    }
+
+    private void HandleVibrations(int duration) {
+        if (vibrator.hasVibrator()) {
+            vibrator.vibrate(duration);
+        }
     }
 
     /*
@@ -45,9 +43,9 @@ public class VibrateController {
     }
     */
 
-    private void HandleVibrations(int duration) {
-        if (vibrator.hasVibrator()) {
-            vibrator.vibrate(duration);
-        }
+    public enum VibrateEffect {
+        TAP,
+        DOUBLE_TAP,
+        NOTIFICATION_PATTERN
     }
 }
