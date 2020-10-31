@@ -53,6 +53,7 @@ public class ItemInfo extends AppCompatActivity {
         Log.i("ItemInfo_INIT", "Init done; calculations complete.");
         Log.i("ItemInfo_INIT", "All values printed.");
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();

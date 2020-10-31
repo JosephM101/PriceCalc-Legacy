@@ -8,6 +8,7 @@ public class BooleanHandling {
             return falseString;
         }
     }
+
     public static Boolean StringToBool(String b, String trueString, String falseString) {
         if (b == trueString) {
             return true;

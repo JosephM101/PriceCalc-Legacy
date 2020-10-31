@@ -12,7 +12,7 @@
     <string name="taxDeductible_Yes">Yes</string> <!-- If item is tax deductible !-->
     <string name="taxDeductible_No">No</string>
     <string name="addItem_taxDeductibleInfo">If checked, item tax based on the specified tax rate will automatically be applied to the final price of the item.</string>
-    <string name="itemNameEditText_Hint">Name of the product (Example: Apples)</string>
+    <string name="itemNameEditText_Hint">Name of the product (Example: Cup)</string>
     <string name="AddItem_confirmButtonText">Add Item</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="nullVal">null</string>

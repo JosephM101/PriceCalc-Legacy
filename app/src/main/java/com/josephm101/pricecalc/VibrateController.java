@@ -11,8 +11,7 @@ public class VibrateController {
     int pauseVibrate = 100;
     int longVibrate = 500;
 
-    public enum VibrateEffect
-    {
+    public enum VibrateEffect {
         TAP,
         DOUBLE_TAP,
         NOTIFICATION_PATTERN

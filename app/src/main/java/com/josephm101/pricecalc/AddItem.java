@@ -20,6 +20,8 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 public class AddItem extends AppCompatActivity {
     EditText itemNameEditText;
     TextView totalCostLabel;
@@ -27,6 +29,11 @@ public class AddItem extends AppCompatActivity {
     CheckBox taxDeductible;
     EditText itemQuantityEditText;
     Boolean isCancelling = true;
+    FloatingActionButton floatingActionButton;
+
+    {
+
+    }
 
     TextView itemCostBoxEmpty;
 
@@ -39,6 +46,7 @@ public class AddItem extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
         //Init Components
+        floatingActionButton = findViewById(R.id.confirmFloatingActionButton);
         itemNameEditText = findViewById(R.id.itemNameEditText);
         itemCostEditText = findViewById(R.id.itemCostEditText);
         totalCostLabel = findViewById(R.id.totalCostLabel);
@@ -83,6 +91,13 @@ public class AddItem extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 UpdateTotalLabel();
+            }
+        });
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ConfirmAndExit();
             }
         });
 
