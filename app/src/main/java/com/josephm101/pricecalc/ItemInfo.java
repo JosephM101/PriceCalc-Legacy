@@ -16,9 +16,11 @@ public class ItemInfo extends AppCompatActivity {
         setTitle(R.string.item_info);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_info);
-        //ActionBar actionBar = getSupportActionBar();
-        //actionBar.setDisplayHomeAsUpEnabled(true);
-        //actionBar.setHomeButtonEnabled(true);
+        //Init Action Bar
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+
         Log.i("ItemInfo_INIT", "Importing data model...");
         Intent i = getIntent();
         importedDataModel = (DataModel) i.getSerializableExtra("dataModel");
@@ -50,5 +52,10 @@ public class ItemInfo extends AppCompatActivity {
         ItemTotalCostLabel.setText(stringBuilder.toString());
         Log.i("ItemInfo_INIT", "Init done; calculations complete.");
         Log.i("ItemInfo_INIT", "All values printed.");
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

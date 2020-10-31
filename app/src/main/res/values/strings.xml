@@ -18,4 +18,5 @@
     <string name="nullVal">null</string>
     <string name="quantity_minValue">1</string>
     <string name="discard">Discard</string>
+    <string name="add_a_new_item">Add a new item</string>
 </resources>

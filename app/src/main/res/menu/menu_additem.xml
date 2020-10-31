@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item
         android:id="@+id/discard_actionButton"
         android:icon="@drawable/ic_baseline_clear_24"
@@ -10,7 +9,9 @@
         app:showAsAction="always|withText" />
     <item
         android:id="@+id/confirm_actionButton"
+        android:enabled="true"
         android:icon="@drawable/ic_baseline_check_24"
         android:title="@string/add_item"
+        android:visible="false"
         app:showAsAction="always" />
 </menu>

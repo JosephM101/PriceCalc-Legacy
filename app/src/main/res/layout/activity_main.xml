@@ -31,9 +31,7 @@
         app:cardPreventCornerOverlap="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewCompatible"
@@ -57,7 +55,7 @@
                 android:layout_marginEnd="4dp"
                 android:baselineAlignBottom="false"
                 android:clickable="true"
-                android:contentDescription="Add a new item"
+                android:contentDescription="@string/add_a_new_item"
                 android:focusable="true"
                 android:textAlignment="center"
                 app:borderWidth="0dp"

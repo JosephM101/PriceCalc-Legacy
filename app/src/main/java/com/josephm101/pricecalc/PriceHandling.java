@@ -44,7 +44,7 @@ public class PriceHandling {
         return stringBuilder.toString();
     }
 
-    private static double getTaxCost(double cost, double taxRate) {
+    public static double getTaxCost(double cost, double taxRate) {
         return (double) ((taxRate * cost) / 100);
     }
 }
