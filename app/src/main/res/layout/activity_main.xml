@@ -10,10 +10,12 @@
         android:id="@+id/items_listBox"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/cardView"
+        app:layout_constraintBottom_toTopOf="@+id/cardViewCompatible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent">
+
+    </ListView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -22,10 +24,23 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="32dp"
+        android:visibility="gone"
         app:cardBackgroundColor="#FFFFFF"
         app:cardCornerRadius="96dp"
         app:cardElevation="16dp"
         app:cardPreventCornerOverlap="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewCompatible"
+        android:layout_width="0dp"
+        android:layout_height="67dp"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -41,6 +56,7 @@
                 android:layout_marginEnd="4dp"
                 android:baselineAlignBottom="false"
                 android:clickable="true"
+                android:contentDescription="Add a new item"
                 android:focusable="true"
                 android:textAlignment="center"
                 app:borderWidth="0dp"
