@@ -18,7 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    ArrayList<DataModel> listItems = new ArrayList<DataModel>();
+    ArrayList<DataModel> listItems = new ArrayList<>();
     private static CustomAdapter adapter;
     ListView listView;
     FloatingActionButton addItem_FloatingActionButton;
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
             }
             Log.d("MATH_LOG", "Has tax deduction:" + BooleanHandling.BoolToString(item.getIsTaxable(), "Yes", "No"));
         }
-        TotalCost = costsWithoutDeductible + PriceHandling.calculatePriceDouble(costsWithDeductible, PriceHandling.getDefaultTaxDeductionPercentage(this));
+        TotalCost = costsWithoutDeductible + PriceHandling.calculatePriceDouble(costsWithDeductible, PriceHandling.getDefaultTaxRatePercentage(this));
         SetDashText(PriceHandling.PriceToString(TotalCost));
     }
 

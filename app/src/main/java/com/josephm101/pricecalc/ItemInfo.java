@@ -42,7 +42,7 @@ public class ItemInfo extends AppCompatActivity {
         stringBuilder.append(PriceHandling.PriceToString(itemPrice * itemQuantity));
         stringBuilder.append("\r\n");
         stringBuilder.append("Tax cost: ");
-        double priceTax = ((priceWithQuantity * PriceHandling.getDefaultTaxDeductionPercentage(this)) / 100);
+        double priceTax = ((priceWithQuantity * PriceHandling.getDefaultTaxRatePercentage(this)) / 100);
         stringBuilder.append(PriceHandling.PriceToString(priceTax));
         stringBuilder.append("\r\n");
         stringBuilder.append("\r\n");

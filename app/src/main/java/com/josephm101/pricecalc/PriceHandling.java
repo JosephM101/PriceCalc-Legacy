@@ -12,7 +12,7 @@ public class PriceHandling {
     private static DecimalFormat priceFormat = new DecimalFormat("0.00");
     //public static double DefaultTaxDeductionPercentage = 6.25;
 
-    public static double getDefaultTaxDeductionPercentage(Context context) {
+    public static double getDefaultTaxRatePercentage(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         String value = sharedPreferences.getString("taxRate_Preference", Preferences.DefaultValues.DefaultTaxRate); //Default tax rate for U.S.
         return Double.parseDouble(value);

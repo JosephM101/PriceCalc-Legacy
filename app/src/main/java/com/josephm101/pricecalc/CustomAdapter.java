@@ -85,7 +85,7 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
         sb.append(BooleanHandling.BoolToString(dataModel.getIsTaxable(), "Yes", "No"));
         if (dataModel.getIsTaxable()) {
             sb.append(" (");
-            sb.append(PriceHandling.PriceToString(PriceHandling.getTaxCost(Double.parseDouble(dataModel.getItemPrice()), PriceHandling.getDefaultTaxDeductionPercentage(mContext.getApplicationContext()))));
+            sb.append(PriceHandling.PriceToString(PriceHandling.getTaxCost(Double.parseDouble(dataModel.getItemPrice()), PriceHandling.getDefaultTaxRatePercentage(mContext.getApplicationContext()))));
             sb.append(" )");
         }
         viewHolder.txtDeductible.setText(sb.toString());

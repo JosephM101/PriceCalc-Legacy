@@ -108,7 +108,7 @@ public class AddItem extends AppCompatActivity {
 
     void UpdateTotalLabel() {
         try {
-            double defaultTaxRate = PriceHandling.getDefaultTaxDeductionPercentage(this);
+            double defaultTaxRate = PriceHandling.getDefaultTaxRatePercentage(this);
             String itemCostText = itemCostEditText.getText().toString();
             if (taxDeductible.isChecked() == true) {
                 totalCostLabel.setText(PriceHandling.calculatePrice(Double.parseDouble(itemCostText), defaultTaxRate, Integer.parseInt(itemQuantityEditText.getText().toString())));
