@@ -14,5 +14,7 @@ public class Preferences {
 
     public static class DefaultValues {
         public static String DefaultTaxRate = "6.25";
+        public static String DefaultTheme = "1";
     }
+
 }

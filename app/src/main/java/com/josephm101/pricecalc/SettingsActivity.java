@@ -1,5 +1,6 @@
 package com.josephm101.pricecalc;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.widget.EditText;
@@ -8,9 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 public class SettingsActivity extends AppCompatActivity {
-
+    private SharedPreferences.OnSharedPreferenceChangeListener prefListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTitle("Settings");
@@ -25,6 +27,22 @@ public class SettingsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+                switch (key) {
+                    case "appTheme_Preference":
+                        RefreshTheme();
+                        break;
+                }
+            }
+        };
+        prefs.registerOnSharedPreferenceChangeListener(prefListener);
+    }
+
+    void RefreshTheme() {
+        ThemeHandling.ApplyTheme(this);
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
