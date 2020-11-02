@@ -15,9 +15,7 @@
             app:singleLineTitle="true"
             app:title="Tax Rate" />
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="Preference category"
-        app:title="User Interface">
+    <PreferenceCategory app:title="User Interface">
 
         <SwitchPreference
             android:defaultValue="false"
@@ -27,5 +25,10 @@
             android:summaryOn="Dark mode is enabled."
             android:switchTextOn="ON"
             android:title="Dark Mode" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="switch_preference_1"
+            android:summary="When enabled, the dock on the main screen containing the total price label and the Add Item button will appear in a rounded floating card. May cause graphical issues on older devices."
+            android:title="Floating dock" />
     </PreferenceCategory>
 </PreferenceScreen>
