@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,7 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
@@ -38,7 +41,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         ThemeHandling.ApplyTheme(this); //Apply theme
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        //Load layout based on settings
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        Boolean value = sharedPreferences.getBoolean("floatingDock_Preference", false);
+        if(value)
+        {
+            setContentView(R.layout.activity_main_floating_toolbar);
+        }
+        else {
+            setContentView(R.layout.activity_main);
+        }
+
         AppBeta.ShowBetaMessage(this);
 
         totalCostLabel = findViewById(R.id.totalCost_Label);

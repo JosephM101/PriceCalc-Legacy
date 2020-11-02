@@ -13,7 +13,7 @@
         android:paddingEnd="16dp"
         android:text="@string/nullVal"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/black"
+        android:textColor="@color/textColor"
         android:textSize="24sp"
         android:textStyle="bold" />
 
@@ -28,7 +28,7 @@
         android:paddingBottom="2dp"
         android:text="@string/nullVal"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/black"
+        android:textColor="@color/textColor"
         android:textSize="18sp" />
 
     <TextView
@@ -42,7 +42,7 @@
         android:paddingBottom="2dp"
         android:text="@string/nullVal"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/black" />
+        android:textColor="@color/textColor" />
 
     <TextView
         android:id="@+id/itemCostTotal"
