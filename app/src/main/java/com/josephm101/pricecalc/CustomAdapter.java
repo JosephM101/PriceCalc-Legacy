@@ -61,13 +61,14 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
 
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            LayoutInflater inflater = LayoutInflater.from(getContext());
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext().getApplicationContext());
             convertView = inflater.inflate(R.layout.row_item, parent, false);
 /*
             viewHolder.txtName = (TextView) convertView.findViewById(R.id.itemName);
             viewHolder.txtPrice = (TextView) convertView.findViewById(R.id.itemCost);
             viewHolder.txtDeductible = (TextView) convertView.findViewById(R.id.isTaxable);
 */
+
             viewHolder.txtName = convertView.findViewById(R.id.itemName);
             viewHolder.txtPrice = convertView.findViewById(R.id.itemCost);
             viewHolder.txtDeductible = convertView.findViewById(R.id.isTaxable);

@@ -10,10 +10,12 @@ public class BooleanHandling {
     }
 
     public static Boolean StringToBool(String b, String trueString, String falseString) {
-        if (b == trueString) {
+        if (b.contains(trueString)) {
             return true;
         } else {
             return false;
         }
     }
+    public static String PositiveValue = "Yes";
+    public static String NegativeValue = "No";
 }

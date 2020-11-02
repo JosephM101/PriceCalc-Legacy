@@ -13,7 +13,7 @@ public class AppBeta {
         if (showMessage != 1) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(context)
                     .setTitle("Beta Mode")
-                    .setMessage("This app is still currently in beta, and is (at the moment) intended for testing purposes only. As a result, issues such as instability, inconsistencies, and occasional bugs will be present throughout the application. \r\nAlso, any data such as settings and lists will be lost when the app is closed.\r\n \r\nYou have been warned.")
+                    .setMessage("This app is still currently in beta, and is (at the moment) intended for testing purposes only. As a result, issues such as instability, inconsistencies, and occasional bugs will be present throughout the application.\r\n \r\nYou have been warned.")
                     .setIcon(R.drawable.ic_baseline_warning_24)
                     .setPositiveButton("OK, Continue", new DialogInterface.OnClickListener() {
                         @Override

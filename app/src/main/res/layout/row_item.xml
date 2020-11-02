@@ -3,6 +3,14 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--
+
+    android:textAppearance="?android:attr/textAppearanceSmall"
+
+
+    -Extra line for TextView objects
+    !-->
+
     <TextView
         android:id="@+id/itemName"
         android:layout_width="wrap_content"
@@ -12,10 +20,10 @@
         android:paddingTop="2dp"
         android:paddingEnd="16dp"
         android:text="@string/nullVal"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/textColor"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"/>
+
 
     <TextView
         android:id="@+id/itemCost"
@@ -27,8 +35,7 @@
         android:paddingEnd="16dp"
         android:paddingBottom="2dp"
         android:text="@string/nullVal"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/textColor"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="18sp" />
 
     <TextView
@@ -41,8 +48,7 @@
         android:paddingEnd="16dp"
         android:paddingBottom="2dp"
         android:text="@string/nullVal"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/textColor" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/itemCostTotal"
@@ -53,10 +59,9 @@
         android:paddingTop="2dp"
         android:paddingEnd="16dp"
         android:text="@string/nullVal"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:visibility="gone" />
 
 </LinearLayout>

@@ -8,10 +8,10 @@ public class DataModel implements Serializable {
     Boolean isTaxable;
     String itemQuantity;
 
-    public DataModel(String itemName, String itemPrice, Boolean isTaxDeductible, String itemQuantity) {
+    public DataModel(String itemName, String itemPrice, Boolean isTaxable, String itemQuantity) {
         this.itemName = itemName;
         this.itemPrice = itemPrice;
-        this.isTaxable = isTaxDeductible;
+        this.isTaxable = isTaxable;
         this.itemQuantity = itemQuantity;
     }
 
