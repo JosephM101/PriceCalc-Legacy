@@ -36,7 +36,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewCompatible"
         android:layout_width="0dp"
-        android:layout_height="67dp"
+        android:layout_height="80dp"
         app:cardCornerRadius="0dp"
         app:cardElevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -74,6 +74,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="4dp"
                 android:text="@string/totalCost_zeroString"
+                android:textAllCaps="true"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/addItem_floatingActionButton"
