@@ -35,8 +35,8 @@ public class ItemInfo extends AppCompatActivity {
         double itemPrice = Double.parseDouble(importedDataModel.getItemPrice());
         int itemQuantity = Integer.parseInt(importedDataModel.itemQuantity);
         ItemPriceLabel.setText(PriceHandling.PriceToString(itemPrice));
-        ItemQuantityLabel.setText("Quantity: " + importedDataModel.itemQuantity);
-        ItemTaxDeductionLabel.setText("Is taxable: " + BooleanHandling.BoolToString(importedDataModel.getIsTaxable(), "Yes", "No"));
+        ItemQuantityLabel.setText(StringHandling.combineStrings(importedDataModel.itemQuantity, "Quantity: "));
+        ItemTaxDeductionLabel.setText(StringHandling.combineStrings(BooleanHandling.BoolToString(importedDataModel.getIsTaxable(), "Yes", "No"), "Is taxable: "));
         StringBuilder stringBuilder = new StringBuilder();
         double priceWithQuantity = (itemPrice * itemQuantity);
         stringBuilder.append(PriceHandling.PriceToString(itemPrice * itemQuantity));

@@ -3,6 +3,7 @@ package com.josephm101.pricecalc;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.content.DialogInterface;
@@ -22,6 +23,8 @@ import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+@SuppressLint("NonConstantResourceId")
+
 public class AddItem extends AppCompatActivity {
     EditText itemNameEditText;
     TextView totalCostLabel;
@@ -30,10 +33,6 @@ public class AddItem extends AppCompatActivity {
     EditText itemQuantityEditText;
     Boolean isCancelling = true;
     FloatingActionButton floatingActionButton;
-
-    {
-
-    }
 
     TextView itemCostBoxEmpty;
 
@@ -110,7 +109,7 @@ public class AddItem extends AppCompatActivity {
         try {
             double defaultTaxRate = PriceHandling.getDefaultTaxRatePercentage(this);
             String itemCostText = itemCostEditText.getText().toString();
-            if (taxDeductible.isChecked() == true) {
+            if (taxDeductible.isChecked()) {
                 totalCostLabel.setText(PriceHandling.calculatePrice(Double.parseDouble(itemCostText), defaultTaxRate, Integer.parseInt(itemQuantityEditText.getText().toString())));
             } else {
                 totalCostLabel.setText(PriceHandling.calculatePrice(Double.parseDouble(itemCostText), 0, Integer.parseInt(itemQuantityEditText.getText().toString())));
@@ -137,7 +136,7 @@ public class AddItem extends AppCompatActivity {
     }
 
     void ShowDiscardWarning() {
-        if (isCancelling == true) {
+        if (isCancelling) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this)
                     .setMessage("Are you sure you want to discard this entry and go back?")
                     .setTitle("Discard Entry?")
@@ -166,6 +165,7 @@ public class AddItem extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_additem, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

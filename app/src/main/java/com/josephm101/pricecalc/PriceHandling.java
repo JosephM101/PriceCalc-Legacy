@@ -9,8 +9,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 public class PriceHandling {
-    private static DecimalFormat priceFormat = new DecimalFormat("0.00");
-    //public static double DefaultTaxDeductionPercentage = 6.25;
+    private static final DecimalFormat priceFormat = new DecimalFormat("0.00");
 
     public static double getDefaultTaxRatePercentage(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
@@ -37,14 +36,17 @@ public class PriceHandling {
     }
 
     public static String PriceToString(double price) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("$");
-        stringBuilder.append(priceFormat.format(price));
-        return stringBuilder.toString();
+//        String stringBuilder = "$" +
+//                priceFormat.format(price);
+//        return stringBuilder;
+
+        return "$" +
+                priceFormat.format(price);
     }
 
     public static double getTaxCost(double cost, double taxRate) {
-        return (double) ((taxRate * cost) / 100);
+        //return (double) ((taxRate * cost) / 100);
+        return (taxRate * cost) / 100;
     }
 }
 
@@ -58,7 +60,7 @@ Find tax cost: multiply 62.99 by 6.25, then divide by 100.
 
 ----------------------
     62.99 * 6.25
-    ————————————  = 3.94 (rounded to nearest hundredth)
+    ————————————  = 3.94 (rounded to the nearest hundredth)
         100
 ----------------------
 

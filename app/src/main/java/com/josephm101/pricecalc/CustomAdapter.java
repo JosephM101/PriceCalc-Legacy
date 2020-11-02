@@ -1,5 +1,6 @@
 package com.josephm101.pricecalc;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,13 +9,17 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 
-public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnClickListener {
+@SuppressLint("NonConstantResourceId")
 
+public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnClickListener {
     private ArrayList<DataModel> dataSet;
     Context mContext;
+
+    public ArrayList<DataModel> getDataSet() {
+        return dataSet;
+    }
 
     // View lookup cache
     private static class ViewHolder {
@@ -32,8 +37,11 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
     @Override
     public void onClick(View v) {
         int position = (Integer) v.getTag();
-        Object object = getItem(position);
-        DataModel dataModel = (DataModel) object;
+        //Object object = getItem(position);
+        //DataModel dataModel = (DataModel) object;
+
+        DataModel object = getItem(position);
+        DataModel dataModel = object;
         switch (v.getId()) {
             case R.id.itemName:
                 //Do whatever you want here.
@@ -55,9 +63,14 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.row_item, parent, false);
+/*
             viewHolder.txtName = (TextView) convertView.findViewById(R.id.itemName);
             viewHolder.txtPrice = (TextView) convertView.findViewById(R.id.itemCost);
             viewHolder.txtDeductible = (TextView) convertView.findViewById(R.id.isTaxable);
+*/
+            viewHolder.txtName = convertView.findViewById(R.id.itemName);
+            viewHolder.txtPrice = convertView.findViewById(R.id.itemCost);
+            viewHolder.txtDeductible = convertView.findViewById(R.id.isTaxable);
             //viewHolder.txtTotal = (TextView) convertView.findViewById(R.id.itemCostTotal);
 
             result = convertView;
@@ -73,6 +86,7 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
         lastPosition = position;
 
         viewHolder.txtName.setText(dataModel.getItemName());
+/*
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("$");
         stringBuilder.append(dataModel.getItemPrice());
@@ -80,6 +94,14 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
         stringBuilder.append(dataModel.getItemQuantity());
         stringBuilder.append(")");
         viewHolder.txtPrice.setText(stringBuilder.toString());
+*/
+        String stringBuilder = "$" +
+                dataModel.getItemPrice() +
+                " (Quantity: " +
+                dataModel.getItemQuantity() +
+                ")";
+        viewHolder.txtPrice.setText(stringBuilder);
+
         StringBuilder sb = new StringBuilder();
         sb.append("Is Taxable: ");
         sb.append(BooleanHandling.BoolToString(dataModel.getIsTaxable(), "Yes", "No"));

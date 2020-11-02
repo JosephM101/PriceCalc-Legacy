@@ -8,11 +8,24 @@
             android:positiveButtonText="Save"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:summary="Edit the tax rate to match that of your current location. If you don't know what that is, look up the tax rate for your location (Europe, U.S., etc.)"
+            android:summary="Edit the tax rate to match that of your current location. If you are unsure of yours, look up the tax rate for your state (Europe, U.S., etc.)"
             android:title="Tax Rate"
             app:defaultValue="6.25"
             app:dialogMessage="Enter the tax rate below for your area. (Example: 6.25)"
             app:singleLineTitle="true"
             app:title="Tax Rate" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Preference category"
+        app:title="User Interface">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="switchDarkModeOn"
+            android:summary="Enable or disable dark theme"
+            android:summaryOff="Dark mode is disabled."
+            android:summaryOn="Dark mode is enabled."
+            android:switchTextOn="ON"
+            android:title="Dark Mode" />
     </PreferenceCategory>
 </PreferenceScreen>
