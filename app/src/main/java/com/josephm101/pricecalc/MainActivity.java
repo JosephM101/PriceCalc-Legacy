@@ -172,6 +172,26 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.clearList_menuItem:
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this)
+                        .setTitle("Clear the entire list?")
+                        .setMessage("Are you sure you want to clear the entire list? This cannot be undone!")
+                        .setIcon(R.drawable.ic_baseline_warning_24)
+                        .setPositiveButton("Yes, clear it", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ClearAll();
+                            }
+                        })
+                        .setNegativeButton("No, don't!", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setCancelable(false);
+                alertDialog.show();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
