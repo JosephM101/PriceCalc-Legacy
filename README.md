@@ -1,2 +1,2 @@
 # PriceCalc
- A price calculator that also calculates tax.
+ A price calculator for Android that also calculates tax.
