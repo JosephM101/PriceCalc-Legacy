@@ -31,4 +31,7 @@
         <item>2</item>
         <item>3</item>
     </string-array>
+
+    <string name="noItemsCard_Title">Nothing here yet...</string>
+    <string name="noItemsCard_Message">Press the + button to add an item!</string>
 </resources>

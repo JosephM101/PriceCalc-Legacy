@@ -2,7 +2,6 @@ package com.josephm101.pricecalc;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -46,12 +46,14 @@ public class MainActivity extends AppCompatActivity {
     TextView totalCostLabel;
     private String savedList_FileName;
     private final int AddNew_RequestCode = 1;
+    CardView noItems_CardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ThemeHandling.ApplyTheme(this); //Apply theme
         super.onCreate(savedInstanceState);
         savedList_FileName = getFilesDir().getParent() + savedListFileName;
+
         //Load layout based on settings
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean value = sharedPreferences.getBoolean("floatingDock_Preference", false);
@@ -127,6 +129,12 @@ public class MainActivity extends AppCompatActivity {
 
         loadingProgressBar = findViewById(R.id.progressBar2);
         loadingProgressBar.setVisibility(View.GONE);
+
+        noItems_CardView = findViewById(R.id.noItems_CardView);
+        noItems_CardView.setCardBackgroundColor(getResources().getColor(R.color.cardBgColor));
+        noItems_CardView.setCardElevation(64);
+        noItems_CardView.setRadius(96);
+        noItems_CardView.setVisibility(View.GONE);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -356,5 +364,13 @@ public class MainActivity extends AppCompatActivity {
         }
         adapter.clear();
         adapter.notifyDataSetChanged();
+    }
+
+    public void RefreshView() {
+        if (adapter.getCount() < 1) {
+            noItems_CardView.setVisibility(View.VISIBLE);
+        } else {
+            noItems_CardView.setVisibility(View.GONE);
+        }
     }
 }
