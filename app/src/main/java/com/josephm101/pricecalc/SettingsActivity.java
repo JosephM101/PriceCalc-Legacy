@@ -1,5 +1,7 @@
 package com.josephm101.pricecalc;
 
+import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
@@ -13,10 +15,11 @@ import androidx.preference.PreferenceManager;
 
 public class SettingsActivity extends AppCompatActivity {
     private SharedPreferences.OnSharedPreferenceChangeListener prefListener;
-
+    Context thisContext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTitle("Settings");
+        thisContext = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
         getSupportFragmentManager()
@@ -37,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
                         RefreshTheme();
                         break;
                     case "floatingDock_Preference":
-                        MessageHandling.ShowMessage(getApplicationContext(), "This app will need to be restarted for changes to take effect.", "Restart required", "OK", R.drawable.ic_baseline_info_24);
+                        MessageHandling.ShowMessage(thisContext, "Restart required", "The app will need to be restarted for changes to take effect.", "OK", R.drawable.ic_baseline_info_24);
                         break;
                 }
             }
