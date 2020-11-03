@@ -2,7 +2,6 @@ package com.josephm101.pricecalc;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
@@ -25,35 +23,28 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.Set;
 
 @SuppressLint("NonConstantResourceId")
 
 public class MainActivity extends AppCompatActivity {
-    ArrayList<DataModel> listItems = new ArrayList<>();
-
+    @SuppressLint("StaticFieldLeak")
+    private static CustomAdapter adapter;
     private final String NewLine = "\r\n";
     private final String NewLineSeparator = "¶";
     private final String splitChar = "§";
-
-    private String savedList_FileName;
-
-    @SuppressLint("StaticFieldLeak")
-    private static CustomAdapter adapter;
+    private final String savedListFileName = "/saved_list.txt";
+    ArrayList<DataModel> listItems = new ArrayList<>();
     ListView listView;
     FloatingActionButton addItem_FloatingActionButton;
-    private int AddNew_RequestCode = 1;
     ProgressBar loadingProgressBar;
     TextView totalCostLabel;
-
-    private final String savedListFileName = "/saved_list.txt";
+    private String savedList_FileName;
+    private int AddNew_RequestCode = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         savedList_FileName = getFilesDir().getParent() + savedListFileName;
         //Load layout based on settings
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        Boolean value = sharedPreferences.getBoolean("floatingDock_Preference", false);
+        boolean value = sharedPreferences.getBoolean("floatingDock_Preference", false);
         if (value) {
             setContentView(R.layout.activity_main_floating_toolbar);
         } else {
@@ -125,9 +116,10 @@ public class MainActivity extends AppCompatActivity {
         try {
             LoadList();
         } catch (Exception ex) {
-            /**
-             * The file doesn't exist. Just ignore it for now; it will get created later.
+            /*
+              The file doesn't exist. Just ignore it for now; it will get created later.
              */
+
             //MessageHandling.ShowMessage(this, "Error", ex.getMessage(), "OK");
             //throw ex;
         }
@@ -197,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void GetTotalCostFromList() {
-        double TotalCost = 0;
+        double TotalCost;
         double costsWithDeductible = 0;
         double costsWithoutDeductible = 0;
         for (DataModel item : listItems) {
@@ -244,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Loads list items into list view
-    void LoadList() throws IOException {
+    void LoadList() {
 /*        SharedPreferences savedList = getApplicationContext().getSharedPreferences(Preferences.MainSettings.PreferenceGroup, 0);
         for (int i = 0; i < savedList.getInt(Preferences.MainSettings.ItemCount, 0) + 1; i++) {
             Set<String> stringSet = savedList.getStringSet(getSavedItemID(i), null);
@@ -262,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
                 AddEntry(dataModels.get(i));
             }
         } catch (IOException e) {
-            throw e;
+            //throw e;
         }
         RefreshEverything();
     }
@@ -292,15 +284,14 @@ public class MainActivity extends AppCompatActivity {
         }
          */
         String[] lines = everything.toString().split(NewLineSeparator);
-        for (int i = 0; i < lines.length; i++) {
-            String nextLine = lines[i];
+        for (String nextLine : lines) {
             Log.d("STRING_HANDLING", nextLine);
             String[] splitString = nextLine.split(splitChar);
             Log.d("STRING_HANDLING", StringHandling.combineStrings("P0", splitString[0]));
             Log.d("STRING_HANDLING", StringHandling.combineStrings("P1", splitString[1]));
             Log.d("STRING_HANDLING", StringHandling.combineStrings("P2", splitString[2]));
             Log.d("STRING_HANDLING", StringHandling.combineStrings("P3", splitString[3]));
-            dataModels.add(new DataModel(splitString[0], splitString[1], BooleanHandling.StringToBool(splitString[2], BooleanHandling.PositiveValue, BooleanHandling.NegativeValue), splitString[3]));
+            dataModels.add(new DataModel(splitString[0], splitString[1], BooleanHandling.StringToBool(splitString[2], BooleanHandling.PositiveValue), splitString[3]));
         }
         return dataModels;
     }
@@ -310,11 +301,11 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<DataModel> dataModels = adapter.getDataSet();
         File logFile = new File(savedList_FileName);
         try {
-            logFile.delete();
-        } catch (Exception ex) {
+            final boolean delete = logFile.delete();
+        } catch (Exception ignored) {
 
         }
-        logFile.createNewFile();
+        final boolean newFile = logFile.createNewFile();
         BufferedWriter writer = new BufferedWriter(new FileWriter(logFile, false));
         for (int i = 0; i < dataModels.size(); i++) {
             try {
@@ -333,7 +324,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     DataModel ProcessEntryInfo(Set<String> stringSet) {
-        /**
+        /*
          * Entry Order:
          * 1. Item Name
          * 2. Item Price
@@ -342,26 +333,24 @@ public class MainActivity extends AppCompatActivity {
          */
 
         String[] stringArray = (String[]) stringSet.toArray();
-        return new DataModel(stringArray[0], stringArray[1], BooleanHandling.StringToBool(stringArray[2], BooleanHandling.PositiveValue, BooleanHandling.NegativeValue), stringArray[3]);
+        return new DataModel(stringArray[0], stringArray[1], BooleanHandling.StringToBool(stringArray[2], BooleanHandling.PositiveValue), stringArray[3]);
     }
 
     public String GenerateEntry(DataModel dataModel) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(dataModel.getItemName());
-        sb.append(splitChar);
-        sb.append(dataModel.getItemPrice());
-        sb.append(splitChar);
-        sb.append(BooleanHandling.BoolToString(dataModel.getIsTaxable(), "Yes", "No"));
-        sb.append(splitChar);
-        sb.append(dataModel.getItemQuantity());
-        return sb.toString();
+        return dataModel.getItemName() +
+                splitChar +
+                dataModel.getItemPrice() +
+                splitChar +
+                BooleanHandling.BoolToString(dataModel.getIsTaxable(), "Yes", "No") +
+                splitChar +
+                dataModel.getItemQuantity();
     }
 
     public void ClearAll() {
         File logFile = new File(savedList_FileName);
         try {
-            logFile.delete();
-        } catch (Exception ex) {
+            final boolean delete = logFile.delete();
+        } catch (Exception ignored) {
 
         }
         adapter.clear();

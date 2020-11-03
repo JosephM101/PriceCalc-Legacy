@@ -2,12 +2,9 @@ package com.josephm101.pricecalc;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -24,19 +21,18 @@ public class DatabaseReader extends AppCompatActivity {
     }
 
     public ArrayList<DataModel> GetEntries() throws IOException {
-        ArrayList<DataModel> dataModels = new ArrayList<DataModel>();
+        ArrayList<DataModel> dataModels = new ArrayList<>();
         int c;
-        String contents = "";
+        StringBuilder contents = new StringBuilder();
         while ((c = fis.read()) != -1) {
-            contents = contents + Character.toString((char) c);
+            contents.append((char) c);
         }
         fis.close();
-        Scanner scanner = new Scanner(contents);
-        while(scanner.hasNextLine())
-        {
+        Scanner scanner = new Scanner(contents.toString());
+        while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             String[] splitString = line.split("`");
-            dataModels.add(new DataModel(splitString[0], splitString[1], BooleanHandling.StringToBool(splitString[2], BooleanHandling.PositiveValue, BooleanHandling.NegativeValue), splitString[3]));
+            dataModels.add(new DataModel(splitString[0], splitString[1], BooleanHandling.StringToBool(splitString[2], BooleanHandling.PositiveValue), splitString[3]));
         }
         return dataModels;
     }

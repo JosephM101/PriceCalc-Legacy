@@ -1,20 +1,11 @@
 package com.josephm101.pricecalc;
 
-import android.content.Context;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedWriter;
-import java.io.FileOutputStream;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.io.File;
-import android.content.ContentValues;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.util.Log;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 public class DatabaseWriter extends AppCompatActivity {
     StringBuilder stringBuilder;
@@ -23,6 +14,7 @@ public class DatabaseWriter extends AppCompatActivity {
     private String NewLine = "\r\n";
     private String splitChar = "`";
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public DatabaseWriter() throws IOException {
         //stringBuilder = new StringBuilder();
         logFile = new File(getFilesDir().getParent(), "saved_list.txt");
@@ -34,6 +26,7 @@ public class DatabaseWriter extends AppCompatActivity {
         }
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void close() {
         try {
             if (!logFile.exists()) {

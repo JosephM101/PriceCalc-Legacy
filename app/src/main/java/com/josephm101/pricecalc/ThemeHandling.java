@@ -10,8 +10,7 @@ public class ThemeHandling {
     public static void ApplyTheme(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         String value = sharedPreferences.getString("appTheme_Preference", Preferences.DefaultValues.DefaultTheme);
-        switch(value)
-        {
+        switch (value) {
             case "1":
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 break;

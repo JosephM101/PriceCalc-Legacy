@@ -3,7 +3,6 @@ package com.josephm101.pricecalc;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 
 public class MessageHandling {
     public static void ShowMessage(Context context, String title, String message, String positiveText) {

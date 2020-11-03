@@ -13,6 +13,7 @@ import androidx.preference.PreferenceManager;
 
 public class SettingsActivity extends AppCompatActivity {
     private SharedPreferences.OnSharedPreferenceChangeListener prefListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTitle("Settings");
@@ -31,11 +32,18 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-                switch (key) {
+                if ("appTheme_Preference".equals(key)) {
+                    RefreshTheme();
+                } else {
+                    throw new IllegalStateException("Unexpected value: " + key);
+                }
+/*                switch (key) {
                     case "appTheme_Preference":
                         RefreshTheme();
                         break;
-                }
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + key);
+                }*/
             }
         };
         prefs.registerOnSharedPreferenceChangeListener(prefListener);
@@ -43,6 +51,12 @@ public class SettingsActivity extends AppCompatActivity {
 
     void RefreshTheme() {
         ThemeHandling.ApplyTheme(this);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
@@ -59,11 +73,5 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
     }
 }

@@ -9,24 +9,15 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 
 @SuppressLint("NonConstantResourceId")
 
 public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnClickListener {
-    private ArrayList<DataModel> dataSet;
     Context mContext;
-
-    public ArrayList<DataModel> getDataSet() {
-        return dataSet;
-    }
-
-    // View lookup cache
-    private static class ViewHolder {
-        TextView txtName;
-        TextView txtPrice;
-        TextView txtDeductible;
-    }
+    private ArrayList<DataModel> dataSet;
+    private int lastPosition = -1;
 
     public CustomAdapter(ArrayList<DataModel> data, Context context) {
         super(context, R.layout.row_item, data);
@@ -34,22 +25,29 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
         this.mContext = context;
     }
 
+    public ArrayList<DataModel> getDataSet() {
+        return dataSet;
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public void onClick(View v) {
         int position = (Integer) v.getTag();
         //Object object = getItem(position);
         //DataModel dataModel = (DataModel) object;
-
-        DataModel object = getItem(position);
-        DataModel dataModel = object;
-        switch (v.getId()) {
+        DataModel dataModel = getItem(position);
+        if (v.getId() == R.id.itemName) {//Do whatever you want here.
+        } else {
+            throw new IllegalStateException("Unexpected value: " + v.getId());
+        }
+/*        switch (v.getId()) {
             case R.id.itemName:
                 //Do whatever you want here.
                 break;
-        }
+            default:
+                throw new IllegalStateException("Unexpected value: " + v.getId());
+        }*/
     }
-
-    private int lastPosition = -1;
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -57,12 +55,12 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
         DataModel dataModel = getItem(position);
 
         // Check if an existing view is being reused, otherwise inflate the view
-        ViewHolder viewHolder = null; // view lookup cache stored in tag
+        ViewHolder viewHolder; // view lookup cache stored in tag
         final View result;
 
         if (convertView == null) {
             //LayoutInflater inflater = LayoutInflater.from(parent.getContext().getApplicationContext());
-            LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE); //Only method that supported app theme matching
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE); //Only method that supported app theme matching
             convertView = inflater.inflate(R.layout.row_item, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.txtName = convertView.findViewById(R.id.itemName);
@@ -97,5 +95,12 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
         }
         viewHolder.txtDeductible.setText(sb.toString());
         return convertView;
+    }
+
+    // View lookup cache
+    private static class ViewHolder {
+        TextView txtName;
+        TextView txtPrice;
+        TextView txtDeductible;
     }
 }

@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 public class PriceHandling {
