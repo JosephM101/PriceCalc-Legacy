@@ -318,13 +318,15 @@ public class MainActivity extends AppCompatActivity {
         }
         final boolean newFile = logFile.createNewFile();
         BufferedWriter writer = new BufferedWriter(new FileWriter(logFile, false));
+        Log.d("DataModelSize", String.valueOf(dataModels.size()));
         for (int i = 0; i < dataModels.size(); i++) {
             try {
                 writer.write(GenerateEntry(dataModels.get(i)));
                 //writer.newLine();
                 writer.append(NewLineSeparator);
+                Log.d("SaveFileWriter", "Wrote Line "+ i + ": "+ GenerateEntry(dataModels.get(i)));
             } catch (Exception ex) {
-                //throw ex;
+                throw ex;
             }
         }
         writer.close();
