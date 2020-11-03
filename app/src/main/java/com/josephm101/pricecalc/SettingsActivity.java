@@ -32,18 +32,14 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-                if ("appTheme_Preference".equals(key)) {
-                    RefreshTheme();
-                } else {
-                    throw new IllegalStateException("Unexpected value: " + key);
-                }
-/*                switch (key) {
+                switch (key) {
                     case "appTheme_Preference":
                         RefreshTheme();
                         break;
-                    default:
-                        throw new IllegalStateException("Unexpected value: " + key);
-                }*/
+                    case "floatingDock_Preference":
+                        MessageHandling.ShowMessage(getApplicationContext(), "This app will need to be restarted for changes to take effect.", "Restart required", "OK", R.drawable.ic_baseline_info_24);
+                        break;
+                }
             }
         };
         prefs.registerOnSharedPreferenceChangeListener(prefListener);

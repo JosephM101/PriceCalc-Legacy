@@ -37,7 +37,7 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
         //DataModel dataModel = (DataModel) object;
         DataModel dataModel = getItem(position);
         if (v.getId() != R.id.itemName) {
-            throw new IllegalStateException("Unexpected value: " + v.getId());
+            //throw new IllegalStateException("Unexpected value: " + v.getId());
         } else {//Do whatever you want here.
         }
 /*        switch (v.getId()) {
