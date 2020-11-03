@@ -132,9 +132,10 @@ public class MainActivity extends AppCompatActivity {
 
         noItems_CardView = findViewById(R.id.noItems_CardView);
         noItems_CardView.setCardBackgroundColor(getResources().getColor(R.color.cardBgColor));
-        noItems_CardView.setCardElevation(64);
-        noItems_CardView.setRadius(96);
+        noItems_CardView.setCardElevation(128);
+        noItems_CardView.setRadius(32);
         noItems_CardView.setVisibility(View.GONE);
+        RefreshView();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -238,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        RefreshView();
     }
 
     void SetDashText(String text) {

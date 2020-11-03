@@ -16,6 +16,7 @@ import androidx.preference.PreferenceManager;
 public class SettingsActivity extends AppCompatActivity {
     private SharedPreferences.OnSharedPreferenceChangeListener prefListener;
     Context thisContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTitle("Settings");
@@ -40,7 +41,10 @@ public class SettingsActivity extends AppCompatActivity {
                         RefreshTheme();
                         break;
                     case "floatingDock_Preference":
-                        MessageHandling.ShowMessage(thisContext, "Restart required", "The app will need to be restarted for changes to take effect.", "OK", R.drawable.ic_baseline_info_24);
+                        try {
+                            //MessageHandling.ShowMessage(thisContext, "Restart required", "The app will need to be restarted for changes to take effect.", "OK", R.drawable.ic_baseline_info_24);
+                        } catch (Exception ignored) {
+                        }
                         break;
                 }
             }
