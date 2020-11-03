@@ -11,8 +11,8 @@ public class DatabaseWriter extends AppCompatActivity {
     StringBuilder stringBuilder;
     File logFile;
     BufferedWriter writer;
-    private String NewLine = "\r\n";
-    private String splitChar = "`";
+    private final String NewLine = "\r\n";
+    private final String splitChar = "`";
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public DatabaseWriter() throws IOException {

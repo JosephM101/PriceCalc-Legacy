@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     ProgressBar loadingProgressBar;
     TextView totalCostLabel;
     private String savedList_FileName;
-    private int AddNew_RequestCode = 1;
+    private final int AddNew_RequestCode = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

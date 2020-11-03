@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnClickListener {
     Context mContext;
-    private ArrayList<DataModel> dataSet;
+    private final ArrayList<DataModel> dataSet;
     private int lastPosition = -1;
 
     public CustomAdapter(ArrayList<DataModel> data, Context context) {

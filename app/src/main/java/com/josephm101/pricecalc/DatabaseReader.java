@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class DatabaseReader extends AppCompatActivity {
     FileInputStream fis;
-    private String NewLine = "\r\n";
+    private final String NewLine = "\r\n";
 
     public DatabaseReader() {
         try {
