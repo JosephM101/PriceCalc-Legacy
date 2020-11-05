@@ -368,6 +368,7 @@ public class MainActivity extends AppCompatActivity {
         }
         adapter.clear();
         adapter.notifyDataSetChanged();
+        RefreshEverything();
     }
 
     public void RefreshView() {
