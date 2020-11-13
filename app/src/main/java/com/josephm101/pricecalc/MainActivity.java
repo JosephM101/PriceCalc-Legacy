@@ -59,9 +59,9 @@ public class MainActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
+                    loadingProgressBar.setVisibility(View.GONE);
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
-                        loadingProgressBar.setVisibility(View.GONE);
                         Bundle extras = data.getExtras();
                         if (extras != null) {
                             AddEntry(extras.getString("itemName"), extras.getString("itemCost"), extras.getBoolean("isTaxDeductible"), extras.getString("itemQuantity"));
@@ -269,7 +269,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         //DB
-
  */
         try {
             ArrayList<DataModel> dataModels = GetEntries();
@@ -292,8 +291,6 @@ public class MainActivity extends AppCompatActivity {
             everything.append(line);
         }
         /*
-
-
         Scanner scanner = new Scanner(everything.toString());
         while (scanner.hasNextLine()) {
             String nextLine = scanner.nextLine();
@@ -306,6 +303,7 @@ public class MainActivity extends AppCompatActivity {
             dataModels.add(new DataModel(splitString[0], splitString[1], BooleanHandling.StringToBool(splitString[2], BooleanHandling.PositiveValue, BooleanHandling.NegativeValue), splitString[3]));
         }
          */
+
         String[] lines = everything.toString().split(NewLineSeparator);
         for (String nextLine : lines) {
             Log.d("STRING_HANDLING", nextLine);
