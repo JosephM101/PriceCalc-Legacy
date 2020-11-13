@@ -28,7 +28,7 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="floatingDock_Preference"
-            android:summary="When enabled, the dock on the main screen containing the total price label and the Add Item button will appear in a rounded floating card. May cause graphical issues on older versions of Android, and may require a restart of the app."
+            android:summary="When enabled, the dock on the main screen containing the total price label and the Add Item button will appear in a rounded floating card. Enabling this setting may cause graphical issues on older versions of Android, and changes to this setting will require a restart of the app before they will take effect."
             android:title="Floating dock (Experimental)" />
     </PreferenceCategory>
 </PreferenceScreen>
