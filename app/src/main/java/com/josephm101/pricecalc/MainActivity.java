@@ -1,6 +1,7 @@
 package com.josephm101.pricecalc;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,10 +12,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.preference.PreferenceManager;
@@ -46,7 +52,28 @@ public class MainActivity extends AppCompatActivity {
     TextView totalCostLabel;
     private String savedList_FileName;
     private final int AddNew_RequestCode = 1;
-    CardView noItems_CardView;
+    LinearLayout noItems_CardView;
+
+    ActivityResultLauncher<Intent> NewItemActivityLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        loadingProgressBar.setVisibility(View.GONE);
+                        Bundle extras = data.getExtras();
+                        if (extras != null) {
+                            AddEntry(extras.getString("itemName"), extras.getString("itemCost"), extras.getBoolean("isTaxDeductible"), extras.getString("itemQuantity"));
+                            try {
+                                SaveList();
+                            } catch (IOException e) {
+                                //e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +98,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 Intent addNew = new Intent(v.getContext(), AddItem.class);
-                startActivityForResult(addNew, AddNew_RequestCode);
+                NewItemActivityLauncher.launch(addNew);
+                //startActivityForResult(addNew, AddNew_RequestCode);
             }
         });
         listView = findViewById(R.id.items_listBox);
@@ -130,30 +158,14 @@ public class MainActivity extends AppCompatActivity {
         loadingProgressBar = findViewById(R.id.progressBar2);
         loadingProgressBar.setVisibility(View.GONE);
 
-        noItems_CardView = findViewById(R.id.noItems_CardView);
-        noItems_CardView.setCardBackgroundColor(getResources().getColor(R.color.cardBgColor));
-        noItems_CardView.setCardElevation(128);
-        noItems_CardView.setRadius(32);
+        noItems_CardView = findViewById(R.id.noItems_View);
         noItems_CardView.setVisibility(View.GONE);
         RefreshView();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        loadingProgressBar.setVisibility(View.GONE);
-        if (requestCode == AddNew_RequestCode) {
-            if (resultCode == RESULT_OK) {
-                Bundle extras = data.getExtras();
-                if (extras != null) {
-                    AddEntry(extras.getString("itemName"), extras.getString("itemCost"), extras.getBoolean("isTaxDeductible"), extras.getString("itemQuantity"));
-                    try {
-                        SaveList();
-                    } catch (IOException e) {
-                        //e.printStackTrace();
-                    }
-                }
-            }
-        }
+        //Deprecated method
     }
 
     @Override
@@ -326,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
                 writer.append(NewLineSeparator);
                 Log.d("SaveFileWriter", "Wrote Line "+ i + ": "+ GenerateEntry(dataModels.get(i)));
             } catch (Exception ex) {
-                throw ex;
+                //throw ex;
             }
         }
         writer.close();
