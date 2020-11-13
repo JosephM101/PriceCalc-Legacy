@@ -150,22 +150,17 @@ public class MainActivity extends AppCompatActivity {
             /*
               The file doesn't exist. Just ignore it for now; it will get created later.
              */
-
-            //MessageHandling.ShowMessage(this, "Error", ex.getMessage(), "OK");
-            //throw ex;
         }
-
         loadingProgressBar = findViewById(R.id.progressBar2);
         loadingProgressBar.setVisibility(View.GONE);
-
         noItems_CardView = findViewById(R.id.noItems_View);
         noItems_CardView.setVisibility(View.GONE);
         RefreshView();
     }
 
+    @Deprecated
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //Deprecated method
     }
 
     @Override
