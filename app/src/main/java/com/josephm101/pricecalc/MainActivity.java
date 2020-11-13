@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.refreshView_menuItem:
                 RefreshEverything();
-                Toaster.pop(this, "Refreshed");
+                //Toaster.pop(this, "Refreshed");
                 break;
             case R.id.settings_menuItem:
                 Intent intent = new Intent(this, SettingsActivity.class);
