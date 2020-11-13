@@ -3,9 +3,6 @@ package com.josephm101.pricecalc;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
-
-import androidx.annotation.DrawableRes;
 
 public class MessageHandling {
     public static void ShowMessage(Context context, String title, String message, String positiveText) {
@@ -41,6 +38,7 @@ public class MessageHandling {
                 .setCancelable(true);
         alertDialog.show();
     }
+
     public static void ShowMessage(Context context, String title, String message, String positiveText, int iconID) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context)
                 .setTitle(title)

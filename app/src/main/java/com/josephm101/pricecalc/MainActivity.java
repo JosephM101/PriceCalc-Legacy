@@ -22,7 +22,6 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -45,15 +44,14 @@ public class MainActivity extends AppCompatActivity {
     private final String NewLineSeparator = "¶";
     private final String splitChar = "§";
     private final String savedListFileName = "/saved_list.txt";
+    private final int AddNew_RequestCode = 1;
     ArrayList<DataModel> listItems = new ArrayList<>();
     ListView listView;
     FloatingActionButton addItem_FloatingActionButton;
     ProgressBar loadingProgressBar;
     TextView totalCostLabel;
-    private String savedList_FileName;
-    private final int AddNew_RequestCode = 1;
     LinearLayout noItems_CardView;
-
+    private String savedList_FileName;
     ActivityResultLauncher<Intent> NewItemActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -329,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
                 writer.write(GenerateEntry(dataModels.get(i)));
                 //writer.newLine();
                 writer.append(NewLineSeparator);
-                Log.d("SaveFileWriter", "Wrote Line "+ i + ": "+ GenerateEntry(dataModels.get(i)));
+                Log.d("SaveFileWriter", "Wrote Line " + i + ": " + GenerateEntry(dataModels.get(i)));
             } catch (Exception ex) {
                 //throw ex;
             }

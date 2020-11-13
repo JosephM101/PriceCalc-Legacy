@@ -15,8 +15,8 @@ import java.util.ArrayList;
 @SuppressLint("NonConstantResourceId")
 
 public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnClickListener {
-    Context mContext;
     private final ArrayList<DataModel> dataSet;
+    Context mContext;
     private int lastPosition = -1;
 
     public CustomAdapter(ArrayList<DataModel> data, Context context) {
