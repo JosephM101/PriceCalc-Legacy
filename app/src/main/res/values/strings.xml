@@ -34,4 +34,6 @@
 
     <string name="noItemsCard_Title">Nothing here yet...</string>
     <string name="noItemsCard_Message">Press the + button to add an item!</string>
+    <string name="nothing_here_yet">Nothing here yet...</string>
+    <string name="press_the_plus_button_to_add_an_item">Press the + button to add an item!</string>
 </resources>
