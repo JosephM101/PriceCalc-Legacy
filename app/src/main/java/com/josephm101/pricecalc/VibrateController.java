@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Vibrator;
 
 public class VibrateController {
-    Vibrator vibrator;
-    int tapDuration = 200;
+    final Vibrator vibrator;
+    final int tapDuration = 200;
     int shortVibrate = 300;
     int pauseVibrate = 100;
     int longVibrate = 500;

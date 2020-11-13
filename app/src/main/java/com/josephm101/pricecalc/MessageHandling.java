@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
+import androidx.annotation.DrawableRes;
+
 public class MessageHandling {
     public static void ShowMessage(Context context, String title, String message, String positiveText) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context)
@@ -39,7 +41,7 @@ public class MessageHandling {
         alertDialog.show();
     }
 
-    public static void ShowMessage(Context context, String title, String message, String positiveText, int iconID) {
+    public static void ShowMessage(Context context, String title, String message, String positiveText, @DrawableRes int iconID) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(message)

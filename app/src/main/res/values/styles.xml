@@ -7,7 +7,7 @@
         <item name="android:textColorPrimary">@color/textColor</item>
     </style>
 
-    <style name="TextAppearance.Medium" parent="android:style/TextAppearance.Medium" tools:ignore="ResourceCycle">
+    <style name="TextAppearance.Medium" parent="android:style/TextAppearance.Medium" tools:ignore="ResourceCycle" tools:keep="@style/TextAppearance_Medium">
         <item name="android:textColor">@color/textColor</item>
     </style>
 </resources>

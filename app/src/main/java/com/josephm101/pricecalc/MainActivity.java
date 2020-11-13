@@ -40,19 +40,18 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     private static CustomAdapter adapter;
+    final ArrayList<DataModel> listItems = new ArrayList<>();
     private final String NewLine = "\r\n";
     private final String NewLineSeparator = "¶";
     private final String splitChar = "§";
-    private final String savedListFileName = "/saved_list.txt";
     private final int AddNew_RequestCode = 1;
-    ArrayList<DataModel> listItems = new ArrayList<>();
     ListView listView;
     FloatingActionButton addItem_FloatingActionButton;
     ProgressBar loadingProgressBar;
     TextView totalCostLabel;
     LinearLayout noItems_CardView;
     private String savedList_FileName;
-    ActivityResultLauncher<Intent> NewItemActivityLauncher = registerForActivityResult(
+    final ActivityResultLauncher<Intent> NewItemActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -77,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         ThemeHandling.ApplyTheme(this); //Apply theme
         super.onCreate(savedInstanceState);
+        String savedListFileName = "/saved_list.txt";
         savedList_FileName = getFilesDir().getParent() + savedListFileName;
 
         //Load layout based on settings
@@ -315,11 +315,11 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<DataModel> dataModels = adapter.getDataSet();
         File logFile = new File(savedList_FileName);
         try {
-            final boolean delete = logFile.delete();
+            @SuppressWarnings("unused") final boolean delete = logFile.delete();
         } catch (Exception ignored) {
 
         }
-        final boolean newFile = logFile.createNewFile();
+        @SuppressWarnings("unused") final boolean newFile = logFile.createNewFile();
         BufferedWriter writer = new BufferedWriter(new FileWriter(logFile, false));
         Log.d("DataModelSize", String.valueOf(dataModels.size()));
         for (int i = 0; i < dataModels.size(); i++) {
@@ -352,7 +352,7 @@ public class MainActivity extends AppCompatActivity {
         return new DataModel(stringArray[0], stringArray[1], BooleanHandling.StringToBool(stringArray[2], BooleanHandling.PositiveValue), stringArray[3]);
     }
 
-    public String GenerateEntry(DataModel dataModel) {
+    public String GenerateEntry(@org.jetbrains.annotations.NotNull DataModel dataModel) {
         return dataModel.getItemName() +
                 splitChar +
                 dataModel.getItemPrice() +
@@ -365,7 +365,7 @@ public class MainActivity extends AppCompatActivity {
     public void ClearAll() {
         File logFile = new File(savedList_FileName);
         try {
-            final boolean delete = logFile.delete();
+            @SuppressWarnings("unused") final boolean delete = logFile.delete();
         } catch (Exception ignored) {
 
         }

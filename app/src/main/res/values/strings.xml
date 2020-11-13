@@ -1,19 +1,19 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Price Calc</string>
     <string name="add_item">Add Item</string>
     <string name="item_info">Item Info</string>
-    <string name="note1">Start adding items to the list.</string>
+    <string name="note1" tools:keep="@string/note1">Start adding items to the list.</string>
     <string name="totalCost_zeroString">$0.00</string>
     <string name="item_is_tax_deductible">Item Is Taxable</string>
 
     <!--
     Item name values for easier and more accurate referencing
     !-->
-    <string name="taxDeductible_Yes">Yes</string> <!-- If item is tax deductible !-->
-    <string name="taxDeductible_No">No</string>
+    <string name="taxDeductible_Yes" tools:keep="@string/taxDeductible_Yes">Yes</string> <!-- If item is tax deductible !-->
+    <string name="taxDeductible_No" tools:keep="@string/taxDeductible_No">No</string>
     <string name="addItem_taxDeductibleInfo">If checked, item tax based on the specified tax rate will automatically be applied to the final price of the item.</string>
     <string name="itemNameEditText_Hint">Name of the product (Example: Cup)</string>
-    <string name="AddItem_confirmButtonText">Add Item</string>
+    <string name="AddItem_confirmButtonText" tools:keep="@string/AddItem_confirmButtonText">Add Item</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="nullVal">null</string>
     <string name="quantity_minValue">1</string>
@@ -32,8 +32,11 @@
         <item>3</item>
     </string-array>
 
-    <string name="noItemsCard_Title">Nothing here yet...</string>
-    <string name="noItemsCard_Message">Press the + button to add an item!</string>
-    <string name="nothing_here_yet">Nothing here yet...</string>
+    <string name="noItemsCard_Title" tools:keep="@string/noItemsCard_Title">Nothing here yet…</string>
+    <string name="noItemsCard_Message" tools:keep="@string/noItemsCard_Message">Press the + button to add an item!</string>
+    <string name="nothing_here_yet">Nothing here yet…</string>
     <string name="press_the_plus_button_to_add_an_item">Press the + button to add an item!</string>
+    <string name="refresh_actionButton">Refresh</string>
+    <string name="settings_actionButton">Settings</string>
+    <string name="clearList_ActionButton">Clear List</string>
 </resources>

@@ -15,9 +15,8 @@ import java.util.ArrayList;
 @SuppressLint("NonConstantResourceId")
 
 public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnClickListener {
+    final Context mContext;
     private final ArrayList<DataModel> dataSet;
-    Context mContext;
-    private int lastPosition = -1;
 
     public CustomAdapter(ArrayList<DataModel> data, Context context) {
         super(context, R.layout.row_item, data);
@@ -35,7 +34,7 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
         int position = (Integer) v.getTag();
         //Object object = getItem(position);
         //DataModel dataModel = (DataModel) object;
-        DataModel dataModel = getItem(position);
+        @SuppressWarnings("unused") DataModel dataModel = getItem(position);
         if (v.getId() != R.id.itemName) {
             //throw new IllegalStateException("Unexpected value: " + v.getId());
         } else {//Do whatever you want here.
@@ -76,7 +75,6 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
 
         Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.up_from_bottom);
         result.startAnimation(animation);
-        lastPosition = position;
         viewHolder.txtName.setText(dataModel.getItemName());
         String stringBuilder = "$" +
                 dataModel.getItemPrice() +

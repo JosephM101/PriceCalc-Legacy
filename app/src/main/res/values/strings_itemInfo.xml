@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="delete_item_action_button">Delete Item</string>
+    <string name="edit_item_action_button">Edit Item</string>
+</resources>

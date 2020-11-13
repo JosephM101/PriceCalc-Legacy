@@ -3,10 +3,10 @@ package com.josephm101.pricecalc;
 import java.io.Serializable;
 
 public class DataModel implements Serializable {
-    String itemName;
-    String itemPrice;
-    Boolean isTaxable;
-    String itemQuantity;
+    final String itemName;
+    final String itemPrice;
+    final Boolean isTaxable;
+    final String itemQuantity;
 
     public DataModel(String itemName, String itemPrice, Boolean isTaxable, String itemQuantity) {
         this.itemName = itemName;

@@ -1,7 +1,7 @@
 package com.josephm101.pricecalc;
 
 public class BooleanHandling {
-    public static String PositiveValue = "Yes";
+    public static final String PositiveValue = "Yes";
     public static String NegativeValue = "No";
 
     public static String BoolToString(Boolean b, String trueString, String falseString) {

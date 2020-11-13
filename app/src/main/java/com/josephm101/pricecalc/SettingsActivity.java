@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -15,7 +14,6 @@ import androidx.preference.PreferenceManager;
 
 public class SettingsActivity extends AppCompatActivity {
     Context thisContext;
-    private SharedPreferences.OnSharedPreferenceChangeListener prefListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +32,8 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        //MessageHandling.ShowMessage(thisContext, "Restart required", "The app will need to be restarted for changes to take effect.", "OK", R.drawable.ic_baseline_info_24);
+        SharedPreferences.OnSharedPreferenceChangeListener prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
                 switch (key) {
                     case "appTheme_Preference":

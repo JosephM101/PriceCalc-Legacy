@@ -9,12 +9,12 @@ public class Preferences {
     }
 
     public static class BetaMode {
-        public static String PreferenceGroup = "BETA_MODE_MESSAGE";
-        public static String ENTRY_BETA_MODE_MSG_PREF = "doNotShowAgain";
+        public static final String PreferenceGroup = "BETA_MODE_MESSAGE";
+        public static final String ENTRY_BETA_MODE_MSG_PREF = "doNotShowAgain";
     }
 
     public static class DefaultValues {
-        public static String DefaultTaxRate = "6.25";
-        public static String DefaultTheme = "1";
+        public static final String DefaultTaxRate = "6.25";
+        public static final String DefaultTheme = "1";
     }
 }

@@ -55,7 +55,7 @@
         android:layout_marginTop="16dp"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:text="Item Name (not required)"
+        android:text="@string/itemNameHint"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -67,7 +67,7 @@
         android:layout_marginTop="24dp"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:text="Item Net Cost"
+        android:text="@string/item_net_cost"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemNameEditText" />
 
@@ -78,14 +78,15 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="Price of the product (Example: 1.99)"
+        android:hint="@string/ProductPriceLabelHint"
         android:inputType="numberDecimal"
         android:maxLength="50"
         android:maxLines="1"
         android:singleLine="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        android:importantForAutofill="no" />
 
     <TextView
         android:id="@+id/totalCostLabel"
@@ -94,7 +95,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
-        android:text="$0.00"
+        android:text="@string/defValue_Price"
         android:textAlignment="textEnd"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -109,7 +110,7 @@
         android:layout_marginTop="24dp"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:text="Quantity"
+        android:text="@string/quantity"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemCostEditText" />
 
@@ -118,16 +119,19 @@
         android:layout_width="192dp"
         android:layout_height="42dp"
         android:ems="10"
+        android:hint="@string/item_quantity"
         android:inputType="number"
-        android:text="1"
+        android:text="@string/defValue"
         app:layout_constraintStart_toStartOf="@+id/textView5"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        tools:ignore="LabelFor"
+        android:importantForAutofill="no" />
 
     <TextView
         android:id="@+id/itemCostBoxEmpty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This field is required."
+        android:text="@string/this_field_is_required"
         android:textColor="#FF0000"
         app:layout_constraintEnd_toEndOf="@+id/itemCostEditText"
         app:layout_constraintTop_toBottomOf="@+id/itemCostEditText" />
@@ -139,9 +143,10 @@
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="16dp"
         android:clickable="true"
-        android:contentDescription="Add Item"
+        android:contentDescription="@string/add_item"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_baseline_check_24" />
+        app:srcCompat="@drawable/ic_baseline_check_24"
+        android:focusable="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
