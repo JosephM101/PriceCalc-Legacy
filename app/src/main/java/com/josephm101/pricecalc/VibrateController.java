@@ -1,11 +1,15 @@
 package com.josephm101.pricecalc;
 
 import android.content.Context;
+import android.os.Build;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
+
+import androidx.annotation.RequiresApi;
 
 public class VibrateController {
     final Vibrator vibrator;
-    final int tapDuration = 200;
+    final int tapDuration = 100;
     int shortVibrate = 300;
     int pauseVibrate = 100;
     int longVibrate = 500;
@@ -14,38 +18,21 @@ public class VibrateController {
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
     }
 
-    public void TapEffect() {
-        vibrator.vibrate(tapDuration);
+    public void Tap() {
+        //vibrator.vibrate(VibrationEffect.createOneShot(tapDuration, VibrationEffect.DEFAULT_AMPLITUDE));
     }
 
-    public void doVibrate(int duration) {
-        vibrator.vibrate(duration);
+    public void DoubleTap() {
+        vibrator.vibrate(VibrationEffect.EFFECT_DOUBLE_CLICK);
+    }
+
+    public void LongPress() {
+        vibrator.vibrate(VibrationEffect.EFFECT_HEAVY_CLICK);
     }
 
     private void HandleVibrations(int duration) {
         if (vibrator.hasVibrator()) {
             vibrator.vibrate(duration);
         }
-    }
-
-    /*
-    public void doVibrate(VibrateEffect vibrateEffect) {
-        switch (vibrateEffect)
-        {
-            case TAP:
-                doVibrate(tapDuration);
-                break;
-            case DOUBLE_TAP:
-                doVibrate(shortVibrate);
-                wait(pauseVibrate);
-        }
-        vibrator.vibrate(vibrateEffect);
-    }
-    */
-
-    public enum VibrateEffect {
-        TAP,
-        DOUBLE_TAP,
-        NOTIFICATION_PATTERN
     }
 }

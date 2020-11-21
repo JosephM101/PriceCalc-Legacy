@@ -15,7 +15,8 @@ android {
     defaultConfig {
         applicationId "com.josephm101.pricecalc"
         minSdkVersion 19
-        targetSdkVersion 30
+        //noinspection ExpiredTargetSdkVersion
+        targetSdkVersion 24
         versionCode 1
         versionName '1.0alpha4'
         android.defaultConfig.vectorDrawables.useSupportLibrary = true
