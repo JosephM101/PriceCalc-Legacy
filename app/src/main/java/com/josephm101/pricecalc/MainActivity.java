@@ -2,8 +2,6 @@ package com.josephm101.pricecalc;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,7 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -24,7 +21,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -35,6 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 
+@SuppressWarnings("ALL")
 @SuppressLint("NonConstantResourceId")
 
 public class MainActivity extends AppCompatActivity {
@@ -46,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private final String splitChar = "§";
     //private final int AddNew_RequestCode = 1;
     ListView listView;
-    FloatingActionButton addItem_FloatingActionButton;
+    ExtendedFloatingActionButton addItem_FloatingActionButton;
     ProgressBar loadingProgressBar;
     TextView totalCostLabel;
     LinearLayout noItems_CardView;
@@ -59,7 +58,10 @@ public class MainActivity extends AppCompatActivity {
                     loadingProgressBar.setVisibility(View.GONE);
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
-                        Bundle extras = data.getExtras();
+                        Bundle extras = null;
+                        if (data != null) {
+                            extras = data.getExtras();
+                        }
                         if (extras != null) {
                             AddEntry(extras.getString("itemName"), extras.getString("itemCost"), extras.getBoolean("isTaxDeductible"), extras.getString("itemQuantity"), true);
                         }
@@ -86,14 +88,11 @@ public class MainActivity extends AppCompatActivity {
 
         totalCostLabel = findViewById(R.id.totalCost_Label);
         addItem_FloatingActionButton = findViewById(R.id.addItem_floatingActionButton);
-        addItem_FloatingActionButton.setOnClickListener(new FloatingActionButton.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                Intent addNew = new Intent(v.getContext(), AddItem.class);
-                NewItemActivityLauncher.launch(addNew);
-                //startActivityForResult(addNew, AddNew_RequestCode);
-            }
+        addItem_FloatingActionButton.setOnClickListener(v -> {
+            loadingProgressBar.setVisibility(View.VISIBLE);
+            Intent addNew = new Intent(v.getContext(), AddItem.class);
+            NewItemActivityLauncher.launch(addNew);
+            //startActivityForResult(addNew, AddNew_RequestCode);
         });
         listView = findViewById(R.id.items_listBox);
         //RecyclerView recyclerView = findViewById(R.id.recyclerView);
@@ -101,53 +100,32 @@ public class MainActivity extends AppCompatActivity {
         adapter = new CustomAdapter(listItems, MainActivity.this);
         adapter.setNotifyOnChange(true);
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DataModel dataModel = listItems.get(position);
-                Intent i = new Intent(view.getContext(), ItemInfo.class);
-                i.putExtra("dataModel", dataModel);
-                startActivity(i);
-            }
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            DataModel dataModel = listItems.get(position);
+            Intent i = new Intent(view.getContext(), ItemInfo.class);
+            i.putExtra("dataModel", dataModel);
+            startActivity(i);
         });
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                final DataModel dataModel = listItems.get(position);
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(parent.getContext())
-                        .setMessage("Are you sure you want to permanently delete this entry? \r\n" + dataModel.getItemName())
-                        .setTitle("Delete Entry?")
-                        .setIcon(R.drawable.ic_baseline_delete_forever_24)
-                        .setPositiveButton("Yes, delete it.", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                listItems.remove(position);
-                                RefreshEverything(true);
-                            }
-                        })
-                        .setNegativeButton("No, don't!", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .setCancelable(true);
-                alertDialog.show();
-                return true;
-            }
+        listView.setOnItemLongClickListener((parent, view, position, id) -> {
+            final DataModel dataModel = listItems.get(position);
+            MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(parent.getContext(), R.style.CustomTheme_MaterialComponents_MaterialAlertDialog)
+                    .setMessage("Are you sure you want to permanently delete this entry? \r\n" + dataModel.getItemName())
+                    .setTitle("Delete Entry?")
+                    .setIcon(R.drawable.ic_baseline_delete_forever_24)
+                    .setPositiveButton("Yes, delete it.", (dialog, which) -> {
+                        listItems.remove(position);
+                        RefreshEverything(true);
+                    })
+                    .setNegativeButton("No, don't!", (dialog, which) -> dialog.dismiss())
+                    .setCancelable(true);
+            materialAlertDialogBuilder.show();
+            return true;
         });
         loadingProgressBar = findViewById(R.id.progressBar2);
         loadingProgressBar.setVisibility(View.GONE);
         noItems_CardView = findViewById(R.id.noItems_View);
         noItems_CardView.setVisibility(View.GONE);
-        try {
-            LoadList();
-        } catch (Exception ex) {
-            /*
-              The file doesn't exist. Just ignore it for now; it will get created later.
-             */
-            throw ex;
-        }
+        LoadList();
         RefreshView();
     }
 
@@ -175,24 +153,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.clearList_menuItem:
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this)
+                MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(this, R.style.CustomTheme_MaterialComponents_MaterialAlertDialog)
                         .setTitle("Clear the entire list?")
                         .setMessage("Are you sure you want to clear the entire list? This cannot be undone!")
                         .setIcon(R.drawable.ic_baseline_warning_24)
-                        .setPositiveButton("Yes, clear it", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ClearAll();
-                            }
-                        })
-                        .setNegativeButton("No, don't!", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        })
+                        .setPositiveButton("Yes, clear it", (dialog, which) -> ClearAll())
+                        .setNegativeButton("No, don't!", (dialog, which) -> dialog.dismiss())
                         .setCancelable(false);
-                alertDialog.show();
+                materialAlertDialogBuilder.show();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -215,14 +183,14 @@ public class MainActivity extends AppCompatActivity {
         SetDashText(PriceHandling.PriceToString(TotalCost));
     }
 
-    void AddEntry(String itemName, String itemPrice, Boolean isTaxDeductible, String quantity, Boolean CommitChanges) {
+    void AddEntry(String itemName, String itemPrice, Boolean isTaxDeductible, String quantity, @SuppressWarnings("SameParameterValue") Boolean CommitChanges) {
         //listItems.add(new DataModel(itemName, itemPrice, isTaxDeductible, quantity));
         DataModel dataModel = new DataModel(itemName, itemPrice, isTaxDeductible, quantity);
         adapter.add(dataModel);
         RefreshEverything(CommitChanges);
     }
 
-    void AddEntry(DataModel dataModel, Boolean CommitChanges) {
+    void AddEntry(DataModel dataModel, @SuppressWarnings("SameParameterValue") Boolean CommitChanges) {
         adapter.add(dataModel);
         RefreshEverything(CommitChanges);
     }
@@ -265,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < dataModels.size(); i++) {
                 AddEntry(dataModels.get(i), false);
             }
-        } catch (IOException e) {
+        } catch (IOException ignored) {
 
         }
         RefreshEverything(false);

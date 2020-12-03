@@ -4,17 +4,17 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
-import android.widget.EditText;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
+@SuppressWarnings("ALL")
 public class SettingsActivity extends AppCompatActivity {
     Context thisContext;
 
+    @SuppressWarnings("EmptyTryBlock")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTitle("Settings");
@@ -33,20 +33,19 @@ public class SettingsActivity extends AppCompatActivity {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         //MessageHandling.ShowMessage(thisContext, "Restart required", "The app will need to be restarted for changes to take effect.", "OK", R.drawable.ic_baseline_info_24);
-        SharedPreferences.OnSharedPreferenceChangeListener prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-                switch (key) {
-                    case "appTheme_Preference":
-                        RefreshTheme();
-                        break;
-                    case "floatingDock_Preference":
-                        try {
-                            //MessageHandling.ShowMessage(thisContext, "Restart required", "The app will need to be restarted for changes to take effect.", "OK", R.drawable.ic_baseline_info_24);
-                            //Toaster.pop(thisContext, "App restart required.");
-                        } catch (Exception ignored) {
-                        }
-                        break;
-                }
+        SharedPreferences.OnSharedPreferenceChangeListener prefListener = (prefs1, key) -> {
+            switch (key) {
+                case "appTheme_Preference":
+                    RefreshTheme();
+                    break;
+                case "floatingDock_Preference":
+                    //noinspection EmptyTryBlock,EmptyTryBlock
+                    try {
+                        //MessageHandling.ShowMessage(thisContext, "Restart required", "The app will need to be restarted for changes to take effect.", "OK", R.drawable.ic_baseline_info_24);
+                        //Toaster.pop(thisContext, "App restart required.");
+                    } catch (Exception ignored) {
+                    }
+                    break;
             }
         };
         prefs.registerOnSharedPreferenceChangeListener(prefListener);
@@ -69,12 +68,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             androidx.preference.EditTextPreference editTextPreference = getPreferenceManager().findPreference("taxRate_Preference");
             assert editTextPreference != null;
-            editTextPreference.setOnBindEditTextListener(new androidx.preference.EditTextPreference.OnBindEditTextListener() {
-                @Override
-                public void onBindEditText(@NonNull EditText editText) {
-                    editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                }
-            });
+            editTextPreference.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
         }
     }
 }

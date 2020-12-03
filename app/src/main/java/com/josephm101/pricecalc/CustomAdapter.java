@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("ALL")
 @SuppressLint("NonConstantResourceId")
 
 public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnClickListener {
@@ -34,7 +35,7 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
         int position = (Integer) v.getTag();
         //Object object = getItem(position);
         //DataModel dataModel = (DataModel) object;
-        @SuppressWarnings("unused") DataModel dataModel = getItem(position);
+        DataModel dataModel = getItem(position);
         if (v.getId() != R.id.itemName) {
             //throw new IllegalStateException("Unexpected value: " + v.getId());
         } else {//Do whatever you want here.

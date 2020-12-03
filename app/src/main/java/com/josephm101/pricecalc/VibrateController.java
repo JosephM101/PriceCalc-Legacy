@@ -1,12 +1,9 @@
 package com.josephm101.pricecalc;
 
 import android.content.Context;
-import android.os.Build;
-import android.os.VibrationEffect;
 import android.os.Vibrator;
 
-import androidx.annotation.RequiresApi;
-
+@SuppressWarnings("ALL")
 public class VibrateController {
     final Vibrator vibrator;
     final int tapDuration = 100;
