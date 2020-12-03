@@ -11,13 +11,13 @@ public class ThemeHandling {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         String value = sharedPreferences.getString("appTheme_Preference", Preferences.DefaultValues.DefaultTheme);
         switch (value) {
-            case "1":
+            case "2":
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 break;
-            case "3":
+            case "1":
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
                 break;
-            case "2":
+            case "3":
             default:
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 break;

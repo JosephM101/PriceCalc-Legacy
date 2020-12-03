@@ -23,6 +23,7 @@
             android:summary="Change the theme of the app."
             android:title="App Theme"
             app:dialogTitle="Change app theme"
+            app:defaultValue="1"
             app:entryValues="@array/theme_settings_val" />
 
         <SwitchPreference

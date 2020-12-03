@@ -41,10 +41,10 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     private static CustomAdapter adapter;
     final ArrayList<DataModel> listItems = new ArrayList<>();
-    private final String NewLine = "\r\n";
-    private final String NewLineSeparator = "¶";
+    //private final String NewLine = "\r\n";
+    private final String NewLineSeparator = "`";
     private final String splitChar = "§";
-    private final int AddNew_RequestCode = 1;
+    //private final int AddNew_RequestCode = 1;
     ListView listView;
     FloatingActionButton addItem_FloatingActionButton;
     ProgressBar loadingProgressBar;
@@ -61,12 +61,7 @@ public class MainActivity extends AppCompatActivity {
                         Intent data = result.getData();
                         Bundle extras = data.getExtras();
                         if (extras != null) {
-                            AddEntry(extras.getString("itemName"), extras.getString("itemCost"), extras.getBoolean("isTaxDeductible"), extras.getString("itemQuantity"));
-                            try {
-                                SaveList();
-                            } catch (IOException e) {
-                                //e.printStackTrace();
-                            }
+                            AddEntry(extras.getString("itemName"), extras.getString("itemCost"), extras.getBoolean("isTaxDeductible"), extras.getString("itemQuantity"), true);
                         }
                     }
                 }
@@ -127,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 listItems.remove(position);
-                                RefreshEverything();
+                                RefreshEverything(true);
                             }
                         })
                         .setNegativeButton("No, don't!", new DialogInterface.OnClickListener() {
@@ -172,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.refreshView_menuItem:
-                RefreshEverything();
+                RefreshEverything(false); //Don't save; we're just refreshing
                 //Toaster.pop(this, "Refreshed");
                 break;
             case R.id.settings_menuItem:
@@ -220,31 +215,34 @@ public class MainActivity extends AppCompatActivity {
         SetDashText(PriceHandling.PriceToString(TotalCost));
     }
 
-    void AddEntry(String itemName, String itemPrice, Boolean isTaxDeductible, String quantity) {
+    void AddEntry(String itemName, String itemPrice, Boolean isTaxDeductible, String quantity, Boolean CommitChanges) {
         //listItems.add(new DataModel(itemName, itemPrice, isTaxDeductible, quantity));
         DataModel dataModel = new DataModel(itemName, itemPrice, isTaxDeductible, quantity);
         adapter.add(dataModel);
-        RefreshEverything();
+        RefreshEverything(CommitChanges);
     }
 
-    void AddEntry(DataModel dataModel) {
+    void AddEntry(DataModel dataModel, Boolean CommitChanges) {
         adapter.add(dataModel);
-        RefreshEverything();
+        RefreshEverything(CommitChanges);
     }
 
-    void RefreshEverything() {
+    void RefreshEverything(Boolean saveList) {
         adapter.notifyDataSetChanged();
         try {
             GetTotalCostFromList();
         } catch (Exception ex) {
             SetDashText("Error");
         }
-        try {
-            SaveList();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(saveList) {
+            try {
+                SaveList();
+            } catch (IOException e) {
+                SetDashText("Save Error");
+            }
         }
         RefreshView();
+        Log.d("REFRESH", "View refreshed, " + BooleanHandling.BoolToString(saveList, "commits saved.", "file untouched."));
     }
 
     void SetDashText(String text) {
@@ -265,12 +263,12 @@ public class MainActivity extends AppCompatActivity {
         try {
             ArrayList<DataModel> dataModels = GetEntries();
             for (int i = 0; i < dataModels.size(); i++) {
-                AddEntry(dataModels.get(i));
+                AddEntry(dataModels.get(i), false);
             }
         } catch (IOException e) {
             //throw e;
         }
-        RefreshEverything();
+        RefreshEverything(false);
     }
 
     public ArrayList<DataModel> GetEntries() throws IOException {
@@ -281,6 +279,7 @@ public class MainActivity extends AppCompatActivity {
         String line;
         while ((line = bufferedReader.readLine()) != null) {
             everything.append(line);
+            Log.d("READ_FILE", line);
         }
         /*
         Scanner scanner = new Scanner(everything.toString());
@@ -295,17 +294,20 @@ public class MainActivity extends AppCompatActivity {
             dataModels.add(new DataModel(splitString[0], splitString[1], BooleanHandling.StringToBool(splitString[2], BooleanHandling.PositiveValue, BooleanHandling.NegativeValue), splitString[3]));
         }
          */
-
+        Log.d("STRING_HANDLING", StringHandling.combineStrings(everything.toString(), "Full String: "));
         String[] lines = everything.toString().split(NewLineSeparator);
+        Log.d("STRING_HANDLING", StringHandling.combineStrings(String.valueOf(lines.length), "Lines: "));
         for (String nextLine : lines) {
             Log.d("STRING_HANDLING", nextLine);
             String[] splitString = nextLine.split(splitChar);
-            Log.d("STRING_HANDLING", StringHandling.combineStrings("P0", splitString[0]));
-            Log.d("STRING_HANDLING", StringHandling.combineStrings("P1", splitString[1]));
-            Log.d("STRING_HANDLING", StringHandling.combineStrings("P2", splitString[2]));
-            Log.d("STRING_HANDLING", StringHandling.combineStrings("P3", splitString[3]));
+            Log.d("STRING_HANDLING", "---LINE CONTENTS---");
+            Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[0]));
+            Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[1]));
+            Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[2]));
+            Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[3]));
             dataModels.add(new DataModel(splitString[0], splitString[1], BooleanHandling.StringToBool(splitString[2], BooleanHandling.PositiveValue), splitString[3]));
         }
+        Log.d("STRING_HANDLING", StringHandling.combineStrings(String.valueOf(dataModels.size()), "DataModel Final Size: "));
         return dataModels;
     }
 
@@ -370,7 +372,7 @@ public class MainActivity extends AppCompatActivity {
         }
         adapter.clear();
         adapter.notifyDataSetChanged();
-        RefreshEverything();
+        RefreshEverything(true);
     }
 
     public void RefreshView() {

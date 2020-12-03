@@ -42,7 +42,7 @@ public class SettingsActivity extends AppCompatActivity {
                     case "floatingDock_Preference":
                         try {
                             //MessageHandling.ShowMessage(thisContext, "Restart required", "The app will need to be restarted for changes to take effect.", "OK", R.drawable.ic_baseline_info_24);
-                            Toaster.pop(thisContext, "App restart required.");
+                            //Toaster.pop(thisContext, "App restart required.");
                         } catch (Exception ignored) {
                         }
                         break;
