@@ -23,6 +23,7 @@ import androidx.preference.PreferenceManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -114,7 +115,13 @@ public class MainActivity extends AppCompatActivity {
                     .setIcon(R.drawable.ic_baseline_delete_forever_24)
                     .setPositiveButton("Yes, delete it.", (dialog, which) -> {
                         listItems.remove(position);
+                        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Entry deleted", Snackbar.LENGTH_LONG)
+                                .setAction("UNDO", v1 -> {
+                                })
+                                .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
+                        snackbar.show();
                         RefreshEverything(true);
+
                     })
                     .setNegativeButton("No, don't!", (dialog, which) -> dialog.dismiss())
                     .setCancelable(true);
@@ -266,14 +273,20 @@ public class MainActivity extends AppCompatActivity {
         String[] lines = everything.toString().split(NewLineSeparator);
         Log.d("STRING_HANDLING", StringHandling.combineStrings(String.valueOf(lines.length), "Lines: "));
         for (String nextLine : lines) {
-            Log.d("STRING_HANDLING", nextLine);
-            String[] splitString = nextLine.split(splitChar);
-            Log.d("STRING_HANDLING", "---LINE CONTENTS---");
-            Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[0]));
-            Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[1]));
-            Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[2]));
-            Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[3]));
-            dataModels.add(new DataModel(splitString[0], splitString[1], BooleanHandling.StringToBool(splitString[2], BooleanHandling.PositiveValue), splitString[3]));
+            try {
+                Log.d("STRING_HANDLING", nextLine);
+                String[] splitString = nextLine.split(splitChar);
+                Log.d("STRING_HANDLING", "---LINE CONTENTS---");
+                Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[0]));
+                Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[1]));
+                Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[2]));
+                Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[3]));
+                dataModels.add(new DataModel(splitString[0], splitString[1], BooleanHandling.StringToBool(splitString[2], BooleanHandling.PositiveValue), splitString[3]));
+            }
+            catch (Exception ex)
+            {
+                Log.e("LOAD_FILE", "Error parsing string/line in file. It may be empty.");
+            }
         }
         Log.d("STRING_HANDLING", StringHandling.combineStrings(String.valueOf(dataModels.size()), "DataModel Final Size: "));
         return dataModels;
