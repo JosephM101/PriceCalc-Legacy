@@ -1,8 +1,6 @@
 package com.josephm101.pricecalc;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,13 +9,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 @SuppressLint("NonConstantResourceId")
@@ -68,12 +66,7 @@ public class AddItem extends AppCompatActivity {
             }
         });
         taxDeductible = findViewById(R.id.isTaxDeductible_CheckBox);
-        taxDeductible.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                UpdateTotalLabel();
-            }
-        });
+        taxDeductible.setOnCheckedChangeListener((buttonView, isChecked) -> UpdateTotalLabel());
         itemCostEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -91,12 +84,7 @@ public class AddItem extends AppCompatActivity {
             }
         });
 
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ConfirmAndExit();
-            }
-        });
+        floatingActionButton.setOnClickListener(v -> ConfirmAndExit());
 
         //Warning labels and objects
         itemCostBoxEmpty = findViewById(R.id.itemCostBoxEmpty);
@@ -135,25 +123,17 @@ public class AddItem extends AppCompatActivity {
 
     void ShowDiscardWarning() {
         if (isCancelling) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this)
+            MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(this, R.style.CustomTheme_MaterialComponents_MaterialAlertDialog)
                     .setMessage("Are you sure you want to discard this entry and go back?")
                     .setTitle("Discard Entry?")
                     .setIcon(R.drawable.ic_baseline_cancel_24)
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            setResult(RESULT_CANCELED);
-                            finish();
-                        }
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        setResult(RESULT_CANCELED);
+                        finish();
                     })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
+                    .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                     .setCancelable(true);
-            alertDialog.show();
+            materialAlertDialogBuilder.show();
         }
     }
 

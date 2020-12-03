@@ -26,7 +26,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="32dp"
         android:visibility="visible"
-        app:cardBackgroundColor="@color/cardBgColor"
+        app:cardBackgroundColor="?cardBackgroundColor"
         app:cardCornerRadius="96dp"
         app:cardElevation="16dp"
         app:cardPreventCornerOverlap="false"
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/addItem_floatingActionButton"
                 android:layout_width="60dp"
                 android:layout_height="56dp"
@@ -53,6 +53,7 @@
                 app:elevation="10dp"
                 app:flow_horizontalAlign="center"
                 app:flow_verticalAlign="center"
+                app:icon="@drawable/ic_baseline_add_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

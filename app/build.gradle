@@ -26,9 +26,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            debuggable false
-            jniDebuggable false
-            renderscriptDebuggable false
             applicationVariants.all { variant ->
                 variant.outputs.all {
                     outputFileName = "PriceCalc_${variant.buildType.name}_v${defaultConfig.versionName}.apk"
@@ -36,7 +33,11 @@ android {
             }
         }
     }
-    ndkVersion '21.3.6528147'
+    //ndkVersion '21.3.6528147'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
