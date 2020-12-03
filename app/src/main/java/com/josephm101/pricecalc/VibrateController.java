@@ -23,16 +23,16 @@ public class VibrateController {
     }
 
     public void DoubleTap() {
-        vibrator.vibrate(VibrationEffect.EFFECT_DOUBLE_CLICK);
+        //vibrator.vibrate(VibrationEffect.EFFECT_DOUBLE_CLICK);
     }
 
     public void LongPress() {
-        vibrator.vibrate(VibrationEffect.EFFECT_HEAVY_CLICK);
+        //vibrator.vibrate(VibrationEffect.EFFECT_HEAVY_CLICK);
     }
 
-    private void HandleVibrations(int duration) {
-        if (vibrator.hasVibrator()) {
-            vibrator.vibrate(duration);
-        }
-    }
+//    private void HandleVibrations(int duration) {
+//        if (vibrator.hasVibrator()) {
+//            vibrator.vibrate(duration);
+//        }
+//    }
 }
