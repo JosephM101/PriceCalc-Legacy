@@ -13,6 +13,7 @@
       <entry_point TYPE="field" FQNAME="com.josephm101.pricecalc.Preferences.MainSettings PreferenceGroup" />
       <entry_point TYPE="field" FQNAME="com.josephm101.pricecalc.VibrateController shortVibrate" />
       <entry_point TYPE="field" FQNAME="com.josephm101.pricecalc.VibrateController.VibrateEffect TAP" />
+      <entry_point TYPE="field" FQNAME="com.josephm101.pricecalc.SettingsActivity thisContext" />
     </entry_points>
     <pattern value="com.josephm101.pricecalc.About" />
     <pattern value="com.josephm101.pricecalc.AddItem" />
