@@ -261,7 +261,6 @@ public class MainActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged(); //Do it every time...
             }
         }
-        //DB
  */
         try {
             ArrayList<DataModel> dataModels = GetEntries();
