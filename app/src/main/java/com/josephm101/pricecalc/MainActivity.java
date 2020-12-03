@@ -19,6 +19,8 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -33,14 +35,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
-
 @SuppressWarnings("ALL")
 @SuppressLint("NonConstantResourceId")
 
 public class MainActivity extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     private static CustomAdapter adapter;
-    final ArrayList<DataModel> listItems = new ArrayList<>();
+    ArrayList<DataModel> listItems = new ArrayList<>();
+    ArrayList<DataModel> listItems_BKP = new ArrayList<>();
     //private final String NewLine = "\r\n";
     private final String NewLineSeparator = "`";
     private final String splitChar = "§";
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     ProgressBar loadingProgressBar;
     TextView totalCostLabel;
     LinearLayout noItems_CardView;
+    //CardView.
     private String savedList_FileName;
     final ActivityResultLauncher<Intent> NewItemActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -114,14 +117,29 @@ public class MainActivity extends AppCompatActivity {
                     .setTitle("Delete Entry?")
                     .setIcon(R.drawable.ic_baseline_delete_forever_24)
                     .setPositiveButton("Yes, delete it.", (dialog, which) -> {
+                        //Backup... just in case :)
+                        listItems_BKP.clear();
+                        for(DataModel item : listItems) {
+                            listItems_BKP.add(item);
+                        }
                         listItems.remove(position);
-                        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "Entry deleted", Snackbar.LENGTH_LONG)
+                        CoordinatorLayout coordinatorLayout = findViewById(R.id.coordinator);
+                        CardView cardView = findViewById(R.id.cardView);
+                        View layout = findViewById(R.id.layout);
+                        Snackbar snackbar = Snackbar.make(coordinatorLayout, "Entry deleted", Snackbar.LENGTH_LONG)
                                 .setAction("UNDO", v1 -> {
+                                    listItems.clear();
+                                    for(DataModel item : listItems_BKP) {
+                                        listItems.add(item);
+                                    }
+                                    RefreshEverything(true);
+                                    Snackbar snackbarUndone = Snackbar.make(coordinatorLayout, "Action undone", Snackbar.LENGTH_SHORT)
+                                            .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
+                                    snackbarUndone.show();
                                 })
                                 .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
                         snackbar.show();
                         RefreshEverything(true);
-
                     })
                     .setNegativeButton("No, don't!", (dialog, which) -> dialog.dismiss())
                     .setCancelable(true);
