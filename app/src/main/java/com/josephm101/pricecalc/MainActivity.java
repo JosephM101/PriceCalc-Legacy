@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         RefreshView();
-        Log.d("REFRESH", "View refreshed, " + BooleanHandling.BoolToString(saveList, "commits saved.", "file untouched."));
+        Log.d("VIEW_REFRESH", "View refreshed, " + BooleanHandling.BoolToString(saveList, "commits saved.", "file untouched."));
     }
 
     void SetDashText(String text) {
