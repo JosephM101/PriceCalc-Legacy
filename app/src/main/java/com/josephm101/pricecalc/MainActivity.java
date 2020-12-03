@@ -284,11 +284,11 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<DataModel> dataModels = adapter.getDataSet();
         File logFile = new File(savedList_FileName);
         try {
-            @SuppressWarnings("unused") final boolean delete = logFile.delete();
+            final boolean delete = logFile.delete();
         } catch (Exception ignored) {
 
         }
-        @SuppressWarnings("unused") final boolean newFile = logFile.createNewFile();
+        final boolean newFile = logFile.createNewFile();
         BufferedWriter writer = new BufferedWriter(new FileWriter(logFile, false));
         Log.d("DataModelSize", String.valueOf(dataModels.size()));
         for (int i = 0; i < dataModels.size(); i++) {
@@ -336,7 +336,7 @@ public class MainActivity extends AppCompatActivity {
     public void ClearAll() {
         File logFile = new File(savedList_FileName);
         try {
-            @SuppressWarnings("unused") final boolean delete = logFile.delete();
+            final boolean delete = logFile.delete();
         } catch (Exception ignored) {
 
         }
