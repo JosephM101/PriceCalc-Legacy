@@ -136,18 +136,18 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
+        loadingProgressBar = findViewById(R.id.progressBar2);
+        loadingProgressBar.setVisibility(View.GONE);
+        noItems_CardView = findViewById(R.id.noItems_View);
+        noItems_CardView.setVisibility(View.GONE);
         try {
             LoadList();
         } catch (Exception ex) {
             /*
               The file doesn't exist. Just ignore it for now; it will get created later.
              */
+            throw ex;
         }
-        loadingProgressBar = findViewById(R.id.progressBar2);
-        loadingProgressBar.setVisibility(View.GONE);
-        noItems_CardView = findViewById(R.id.noItems_View);
-        noItems_CardView.setVisibility(View.GONE);
         RefreshView();
     }
 
@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
                 AddEntry(dataModels.get(i), false);
             }
         } catch (IOException e) {
-            //throw e;
+
         }
         RefreshEverything(false);
     }
@@ -327,7 +327,9 @@ public class MainActivity extends AppCompatActivity {
             try {
                 writer.write(GenerateEntry(dataModels.get(i)));
                 //writer.newLine();
-                writer.append(NewLineSeparator);
+                if(i<dataModels.size()) {
+                    writer.append(NewLineSeparator);
+                }
                 Log.d("SaveFileWriter", "Wrote Line " + i + ": " + GenerateEntry(dataModels.get(i)));
             } catch (Exception ex) {
                 //throw ex;
