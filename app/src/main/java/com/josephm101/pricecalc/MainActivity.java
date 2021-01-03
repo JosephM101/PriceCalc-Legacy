@@ -25,7 +25,6 @@ import androidx.preference.PreferenceManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -126,19 +125,24 @@ public class MainActivity extends AppCompatActivity {
                         CoordinatorLayout coordinatorLayout = findViewById(R.id.coordinator);
                         CardView cardView = findViewById(R.id.cardView);
                         View layout = findViewById(R.id.layout);
-                        Snackbar snackbar = Snackbar.make(coordinatorLayout, "Entry deleted", Snackbar.LENGTH_LONG)
-                                .setAction("UNDO", v1 -> {
-                                    listItems.clear();
-                                    for(DataModel item : listItems_BKP) {
-                                        listItems.add(item);
-                                    }
-                                    RefreshEverything(true);
-                                    Snackbar snackbarUndone = Snackbar.make(coordinatorLayout, "Action undone", Snackbar.LENGTH_SHORT)
-                                            .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
-                                    snackbarUndone.show();
-                                })
-                                .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
-                        snackbar.show();
+
+                        //Show snackbar
+                        /*{
+                            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Entry deleted", Snackbar.LENGTH_LONG)
+                                    .setAction("UNDO", v1 -> {
+                                        listItems.clear();
+                                        for (DataModel item : listItems_BKP) {
+                                            listItems.add(item);
+                                        }
+                                        RefreshEverything(true);
+                                        Snackbar snackbarUndone = Snackbar.make(coordinatorLayout, "Action undone", Snackbar.LENGTH_SHORT)
+                                                .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
+                                        snackbarUndone.show();
+                                    })
+                                    .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
+                            snackbar.show();
+                        }*/
+
                         RefreshEverything(true);
                     })
                     .setNegativeButton("No, don't!", (dialog, which) -> dialog.dismiss())

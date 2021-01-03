@@ -39,4 +39,6 @@
     <string name="refresh_actionButton">Refresh</string>
     <string name="settings_actionButton">Settings</string>
     <string name="clearList_ActionButton">Clear List</string>
+
+    <string name="error_RequiredField">This is a required field.</string>
 </resources>

@@ -7,7 +7,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -28,8 +27,6 @@ public class AddItem extends AppCompatActivity {
     EditText itemQuantityEditText;
     Boolean isCancelling = true;
     FloatingActionButton floatingActionButton;
-
-    TextView itemCostBoxEmpty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,10 +82,6 @@ public class AddItem extends AppCompatActivity {
         });
 
         floatingActionButton.setOnClickListener(v -> ConfirmAndExit());
-
-        //Warning labels and objects
-        itemCostBoxEmpty = findViewById(R.id.itemCostBoxEmpty);
-        itemCostBoxEmpty.setVisibility(View.GONE);
     }
 
     void UpdateTotalLabel() {
@@ -117,7 +110,7 @@ public class AddItem extends AppCompatActivity {
             setResult(RESULT_OK, data);
             finish();
         } else {
-            itemCostBoxEmpty.setVisibility(View.VISIBLE);
+            itemCostEditText.setError(getString(R.string.error_RequiredField));
         }
     }
 
