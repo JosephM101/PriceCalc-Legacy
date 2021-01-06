@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                     .setPositiveButton("Yes, delete it.", (dialog, which) -> {
                         //Backup... just in case :)
                         listItems_BKP.clear();
-                        for(DataModel item : listItems) {
+                        for (DataModel item : listItems) {
                             listItems_BKP.add(item);
                         }
                         listItems.remove(position);
@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception ex) {
             SetDashText("Error");
         }
-        if(saveList) {
+        if (saveList) {
             try {
                 SaveList();
             } catch (IOException e) {
@@ -304,9 +304,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[2]));
                 Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[3]));
                 dataModels.add(new DataModel(splitString[0], splitString[1], BooleanHandling.StringToBool(splitString[2], BooleanHandling.PositiveValue), splitString[3]));
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 Log.e("LOAD_FILE", "Error parsing string/line in file. It may be empty.");
             }
         }
@@ -330,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 writer.write(GenerateEntry(dataModels.get(i)));
                 //writer.newLine();
-                if(i<dataModels.size()) {
+                if (i < dataModels.size()) {
                     writer.append(NewLineSeparator);
                 }
                 Log.d("SaveFileWriter", "Wrote Line " + i + ": " + GenerateEntry(dataModels.get(i)));
