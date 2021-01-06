@@ -19,6 +19,8 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -32,14 +34,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
-
 @SuppressWarnings("ALL")
 @SuppressLint("NonConstantResourceId")
 
 public class MainActivity extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     private static CustomAdapter adapter;
-    final ArrayList<DataModel> listItems = new ArrayList<>();
+    ArrayList<DataModel> listItems = new ArrayList<>();
+    ArrayList<DataModel> listItems_BKP = new ArrayList<>();
     //private final String NewLine = "\r\n";
     private final String NewLineSeparator = "`";
     private final String splitChar = "§";
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     ProgressBar loadingProgressBar;
     TextView totalCostLabel;
     LinearLayout noItems_CardView;
+    //CardView.
     private String savedList_FileName;
     final ActivityResultLauncher<Intent> NewItemActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -113,7 +116,33 @@ public class MainActivity extends AppCompatActivity {
                     .setTitle("Delete Entry?")
                     .setIcon(R.drawable.ic_baseline_delete_forever_24)
                     .setPositiveButton("Yes, delete it.", (dialog, which) -> {
+                        //Backup... just in case :)
+                        listItems_BKP.clear();
+                        for(DataModel item : listItems) {
+                            listItems_BKP.add(item);
+                        }
                         listItems.remove(position);
+                        CoordinatorLayout coordinatorLayout = findViewById(R.id.coordinator);
+                        CardView cardView = findViewById(R.id.cardView);
+                        View layout = findViewById(R.id.layout);
+
+                        //Show snackbar
+                        /*{
+                            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Entry deleted", Snackbar.LENGTH_LONG)
+                                    .setAction("UNDO", v1 -> {
+                                        listItems.clear();
+                                        for (DataModel item : listItems_BKP) {
+                                            listItems.add(item);
+                                        }
+                                        RefreshEverything(true);
+                                        Snackbar snackbarUndone = Snackbar.make(coordinatorLayout, "Action undone", Snackbar.LENGTH_SHORT)
+                                                .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
+                                        snackbarUndone.show();
+                                    })
+                                    .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
+                            snackbar.show();
+                        }*/
+
                         RefreshEverything(true);
                     })
                     .setNegativeButton("No, don't!", (dialog, which) -> dialog.dismiss())
@@ -266,14 +295,20 @@ public class MainActivity extends AppCompatActivity {
         String[] lines = everything.toString().split(NewLineSeparator);
         Log.d("STRING_HANDLING", StringHandling.combineStrings(String.valueOf(lines.length), "Lines: "));
         for (String nextLine : lines) {
-            Log.d("STRING_HANDLING", nextLine);
-            String[] splitString = nextLine.split(splitChar);
-            Log.d("STRING_HANDLING", "---LINE CONTENTS---");
-            Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[0]));
-            Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[1]));
-            Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[2]));
-            Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[3]));
-            dataModels.add(new DataModel(splitString[0], splitString[1], BooleanHandling.StringToBool(splitString[2], BooleanHandling.PositiveValue), splitString[3]));
+            try {
+                Log.d("STRING_HANDLING", nextLine);
+                String[] splitString = nextLine.split(splitChar);
+                Log.d("STRING_HANDLING", "---LINE CONTENTS---");
+                Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[0]));
+                Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[1]));
+                Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[2]));
+                Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[3]));
+                dataModels.add(new DataModel(splitString[0], splitString[1], BooleanHandling.StringToBool(splitString[2], BooleanHandling.PositiveValue), splitString[3]));
+            }
+            catch (Exception ex)
+            {
+                Log.e("LOAD_FILE", "Error parsing string/line in file. It may be empty.");
+            }
         }
         Log.d("STRING_HANDLING", StringHandling.combineStrings(String.valueOf(dataModels.size()), "DataModel Final Size: "));
         return dataModels;
