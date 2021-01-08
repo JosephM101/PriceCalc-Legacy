@@ -47,6 +47,15 @@ public class PriceHandling {
         //return (double) ((taxRate * cost) / 100);
         return (taxRate * cost) / 100;
     }
+
+    public static double calculateTip(double cost, int percentage) {
+        return (percentage / 100) * cost;
+    }
+/*
+    public static double calculateSplitTip(double cost, int percentage) {
+        return (percentage / 100) * cost;
+    }
+ */
 }
 
 /* Formula for Item Cost + Tax
