@@ -42,4 +42,9 @@
 
     <string name="error_RequiredField">This is a required field.</string>
     <string name="tip_calculator">Tip Calculator</string>
+    <string name="percentage_symbol">%</string>
+    <string name="tip_percentage">Tip Percentage</string>
+    <string name="bill_cost">Bill Cost</string>
+    <string name="enter_bill_cost">Enter Bill Cost</string>
+    <string name="dollar_symbol">$</string>
 </resources>
