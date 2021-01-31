@@ -41,4 +41,5 @@
     <string name="clearList_ActionButton">Clear List</string>
 
     <string name="error_RequiredField">This is a required field.</string>
+    <string name="tip_calculator">Tip Calculator</string>
 </resources>
