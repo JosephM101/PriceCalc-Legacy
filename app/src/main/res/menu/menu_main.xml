@@ -13,4 +13,7 @@
     <item
         android:id="@+id/clearList_menuItem"
         android:title="@string/clearList_ActionButton" />
+    <item
+        android:id="@+id/openTipCalculator_menuItem"
+        android:title="@string/tip_calculator" />
 </menu>
