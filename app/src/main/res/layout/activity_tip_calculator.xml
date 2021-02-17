@@ -11,11 +11,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/bill_cost"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNumberDecimal"
-        app:layout_constraintStart_toStartOf="@+id/editTextNumberDecimal" />
+        app:layout_constraintBottom_toTopOf="@+id/billCost_EditText"
+        app:layout_constraintStart_toStartOf="@+id/billCost_EditText" />
 
     <EditText
-        android:id="@+id/editTextNumberDecimal"
+        android:id="@+id/billCost_EditText"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
@@ -33,7 +33,6 @@
 
     <Spinner
         android:id="@+id/tipPercentage_spinner"
-        style="@style/Widget.AppCompat.Spinner.DropDown"
         android:layout_width="172dp"
         android:layout_height="46dp"
         android:layout_marginStart="16dp"
@@ -54,10 +53,10 @@
         android:layout_marginTop="24dp"
         android:text="@string/tip_percentage"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal" />
+        app:layout_constraintTop_toBottomOf="@+id/billCost_EditText" />
 
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/totalTip_label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
