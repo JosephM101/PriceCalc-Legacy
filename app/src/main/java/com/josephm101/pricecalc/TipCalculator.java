@@ -30,7 +30,7 @@ public class TipCalculator extends AppCompatActivity {
         setTitle("Tip Calculator");
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
-        actionBar.setSubtitle("[Beta]");
+        actionBar.setSubtitle("Beta");
         actionBar.setDisplayHomeAsUpEnabled(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tip_calculator);
