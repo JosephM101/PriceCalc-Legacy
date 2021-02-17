@@ -1,10 +1,13 @@
 package com.josephm101.pricecalc;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -15,11 +18,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.google.android.material.chip.Chip;
+import com.google.android.material.textfield.TextInputLayout;
+
+import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.List;
 
 public class TipCalculator extends AppCompatActivity {
-    float currentTipPercentage = 10;
+    float currentTipPercentage;
     boolean isCustomPercentage = false;
     EditText billCost_EditText;
     SeekBar tipPercentageSeekBar;
@@ -27,6 +35,7 @@ public class TipCalculator extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setTitle("Tip Calculator");
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
@@ -58,41 +67,38 @@ public class TipCalculator extends AppCompatActivity {
         Chip chip_minusFive = findViewById(R.id.chip_removeFive);
         Chip chip_addFive = findViewById(R.id.chip_addFive);
         Chip chip_addTen = findViewById(R.id.chip_addTen);
-        Spinner tipPercentage_spinner = findViewById(R.id.tipPercentage_spinner);
         CardView tipPercentage_custom_card = findViewById(R.id.tipPercentage_custom_card);
         tipPercentage_custom_card.setVisibility(View.INVISIBLE);
-        tipPercentage_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0: //10%
-                        currentTipPercentage = 10;
-                        tipPercentage_custom_card.setVisibility(View.INVISIBLE);
-                        isCustomPercentage = false;
-                        break;
-                    case 1: //15%
-                        currentTipPercentage = 15;
-                        tipPercentage_custom_card.setVisibility(View.INVISIBLE);
-                        isCustomPercentage = false;
-                        break;
-                    case 2: //20%
-                        currentTipPercentage = 20;
-                        tipPercentage_custom_card.setVisibility(View.INVISIBLE);
-                        isCustomPercentage = false;
-                        break;
-                    case 3: //Custom
-                        currentTipPercentage = tipPercentageSeekBar.getProgress();
-                        tipPercentage_custom_card.setVisibility(View.VISIBLE);
-                        isCustomPercentage = true;
-                        break;
-                }
-                RefreshTotalLabel();
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+        List<String> list = Arrays.asList("10%", "15%", "20%", "Custom");
+        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.dropdown_list_item, list);
+        TextInputLayout textInputLayout = findViewById(R.id.tipPercentage_spinner);
+        AutoCompleteTextView autoCompleteTextView = findViewById(R.id.tipPercentage_autoCompleteTextView);
+        autoCompleteTextView.setAdapter(adapter);
+        autoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
+            switch (position) {
+                case 0: //10%
+                    currentTipPercentage = 10;
+                    tipPercentage_custom_card.setVisibility(View.INVISIBLE);
+                    isCustomPercentage = false;
+                    break;
+                case 1: //15%
+                    currentTipPercentage = 15;
+                    tipPercentage_custom_card.setVisibility(View.INVISIBLE);
+                    isCustomPercentage = false;
+                    break;
+                case 2: //20%
+                    currentTipPercentage = 20;
+                    tipPercentage_custom_card.setVisibility(View.INVISIBLE);
+                    isCustomPercentage = false;
+                    break;
+                case 3: //Custom
+                    currentTipPercentage = tipPercentageSeekBar.getProgress();
+                    tipPercentage_custom_card.setVisibility(View.VISIBLE);
+                    isCustomPercentage = true;
+                    break;
             }
+            RefreshTotalLabel();
         });
 
         chip_minusFive.setOnClickListener(v -> {
