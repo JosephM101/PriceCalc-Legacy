@@ -33,22 +33,28 @@
 
     <Spinner
         android:id="@+id/tipPercentage_spinner"
+        style="@style/Widget.AppCompat.Spinner.DropDown"
         android:layout_width="172dp"
         android:layout_height="46dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="8dp"
         android:background="#FFFFFF"
+        android:elevation="4dp"
         android:entries="@array/tip_calc_percentage_spinner"
+        android:isScrollContainer="false"
+        android:longClickable="false"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal" />
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
         android:text="@string/tip_percentage"
-        app:layout_constraintBottom_toTopOf="@+id/tipPercentage_spinner"
-        app:layout_constraintStart_toStartOf="@+id/tipPercentage_spinner" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal" />
 
     <TextView
         android:id="@+id/textView10"
@@ -94,7 +100,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="8dp"
-                android:text="@string/percentage_symbol"
+                android:text="0%"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/tipPercentageSeekBar"
                 app:layout_constraintTop_toBottomOf="@+id/tipPercentageSeekBar" />
@@ -106,10 +112,57 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:max="16"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="0"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/nav_chips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toStartOf="@+id/tipPercentageSeekBar_Label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tipPercentageSeekBar">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_removeTen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-10"
+                    app:chipIcon="@drawable/ic_baseline_arrow_back_ios_24"
+                    app:closeIconEnabled="false"
+                    app:closeIconVisible="false" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_removeFive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-5"
+                    app:chipIcon="@drawable/ic_baseline_arrow_back_ios_24"
+                    app:closeIconEnabled="false"
+                    app:closeIconVisible="false" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_addFive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+5"
+                    app:chipIcon="@drawable/ic_baseline_arrow_forward_ios_24"
+                    app:closeIconEnabled="false"
+                    app:closeIconVisible="false" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_addTen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+10"
+                    app:chipIcon="@drawable/ic_baseline_arrow_forward_ios_24"
+                    app:closeIconEnabled="false"
+                    app:closeIconVisible="false" />
+            </com.google.android.material.chip.ChipGroup>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
