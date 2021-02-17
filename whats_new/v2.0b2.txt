@@ -1,0 +1,19 @@
+# What's new
+### <b>Tip Calculator (Beta)</b>
+A quick & dirty way to calculate tip.
+
+# Bug Fixes
+### General
+* Fixed a bug where some buttons in alert dialogs would appear invisible because their background color was set to transparent
+* Fixed a bug where the buttons on the floating panel (identical to the default panel functionality-wise) would not work.
+* Fixed a serious bug that caused incorrect price calculations across the app
+* Fixed a bug that would cause the app to crash if the theme was changed on older versions of Android
+### Price Calculator
+* Fixed a bug that caused previous item entries in the price calculator to not be loaded after the app was restarted
+* Fixed a bug where tapping an item entry to view its info would cause the app to crash
+### Tip Calculator
+* Fixed a bug where the Tip Calculator would crash if you set the percentage/mode to "Custom", then back to one of the predefined values
+* Fixed a bug where the theme of the Tip Calculator would not match the rest of the app
+
+# Other changes
+* Updated app to use the Material Components style sheet
