@@ -191,10 +191,6 @@ public class MainActivity extends AppCompatActivity {
                         .setCancelable(false);
                 materialAlertDialogBuilder.show();
                 break;
-            case R.id.openTipCalculator_menuItem:
-                Intent tipCalc_Intent = new Intent(this, TipCalculator.class);
-                startActivity(tipCalc_Intent);
-                break;
         }
         return super.onOptionsItemSelected(item);
     }
