@@ -156,6 +156,8 @@ public class AddItem extends AppCompatActivity {
                         .setCancelable(true);
                 materialAlertDialogBuilder.show();
             }
+        } else {
+            finish();
         }
     }
 
@@ -165,7 +167,6 @@ public class AddItem extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_additem, menu);
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
