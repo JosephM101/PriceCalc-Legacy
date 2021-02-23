@@ -53,6 +53,9 @@ public class CheckForUpdates extends AppCompatActivity {
                     TextView currentVersionTextView = findViewById(R.id.textView_currentVersion);
                     TextView newVersionTextView = findViewById(R.id.textView_newVersion);
                     TextView changelogTextView = findViewById(R.id.textView_changelog);
+                    currentVersionTextView.setText(BuildConfig.VERSION_NAME);
+                    newVersionTextView.setText(update.getLatestVersion());
+                    changelogTextView.setText(update.getReleaseNotes());
                     cardView_updateInfo.setVisibility(View.VISIBLE);
                 } else {
                     setTitle("No new updates.");
