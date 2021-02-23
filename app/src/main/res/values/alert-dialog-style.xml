@@ -5,10 +5,17 @@
         <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
     </style>
 
+    <!--
     <style name="PositiveButtonStyle" parent="@style/Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:textColor">?colorOnPrimary</item>
         <item name="backgroundTint">?colorPrimary</item>
         <item name="rippleColor">@color/purple_200</item>
+    </style>
+    -->
+
+    <style name="PositiveButtonStyle" parent="@style/Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">?colorPrimary</item>
+        <item name="backgroundTint">@android:color/transparent</item>
     </style>
 
     <style name="NegativeButtonStyle" parent="@style/Widget.MaterialComponents.Button.TextButton.Dialog">
