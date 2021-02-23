@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Animation ani = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.floating_action_button_scale_up_ani);
                     addItem_FloatingActionButton.startAnimation(ani);
+                    addItem_FloatingActionButton.setEnabled(true);
 
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
@@ -107,12 +108,11 @@ public class MainActivity extends AppCompatActivity {
             ani.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
-
+                    addItem_FloatingActionButton.setEnabled(false);
                 }
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-                    addItem_FloatingActionButton.startAnimation(ani);
                     Intent addNew = new Intent(v.getContext(), AddItem.class);
                     NewItemActivityLauncher.launch(addNew);
                 }
@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             //startActivityForResult(addNew, AddNew_RequestCode);
+            addItem_FloatingActionButton.startAnimation(ani);
         });
         listView = findViewById(R.id.items_listBox);
         //RecyclerView recyclerView = findViewById(R.id.recyclerView);
