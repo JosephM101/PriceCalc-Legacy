@@ -37,7 +37,7 @@
     <string name="nothing_here_yet">Nothing here yet…</string>
     <string name="press_the_plus_button_to_add_an_item">Press the + button to add an item!</string>
     <string name="refresh_actionButton">Refresh</string>
-    <string name="settings_actionButton">Settings</string>
+    <string name="settings_actionButton">App Settings</string>
     <string name="clearList_ActionButton">Clear List</string>
 
     <string name="error_RequiredField">This is a required field.</string>
@@ -47,4 +47,8 @@
     <string name="bill_cost">Bill Cost (Before Tax)</string>
     <string name="enter_bill_cost">Enter Bill Cost (Before Tax)</string>
     <string name="dollar_symbol">$</string>
+    <string name="about">About</string>
+    <string name="tools">Tools</string>
+    <string name="add_new_entry">Add New Entry</string>
+    <string name="delete_entry">Delete Entry</string>
 </resources>

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
+import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -56,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     ProgressBar loadingProgressBar;
     TextView totalCostLabel;
     LinearLayout noItems_CardView;
+    Boolean inDeleteMode = false;
+    Menu referencedMenu;
     //CardView
     private String savedList_FileName;
     final ActivityResultLauncher<Intent> NewItemActivityLauncher = registerForActivityResult(
@@ -195,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        referencedMenu = menu;
         return true;
     }
 
@@ -222,6 +226,19 @@ public class MainActivity extends AppCompatActivity {
             case R.id.openTipCalculator_menuItem:
                 Intent tipCalc_Intent = new Intent(this, TipCalculator.class);
                 startActivity(tipCalc_Intent);
+                break;
+            case R.id.aboutApplication_menuItem:
+                Intent aboutBox_Intent = new Intent(this, About.class);
+                startActivity(aboutBox_Intent);
+                break;
+            case R.id.deleteEntry_menuItem:
+                EnterDeleteMode(this);
+                break;
+            case R.id.confirmDeletion_menuItem:
+                LeaveDeleteMode(this);
+                break;
+            case R.id.cancelDeletion_menuItem:
+                LeaveDeleteMode(this);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -453,5 +470,27 @@ public class MainActivity extends AppCompatActivity {
     void AnimateFloatingActionButton_ScaleDown(Context context, ExtendedFloatingActionButton fab) {
         Animation ani = AnimationUtils.loadAnimation(context, R.anim.floating_action_button_scale_down_ani);
         fab.startAnimation(ani);
+    }
+
+    void EnterDeleteMode(Context context) {
+        CardView cardView = findViewById(R.id.cardView);
+        Animation cardAni = AnimationUtils.loadAnimation(context, R.anim.card_hide_ani);
+        cardView.startAnimation(cardAni);
+        setTitle("Delete items");
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE); //Allow multiple items to be selected & deleted.
+        referencedMenu.clear();
+        getMenuInflater().inflate(R.menu.menu_main_deleting_items, referencedMenu);
+        inDeleteMode = true;
+    }
+
+    void LeaveDeleteMode(Context context) {
+        CardView cardView = findViewById(R.id.cardView);
+        Animation cardAni = AnimationUtils.loadAnimation(context, R.anim.card_show_ani);
+        cardView.startAnimation(cardAni);
+        setTitle(getString(R.string.app_name)); //Reset the menu bar title.
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); //Go back to only allowing a single item.
+        referencedMenu.clear();
+        getMenuInflater().inflate(R.menu.menu_main, referencedMenu);
+        inDeleteMode = false;
     }
 }

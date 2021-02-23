@@ -28,6 +28,7 @@ public class AddItem extends AppCompatActivity {
     EditText itemQuantityEditText;
     Boolean isCancelling = true;
     FloatingActionButton floatingActionButton;
+    Boolean somethingChanged = false; //Checked before activity exits. If true, the "Confirm exit & discard" warning dialog will be shown if the user tries to exit the activity.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,39 @@ public class AddItem extends AppCompatActivity {
         //floatingActionButton.setAnimateShowBeforeLayout(true);
 
         itemNameEditText = findViewById(R.id.itemNameEditText);
+        itemNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                somethingChanged = true; //Changed the title
+            }
+        });
         itemCostEditText = findViewById(R.id.itemCostEditText);
+        itemCostEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                UpdateTotalLabel();
+            }
+        });
         totalCostLabel = findViewById(R.id.totalCostLabel);
         itemQuantityEditText = findViewById(R.id.itemQuantityEditText);
         itemQuantityEditText.addTextChangedListener(new TextWatcher() {
@@ -72,22 +105,6 @@ public class AddItem extends AppCompatActivity {
         });
         taxDeductible = findViewById(R.id.isTaxDeductible_CheckBox);
         taxDeductible.setOnCheckedChangeListener((buttonView, isChecked) -> UpdateTotalLabel());
-        itemCostEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                UpdateTotalLabel();
-            }
-        });
 
         floatingActionButton.setOnClickListener(v -> ConfirmAndExit());
     }
@@ -104,6 +121,7 @@ public class AddItem extends AppCompatActivity {
         } catch (Exception ex) {
             totalCostLabel.setText(R.string.totalCost_zeroString);
         }
+        somethingChanged = true; //We're refreshing because the user changed something. Now, we set this to true so that the "Confirm discard" dialog shows if the user tries to leave the activity.
     }
 
     void ConfirmAndExit() {
@@ -119,22 +137,25 @@ public class AddItem extends AppCompatActivity {
             finish();
         } else {
             itemCostEditText.setError(getString(R.string.error_RequiredField));
+            isCancelling = true;
         }
     }
 
     void ShowDiscardWarning() {
-        if (isCancelling) {
-            MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(this, R.style.CustomTheme_MaterialComponents_MaterialAlertDialog)
-                    .setMessage("Are you sure you want to discard this entry and go back?")
-                    .setTitle("Discard Entry?")
-                    .setIcon(R.drawable.ic_baseline_cancel_24)
-                    .setPositiveButton("Yes", (dialog, which) -> {
-                        setResult(RESULT_CANCELED);
-                        finish();
-                    })
-                    .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
-                    .setCancelable(true);
-            materialAlertDialogBuilder.show();
+        if (somethingChanged == true) {
+            if (isCancelling) {
+                MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(this, R.style.CustomTheme_MaterialComponents_MaterialAlertDialog)
+                        .setMessage("Are you sure you want to discard this entry and go back?")
+                        .setTitle("Discard Entry?")
+                        .setIcon(R.drawable.ic_baseline_cancel_24)
+                        .setPositiveButton("Yes", (dialog, which) -> {
+                            setResult(RESULT_CANCELED);
+                            finish();
+                        })
+                        .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+                        .setCancelable(true);
+                materialAlertDialogBuilder.show();
+            }
         }
     }
 
