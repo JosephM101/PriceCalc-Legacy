@@ -51,4 +51,11 @@
     <string name="tools">Tools</string>
     <string name="add_new_entry">Add New Entry</string>
     <string name="delete_entry">Delete Entry</string>
+    <string name="changelog">Changelog</string>
+    <string name="current_version">Current version</string>
+    <string name="not_interested">Not interested</string>
+    <string name="ok">OK</string>
+    <string name="new_version_available_header">A new version of PriceCalc is available.</string>
+    <string name="latest_version">You have the latest version of the app.</string>
+    <string name="new_version">New version</string>
 </resources>

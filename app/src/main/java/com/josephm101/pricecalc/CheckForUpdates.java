@@ -5,11 +5,14 @@ import androidx.cardview.widget.CardView;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
 import com.github.javiersantos.appupdater.enums.AppUpdaterError;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.github.javiersantos.appupdater.objects.Update;
+
+import org.w3c.dom.Text;
 
 public class CheckForUpdates extends AppCompatActivity {
 
@@ -19,9 +22,16 @@ public class CheckForUpdates extends AppCompatActivity {
         setContentView(R.layout.activity_check_for_updates);
         setTitle("Updates");
         CardView loading_CardView = findViewById(R.id.cardView_checkingForUpdates);
-        CardView updateSummary_cardView = findViewById(R.id.cardView_updateInfo);
+        CardView cardView_updateInfo = findViewById(R.id.cardView_updateInfo);
+        CardView cardView_noUpdates = findViewById(R.id.cardView_noUpdates);
+
         loading_CardView.setVisibility(View.VISIBLE);
-        loading_CardView.setVisibility(View.GONE);
+        cardView_updateInfo.setVisibility(View.GONE);
+        cardView_noUpdates.setVisibility(View.GONE);
+
+        /**
+         * Initialize the updater
+         */
         AppUpdaterUtils appUpdater = new AppUpdaterUtils(this);
         //AppUpdater appUpdater = new AppUpdater(getApplicationContext());
         appUpdater.setGitHubUserAndRepo("JosephM101", "PriceCalc");
@@ -38,9 +48,15 @@ public class CheckForUpdates extends AppCompatActivity {
             @Override
             public void onSuccess(Update update, Boolean isUpdateAvailable) {
                 loading_CardView.setVisibility(View.GONE);
-                loading_CardView.setVisibility(View.VISIBLE);
                 if (isUpdateAvailable) {
                     setTitle("Update available.");
+                    TextView currentVersionTextView = findViewById(R.id.textView_currentVersion);
+                    TextView newVersionTextView = findViewById(R.id.textView_newVersion);
+                    TextView changelogTextView = findViewById(R.id.textView_changelog);
+                    cardView_updateInfo.setVisibility(View.VISIBLE);
+                } else {
+                    setTitle("No new updates.");
+                    cardView_noUpdates.setVisibility(View.VISIBLE);
                 }
             }
 
