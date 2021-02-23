@@ -34,6 +34,8 @@ import androidx.preference.PreferenceManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -145,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
             i.putExtra("dataModel", dataModel);
             startActivity(i);
         });
+
         listView.setOnItemLongClickListener((parent, view, position, id) -> {
             final DataModel dataModel = listItems.get(position);
             MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(parent.getContext(), R.style.CustomTheme_MaterialComponents_MaterialAlertDialog)
@@ -158,27 +161,25 @@ public class MainActivity extends AppCompatActivity {
                             listItems_BKP.add(item);
                         }
                         listItems.remove(position);
-                        CoordinatorLayout coordinatorLayout = findViewById(R.id.coordinator);
-                        CardView cardView = findViewById(R.id.cardView);
-                        View layout = findViewById(R.id.layout);
-
+                        //ConstraintLayout coordinatorLayout = findViewById(R.id.mainConstraintLayout);
+                        //CardView cardView = findViewById(R.id.cardView);
+                        //View layout = findViewById(R.id.mainConstraintLayout);
                         //Show snackbar
-                        /*{
-                            Snackbar snackbar = Snackbar.make(coordinatorLayout, "Entry deleted", Snackbar.LENGTH_LONG)
-                                    .setAction("UNDO", v1 -> {
-                                        listItems.clear();
-                                        for (DataModel item : listItems_BKP) {
-                                            listItems.add(item);
-                                        }
-                                        RefreshEverything(true);
-                                        Snackbar snackbarUndone = Snackbar.make(coordinatorLayout, "Action undone", Snackbar.LENGTH_SHORT)
-                                                .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
-                                        snackbarUndone.show();
-                                    })
-                                    .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
-                            snackbar.show();
-                        }*/
-
+                        {
+                        //    Snackbar snackbar = Snackbar.make(coordinatorLayout, "Entry deleted", Snackbar.LENGTH_LONG)
+                        //            .setAction("UNDO", v1 -> {
+                        //                listItems.clear();
+                        //                for (DataModel item : listItems_BKP) {
+                        //                    listItems.add(item);
+                        //                }
+                        //                RefreshEverything(true);
+                        //                Snackbar snackbarUndone = Snackbar.make(coordinatorLayout, "Action undone", Snackbar.LENGTH_SHORT)
+                        //                        .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
+                        //                snackbarUndone.show();
+                        //            })
+                        //            .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
+                        //    snackbar.show();
+                        }
                         RefreshEverything(true);
                     })
                     .setNegativeButton("No, don't!", (dialog, which) -> dialog.dismiss())
@@ -186,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
             materialAlertDialogBuilder.show();
             return true;
         });
+
         loadingProgressBar = findViewById(R.id.progressBar2);
         loadingProgressBar.setVisibility(View.GONE);
         noItems_CardView = findViewById(R.id.noItems_View);
@@ -235,6 +237,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.aboutApplication_menuItem:
                 Intent aboutBox_Intent = new Intent(this, About.class);
                 startActivity(aboutBox_Intent);
+                break;
+            case R.id.newEntry_menuItem:
+                Intent addNew = new Intent(this, AddItem.class);
+                NewItemActivityLauncher.launch(addNew);
                 break;
             case R.id.deleteEntry_menuItem:
                 EnterDeleteMode(this);
@@ -535,6 +541,9 @@ public class MainActivity extends AppCompatActivity {
         cardAni.setFillAfter(true);
         CardView cardView = findViewById(R.id.cardView);
         cardView.startAnimation(cardAni);
+        Animation fabAni = AnimationUtils.loadAnimation(this, R.anim.floating_action_button_scale_up_full_ani);
+        fabAni.setFillAfter(true);
+        addItem_FloatingActionButton.startAnimation(fabAni);
     }
 
     void AnimateCardOut() {
@@ -542,5 +551,8 @@ public class MainActivity extends AppCompatActivity {
         cardAni.setFillAfter(true);
         CardView cardView = findViewById(R.id.cardView);
         cardView.startAnimation(cardAni);
+        Animation fabAni = AnimationUtils.loadAnimation(this, R.anim.floating_action_button_scale_down_full_ani);
+        fabAni.setFillAfter(true);
+        addItem_FloatingActionButton.startAnimation(fabAni);
     }
 }
