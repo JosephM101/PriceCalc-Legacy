@@ -2,6 +2,7 @@ package com.josephm101.pricecalc;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,6 +10,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -25,6 +29,7 @@ import androidx.preference.PreferenceManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -51,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     ProgressBar loadingProgressBar;
     TextView totalCostLabel;
     LinearLayout noItems_CardView;
-    //CardView.
+    //CardView
     private String savedList_FileName;
     final ActivityResultLauncher<Intent> NewItemActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -59,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     loadingProgressBar.setVisibility(View.GONE);
+
+                    Animation ani = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.floating_action_button_scale_up_ani);
+                    addItem_FloatingActionButton.startAnimation(ani);
+
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
                         Bundle extras = null;
@@ -91,10 +100,28 @@ public class MainActivity extends AppCompatActivity {
 
         totalCostLabel = findViewById(R.id.totalCost_Label);
         addItem_FloatingActionButton = findViewById(R.id.addItem_floatingActionButton);
+        addItem_FloatingActionButton.setAnimateShowBeforeLayout(true);
         addItem_FloatingActionButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
-            Intent addNew = new Intent(v.getContext(), AddItem.class);
-            NewItemActivityLauncher.launch(addNew);
+            Animation ani = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.floating_action_button_scale_down_ani); //Shrink the FAB
+            ani.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    addItem_FloatingActionButton.startAnimation(ani);
+                    Intent addNew = new Intent(v.getContext(), AddItem.class);
+                    NewItemActivityLauncher.launch(addNew);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
             //startActivityForResult(addNew, AddNew_RequestCode);
         });
         listView = findViewById(R.id.items_listBox);
@@ -388,5 +415,42 @@ public class MainActivity extends AppCompatActivity {
         } else {
             noItems_CardView.setVisibility(View.GONE);
         }
+    }
+
+    public void scaleView(View v, float startScale, float endScale) {
+        Animation anim = new ScaleAnimation(
+                1f, 1f, // Start and end values for the X axis scaling
+                startScale, endScale, // Start and end values for the Y axis scaling
+                Animation.RELATIVE_TO_SELF, 0f, // Pivot point of X scaling
+                Animation.RELATIVE_TO_SELF, 1f); // Pivot point of Y scaling
+        anim.setFillAfter(true); // Needed to keep the result of the animation
+        anim.setDuration(1000);
+        v.startAnimation(anim);
+    }
+
+    void AnimateFloatingActionButton_ScaleUp(Context context, ExtendedFloatingActionButton fab) {
+        Animation ani = AnimationUtils.loadAnimation(context, R.anim.floating_action_button_scale_up_ani);
+        fab.startAnimation(ani);
+        ani.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    void AnimateFloatingActionButton_ScaleDown(Context context, ExtendedFloatingActionButton fab) {
+        Animation ani = AnimationUtils.loadAnimation(context, R.anim.floating_action_button_scale_down_ani);
+        fab.startAnimation(ani);
     }
 }
