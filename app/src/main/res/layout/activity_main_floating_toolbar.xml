@@ -20,7 +20,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="0dp"
-        android:layout_height="62dp"
+        android:layout_height="70dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="32dp"
@@ -39,11 +39,38 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <TextView
+                android:id="@+id/totalCost_Label"
+                android:layout_width="0dp"
+                android:layout_height="27dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="7dp"
+                android:text="@string/totalCost_zeroString"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/progressBar2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/progressBar2"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="76dp"
+                android:layout_height="76dp"
+                android:indeterminate="true"
+                android:progress="67"
+                app:layout_constraintBottom_toBottomOf="@+id/addItem_floatingActionButton"
+                app:layout_constraintEnd_toEndOf="@+id/addItem_floatingActionButton"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/addItem_floatingActionButton"
+                app:layout_constraintTop_toTopOf="@+id/addItem_floatingActionButton"
+                app:layout_constraintVertical_bias="0.5" />
+
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/addItem_floatingActionButton"
                 android:layout_width="60dp"
                 android:layout_height="56dp"
-                android:layout_marginEnd="4dp"
+                android:layout_marginEnd="12dp"
                 android:baselineAlignBottom="false"
                 android:clickable="true"
                 android:contentDescription="@string/add_a_new_item"
@@ -59,30 +86,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_baseline_add_24" />
 
-            <TextView
-                android:id="@+id/totalCost_Label"
-                android:layout_width="0dp"
-                android:layout_height="27dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="7dp"
-                android:text="@string/totalCost_zeroString"
-                android:textSize="24sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/addItem_floatingActionButton"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ProgressBar
-                android:id="@+id/progressBar2"
-                style="@style/Widget.AppCompat.ProgressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:progress="67"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/addItem_floatingActionButton"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
