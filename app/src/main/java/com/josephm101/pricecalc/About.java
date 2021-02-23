@@ -9,6 +9,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.github.javiersantos.appupdater.AppUpdater;
+import com.github.javiersantos.appupdater.AppUpdaterUtils;
+import com.github.javiersantos.appupdater.enums.AppUpdaterError;
+import com.github.javiersantos.appupdater.enums.Display;
+import com.github.javiersantos.appupdater.enums.UpdateFrom;
+import com.github.javiersantos.appupdater.objects.Update;
+
 /*
 Shows information about the app (app version, author, etc.)
 
@@ -26,15 +33,14 @@ public class About extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about_window);
-        setTheme(android.R.style.Theme_Material_Dialog);
+        setTheme(android.R.style.Theme_DeviceDefault_DayNight);
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
             //Get info
             version = BuildConfig.VERSION_NAME;
             buildType = BuildConfig.BUILD_TYPE;
             fullPackageName = BuildConfig.APPLICATION_ID;
-            packageName = pInfo.applicationInfo.name + " " + BuildConfig.VERSION_CODE;
-            revision = String.valueOf(pInfo.baseRevisionCode);
+            packageName = getString(R.string.app_name); //+ String.valueOf(BuildConfig.VERSION_CODE);
             //Print info
             TextView packageName_textView = findViewById(R.id.packageName_textView);
             TextView fullPackageName_textView = findViewById(R.id.fullPackageName_textView);
@@ -55,6 +61,9 @@ public class About extends AppCompatActivity {
             appVersion_textView.setText(appVersionString);
             Button dismissButton = findViewById(R.id.aboutActivity_dismissButton);
             dismissButton.setOnClickListener(v -> finish());
+            Button aboutActivity_checkForUpdatesButton = findViewById(R.id.aboutActivity_checkForUpdatesButton);
+            aboutActivity_checkForUpdatesButton.setOnClickListener(v -> {
+            });
 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
