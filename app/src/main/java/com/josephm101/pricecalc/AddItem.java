@@ -15,6 +15,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 @SuppressLint("NonConstantResourceId")
@@ -39,6 +40,13 @@ public class AddItem extends AppCompatActivity {
         setContentView(R.layout.activity_add_item);
         //Init Components
         floatingActionButton = findViewById(R.id.confirmFloatingActionButton);
+
+        /**
+         * The following method is not available for the current class, and it's derivative class (ExtendedFloatingActionButton) will not
+         * work without reworking, which will result in broken functionality.
+         */
+        //floatingActionButton.setAnimateShowBeforeLayout(true);
+
         itemNameEditText = findViewById(R.id.itemNameEditText);
         itemCostEditText = findViewById(R.id.itemCostEditText);
         totalCostLabel = findViewById(R.id.totalCostLabel);
