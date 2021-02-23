@@ -8,12 +8,25 @@
         android:title="@string/refresh_actionButton"
         app:showAsAction="always|withText" />
     <item
-        android:id="@+id/settings_menuItem"
-        android:title="@string/settings_actionButton" />
+        android:id="@+id/newEntry_menuItem"
+        android:title="@string/add_new_entry" />
+    <item
+        android:id="@+id/deleteEntry_menuItem"
+        android:title="@string/delete_entry" />
     <item
         android:id="@+id/clearList_menuItem"
         android:title="@string/clearList_ActionButton" />
+    <item android:title="@string/tools" >
+        <menu >
+            <item
+                android:id="@+id/openTipCalculator_menuItem"
+                android:title="@string/tip_calculator" />
+        </menu>
+    </item>
     <item
-        android:id="@+id/openTipCalculator_menuItem"
-        android:title="@string/tip_calculator" />
+        android:id="@+id/settings_menuItem"
+        android:title="@string/settings_actionButton" />
+    <item
+        android:id="@+id/aboutApplication_menuItem"
+        android:title="@string/about" />
 </menu>

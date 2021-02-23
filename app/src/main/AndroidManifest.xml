@@ -11,12 +11,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PriceCalc">
         <activity android:name=".TipCalculator"></activity>
-        <activity android:name=".About" />
+        <activity android:name=".About"
+            android:excludeFromRecents="true"
+            android:label="About PriceCalc"
+            android:theme="@style/Theme.AppCompat.Dialog"/>
         <activity android:name=".ItemInfo" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".AddItem" />
+        <activity android:name=".AddItem"
+            android:excludeFromRecents="true"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,5 +29,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>
