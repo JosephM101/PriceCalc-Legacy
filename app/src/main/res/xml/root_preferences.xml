@@ -26,10 +26,18 @@
             app:defaultValue="1"
             app:entryValues="@array/theme_settings_val" />
 
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Experimental (Changes require app restart)">
+
         <SwitchPreference
             android:defaultValue="false"
             android:key="floatingDock_Preference"
             android:summary="When enabled, the dock on the main screen containing the total price label and the Add Item button will appear in a rounded floating card. Enabling this setting may cause graphical issues on older versions of Android, and changes to this setting will require a restart of the app before they will take effect."
-            android:title="Floating dock (Experimental)" />
+            android:title="Floating dock" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="hideDock_preference"
+            android:title="Hide the dock entirely"
+            app:summary="If enabled, the dock will be hidden, and its components will be moved to the app bar." />
     </PreferenceCategory>
 </PreferenceScreen>
