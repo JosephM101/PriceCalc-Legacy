@@ -13,6 +13,8 @@ import androidx.cardview.widget.CardView;
 
 import com.josephm101.pricecalc.Update.API.GitHub;
 import com.josephm101.pricecalc.Update.API.ReleaseInfo;
+import com.josephm101.pricecalc.Update.Version.VersionInfo;
+import com.josephm101.pricecalc.Update.Version.VersionParser;
 
 public class CheckForUpdates extends AppCompatActivity {
     CardView cardView_updateError;
@@ -43,7 +45,10 @@ public class CheckForUpdates extends AppCompatActivity {
                     loading_CardView.setVisibility(View.GONE);
                     if (releaseInfo != null) {
                         if (releaseInfo.getReleaseVersion() != BuildConfig.VERSION_NAME) {
-                            cardView_updateInfo.setVisibility(View.GONE);
+                            VersionInfo currentVersionInfo = VersionParser.parse(releaseInfo.getReleaseVersion());
+                            VersionInfo releaseVersionInfo = VersionParser.parse(BuildConfig.VERSION_NAME);
+
+
                             setTitle("Update available.");
                             TextView currentVersionTextView = findViewById(R.id.textView_currentVersion);
                             TextView newVersionTextView = findViewById(R.id.textView_newVersion);
