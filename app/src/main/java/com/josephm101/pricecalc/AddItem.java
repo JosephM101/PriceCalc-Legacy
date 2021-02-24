@@ -7,12 +7,15 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -29,6 +32,7 @@ public class AddItem extends AppCompatActivity {
     FloatingActionButton floatingActionButton;
     Boolean somethingChanged = false; //Checked before activity exits. If true, the "Confirm exit & discard" warning dialog will be shown if the user tries to exit the activity.
     MenuItem addItem_menuBar_totalCostLabel;
+    CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,12 @@ public class AddItem extends AppCompatActivity {
         setContentView(R.layout.activity_add_item);
         //Init Components
         floatingActionButton = findViewById(R.id.confirmFloatingActionButton);
+        View parentView = findViewById(R.id.coordinatorLayoutA);
+        coordinatorLayout = findViewById(R.id.coordinatorLayoutA);
+        Button buttonNew = findViewById(R.id.buttonNew);
+        buttonNew.setOnClickListener(v -> {
+
+        });
 
         /**
          * The following method is not available for the current class, and it's derivative class (ExtendedFloatingActionButton) will not
@@ -97,11 +107,16 @@ public class AddItem extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() < 1) {
-                    itemQuantityEditText.setText(R.string.quantity_minValue);
-                }
                 UpdateTotalLabel();
             }
+        });
+        itemQuantityEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                if (itemQuantityEditText.getText().length() < 1) {
+                    itemQuantityEditText.setText(R.string.quantity_minValue);
+                }
+            }
+            //UpdateTotalLabel();
         });
         taxDeductible = findViewById(R.id.isTaxDeductible_CheckBox);
         taxDeductible.setOnCheckedChangeListener((buttonView, isChecked) -> UpdateTotalLabel());

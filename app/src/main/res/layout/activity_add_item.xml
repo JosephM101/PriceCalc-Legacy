@@ -2,142 +2,160 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:label="@string/add_item"
     tools:context=".AddItem">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="0dp"
-        android:layout_height="57dp"
-        android:layout_marginTop="12dp"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:text="@string/addItem_taxDeductibleInfo"
-        app:layout_constraintEnd_toEndOf="@+id/totalCostLabel"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/isTaxDeductible_CheckBox"
-        app:layout_constraintTop_toBottomOf="@+id/isTaxDeductible_CheckBox" />
+        <ScrollView
+            android:id="@+id/scrollView2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/coordinatorLayoutA"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    <CheckBox
-        android:id="@+id/isTaxDeductible_CheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="28dp"
-        android:text="@string/item_is_tax_deductible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemQuantityEditText" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-    <EditText
-        android:id="@+id/itemNameEditText"
-        android:layout_width="0dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/itemNameEditText_Hint"
-        android:inputType="textPersonName"
-        android:maxLength="100"
-        android:maxLines="1"
-        android:singleLine="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:text="@string/itemNameHint" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:text="@string/itemNameHint"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+                        <EditText
+                            android:id="@+id/itemNameEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints=""
+                            android:ems="10"
+                            android:hint="@string/itemNameEditText_Hint"
+                            android:inputType="textPersonName"
+                            android:maxLength="100"
+                            android:maxLines="1"
+                            android:singleLine="true" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:text="@string/item_net_cost"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemNameEditText" />
+                        <TextView
+                            android:id="@+id/textView3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:text="@string/item_net_cost" />
 
-    <EditText
-        android:id="@+id/itemCostEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:hint="@string/ProductPriceLabelHint"
-        android:inputType="numberDecimal"
-        android:maxLength="50"
-        android:maxLines="1"
-        android:singleLine="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        android:importantForAutofill="no" />
+                        <EditText
+                            android:id="@+id/itemCostEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:hint="@string/ProductPriceLabelHint"
+                            android:importantForAutofill="no"
+                            android:inputType="numberDecimal"
+                            android:maxLength="50"
+                            android:maxLines="1"
+                            android:singleLine="true" />
 
-    <TextView
-        android:id="@+id/totalCostLabel"
-        android:layout_width="0dp"
-        android:layout_height="22dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/defValue_Price"
-        android:textAlignment="textEnd"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+                        <TextView
+                            android:id="@+id/textView5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:focusable="false"
+                            android:focusableInTouchMode="false"
+                            android:text="@string/quantity" />
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:text="@string/quantity"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemCostEditText" />
+                        <EditText
+                            android:id="@+id/itemQuantityEditText"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:hint="@string/item_quantity"
+                            android:importantForAutofill="no"
+                            android:inputType="number"
+                            android:text="@string/defValue"
+                            tools:ignore="LabelFor" />
 
-    <EditText
-        android:id="@+id/itemQuantityEditText"
-        android:layout_width="192dp"
-        android:layout_height="42dp"
-        android:ems="10"
-        android:hint="@string/item_quantity"
-        android:inputType="number"
-        android:text="@string/defValue"
-        app:layout_constraintStart_toStartOf="@+id/textView5"
-        app:layout_constraintTop_toBottomOf="@+id/textView5"
-        tools:ignore="LabelFor"
-        android:importantForAutofill="no" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/confirmFloatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        android:contentDescription="@string/add_item"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_baseline_check_24"
-        android:focusable="true" />
+                                <CheckBox
+                                    android:id="@+id/isTaxDeductible_CheckBox"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/item_is_tax_deductible" />
+
+                                <TextView
+                                    android:id="@+id/textView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="16dp"
+                                    android:focusable="false"
+                                    android:focusableInTouchMode="false"
+                                    android:text="@string/addItem_taxDeductibleInfo"
+                                    android:visibility="invisible" />
+                        </LinearLayout>
+
+                </LinearLayout>
+        </ScrollView>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/coordinatorLayoutA"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutMaster"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:gravity="center_vertical"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal">
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/confirmFloatingActionButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="16dp"
+                            android:clickable="true"
+                            android:contentDescription="@string/add_item"
+                            android:focusable="true"
+                            app:srcCompat="@drawable/ic_baseline_check_24" />
+
+                        <TextView
+                            android:id="@+id/totalCostLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/defValue_Price"
+                            android:textSize="18sp" />
+                </LinearLayout>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

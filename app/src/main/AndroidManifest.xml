@@ -25,6 +25,7 @@
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".AddItem"
+            android:windowSoftInputMode="adjustResize"
             android:excludeFromRecents="true" />
         <activity android:name=".MainActivity">
             <intent-filter>
