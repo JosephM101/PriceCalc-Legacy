@@ -1,4 +1,4 @@
-package com.josephm101.pricecalc.API;
+package com.josephm101.pricecalc.Update.API;
 
 import android.util.Log;
 
@@ -30,7 +30,6 @@ public class GitHub {
         }
     }*/
 
-
     String userName; //Required for link generation.
     String repoName; //Required for link generation.
     String apiCall_prefix = "https://api.github.com/repos/";
@@ -60,12 +59,15 @@ public class GitHub {
     public void GetData(){
         Thread thread = new Thread(() -> {
             try {
+                String url = generateApiCallURL();
+                Log.d("RESPONSE", url);
                 response = GetJsonResponse(generateApiCallURL());
                 JsonObject root = response.getAsJsonObject();
-                if (!(root.isJsonNull())) { //If it's not null, we can keep going.
-                    ReleaseInfo releaseInfo = new ReleaseInfo();
-                    releaseInfo.setDownloadUrl(root.getAsJsonArray("assets").get(0).getAsJsonObject().get("browser_download_url").getAsString());
-                    releaseInfo.setReleaseNotes(root.get("body").getAsString());
+                Thread.sleep(1000); //Sleep for a quick second before continuing to make sure all the data comes in.
+                if (!(root.isJsonNull())) { //If the JsonObject 'root' is not null, then we can keep going.
+                    ReleaseInfo releaseInfo = new ReleaseInfo(); //Create new instance of class ReleaseInfo to return when we're done.
+                    releaseInfo.setDownloadUrl(root.getAsJsonArray("assets").get(0).getAsJsonObject().get("browser_download_url").getAsString()); //Get the download URL for the first available asset (most likely the executable package)
+                    releaseInfo.setReleaseNotes(root.get("body").getAsString()); //
                     releaseInfo.setReleaseName(root.get("name").getAsString());
                     releaseInfo.setReleaseVersion(root.get("tag_name").getAsString());
                     String utcString = root.get("created_at").getAsString();
