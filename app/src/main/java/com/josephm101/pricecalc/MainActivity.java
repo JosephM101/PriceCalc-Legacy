@@ -58,9 +58,11 @@ public class MainActivity extends AppCompatActivity {
     Boolean inDeleteMode = false;
     Menu referencedMenu;
     CardView cardView;
+    androidx.appcompat.app.ActionBar actionBar;
 
     //Preferences
     boolean hideDock_preference;
+    boolean floatingDockPreference_value;
 
     private String savedList_FileName;
     private boolean Card_Hidden;
@@ -91,25 +93,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ThemeHandling.ApplyTheme(this); //Apply theme
+        actionBar = getSupportActionBar();
+        assert actionBar != null;
         super.onCreate(savedInstanceState);
         String savedListFileName = "/saved_list.txt";
         savedList_FileName = getFilesDir().getParent() + savedListFileName;
         //Load layout based on settings
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean floatingDockPreference_value = sharedPreferences.getBoolean("floatingDock_Preference", false);
+        floatingDockPreference_value = sharedPreferences.getBoolean("floatingDock_Preference", false);
         hideDock_preference = sharedPreferences.getBoolean("hideDock_preference", false);
-        if(!hideDock_preference) {
+        if (!hideDock_preference) {
             if (floatingDockPreference_value) {
                 setContentView(R.layout.activity_main_floating_toolbar);
             } else {
                 setContentView(R.layout.activity_main);
             }
-        }
-        else {
+        } else {
             setContentView(R.layout.activity_main);
         }
         cardView = findViewById(R.id.cardView);
-        if(hideDock_preference) {
+        if (hideDock_preference) {
             cardView.setVisibility(View.GONE);
         }
 
@@ -138,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
-            //startActivityForResult(addNew, AddNew_RequestCode);
             addItem_FloatingActionButton.startAnimation(ani);
         });
         listView = findViewById(R.id.items_listBox);
@@ -194,17 +196,17 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        listView.setOnScrollChangeListener(new View.OnScrollChangeListener() { //Hide or show card if the ListView is scrolled.
-            @Override
-            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY > 0) {
-                    MainCardView_ChangeShowStatus(CardShowStatus.HIDE);
-                } else {
-                    MainCardView_ChangeShowStatus(CardShowStatus.SHOW);
-                }
-            }
-        });
-
+        //if (floatingDockPreference_value) {
+        //    cardView.setOnTouchListener(new View.OnTouchListener() {
+        //        @Override
+        //        public boolean onTouch(View v, MotionEvent event) {
+        //            if (event.getAction() == MotionEvent.AXIS_VSCROLL) {
+        //                MainCardView_ChangeShowStatus(false);
+        //            }
+        //            return true;
+        //        }
+        //    });
+        //}
         loadingProgressBar = findViewById(R.id.progressBar2);
         loadingProgressBar.setVisibility(View.GONE);
         noItems_CardView = findViewById(R.id.noItems_View);
@@ -321,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
 
     void SetDashText(String text) {
         if (hideDock_preference) {
-            getActionBar().setSubtitle(text);
+            actionBar.setSubtitle(text);
         } else {
             totalCostLabel.setText(text);
         }
@@ -359,19 +361,6 @@ public class MainActivity extends AppCompatActivity {
             everything.append(line);
             Log.d("READ_FILE", line);
         }
-        /*
-        Scanner scanner = new Scanner(everything.toString());
-        while (scanner.hasNextLine()) {
-            String nextLine = scanner.nextLine();
-            Log.d("STRING_HANDLING", nextLine);
-            String[] splitString = nextLine.split(splitChar);
-            Log.d("STRING_HANDLING", StringHandling.combineStrings("P0", splitString[0]));
-            Log.d("STRING_HANDLING", StringHandling.combineStrings("P1", splitString[1]));
-            Log.d("STRING_HANDLING", StringHandling.combineStrings("P2", splitString[2]));
-            Log.d("STRING_HANDLING", StringHandling.combineStrings("P3", splitString[3]));
-            dataModels.add(new DataModel(splitString[0], splitString[1], BooleanHandling.StringToBool(splitString[2], BooleanHandling.PositiveValue, BooleanHandling.NegativeValue), splitString[3]));
-        }
-         */
         Log.d("STRING_HANDLING", StringHandling.combineStrings(everything.toString(), "Full String: "));
         String[] lines = everything.toString().split(NewLineSeparator);
         Log.d("STRING_HANDLING", StringHandling.combineStrings(String.valueOf(lines.length), "Lines: "));
@@ -560,7 +549,7 @@ public class MainActivity extends AppCompatActivity {
     void AnimateCardIn() {
         Animation cardAni = AnimationUtils.loadAnimation(this, R.anim.card_show_ani);
         cardAni.setFillAfter(true);
-        CardView cardView = findViewById(R.id.cardView);
+        //CardView cardView = findViewById(R.id.cardView);
         cardView.startAnimation(cardAni);
         Animation fabAni = AnimationUtils.loadAnimation(this, R.anim.floating_action_button_scale_up_full_ani);
         fabAni.setFillAfter(true);
@@ -570,7 +559,7 @@ public class MainActivity extends AppCompatActivity {
     void AnimateCardOut() {
         Animation cardAni = AnimationUtils.loadAnimation(this, R.anim.card_hide_ani);
         cardAni.setFillAfter(true);
-        CardView cardView = findViewById(R.id.cardView);
+        //CardView cardView = findViewById(R.id.cardView);
         cardView.startAnimation(cardAni);
         Animation fabAni = AnimationUtils.loadAnimation(this, R.anim.floating_action_button_scale_down_full_ani);
         fabAni.setFillAfter(true);
@@ -582,20 +571,19 @@ public class MainActivity extends AppCompatActivity {
         SHOW
     }
 
-    void MainCardView_ChangeShowStatus(CardShowStatus cardShowStatus) {
-        switch (cardShowStatus) {
-            case HIDE:
+    void MainCardView_ChangeShowStatus(Boolean status) {
+        if (floatingDockPreference_value) {
+            if (!status) {
                 if (Card_Hidden == false) { //Make sure it's not already hidden.
                     Card_Hidden = true;
                     AnimateCardOut();
                 }
-                break;
-            case SHOW:
+            } else {
                 if (Card_Hidden == true) {
                     Card_Hidden = false;
                     AnimateCardIn();
                 }
-                break;
+            }
         }
     }
 }
