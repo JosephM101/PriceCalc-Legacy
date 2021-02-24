@@ -11,7 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PriceCalc">
-        <activity android:name=".CheckForUpdates"></activity>
+        <activity android:name=".CheckForUpdates"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.MaterialComponents.DayNight.Dialog" />
         <activity android:name=".TipCalculator" />
         <activity
             android:name=".About"
