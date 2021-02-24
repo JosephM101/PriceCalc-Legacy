@@ -7,8 +7,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -45,18 +43,6 @@ public class AddItem extends AppCompatActivity {
         setContentView(R.layout.activity_add_item);
         //Init Components
         floatingActionButton = findViewById(R.id.confirmFloatingActionButton);
-        View parentView = findViewById(R.id.coordinatorLayoutA);
-        coordinatorLayout = findViewById(R.id.coordinatorLayoutA);
-        Button buttonNew = findViewById(R.id.buttonNew);
-        buttonNew.setOnClickListener(v -> {
-
-        });
-
-        /**
-         * The following method is not available for the current class, and it's derivative class (ExtendedFloatingActionButton) will not
-         * work without reworking, which will result in broken functionality.
-         */
-        //floatingActionButton.setAnimateShowBeforeLayout(true);
 
         itemNameEditText = findViewById(R.id.itemNameEditText);
         itemNameEditText.addTextChangedListener(new TextWatcher() {
