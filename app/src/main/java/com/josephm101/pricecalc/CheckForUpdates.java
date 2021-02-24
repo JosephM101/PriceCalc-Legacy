@@ -1,51 +1,29 @@
 package com.josephm101.pricecalc;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-
 import android.app.DownloadManager;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageInstaller;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.MemoryFile;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.josephm101.pricecalc.API.GitHub;
 import com.josephm101.pricecalc.API.ReleaseInfo;
 
-import org.w3c.dom.Text;
-
-import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
-
 public class CheckForUpdates extends AppCompatActivity {
     public static final int progress_bar_type = 0;
-    private ProgressDialog pDialog;
     String urlToPing = "https://api.github.com/repos/JosephM101/PriceCalc/releases/latest"; //Returns JSON summary of latest package
     JsonElement response;
     CardView cardView_updateError;
     CardView cardView_noUpdates;
     CardView cardView_updateInfo;
     CardView loading_CardView;
+    GitHub release_repo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,36 +39,51 @@ public class CheckForUpdates extends AppCompatActivity {
         cardView_updateInfo.setVisibility(View.GONE);
         cardView_noUpdates.setVisibility(View.GONE);
         cardView_updateError.setVisibility(View.GONE);
-        Thread thread = new Thread(new Runnable() {
-
+        release_repo = new GitHub("JosephM101", "PriceCalc", new GitHub.RetrievalListener() {
             @Override
-            public void run() {
-                try {
-                    GitHub release_repo = new GitHub("JosephM101", "PriceCalc");
-                    ReleaseInfo releaseInfo = release_repo.GetData();
-                    String releaseName = releaseInfo.getReleaseVersion();
-                    if (releaseName != BuildConfig.VERSION_NAME) {
-                        loading_CardView.setVisibility(View.GONE);
-                        cardView_updateInfo.setVisibility(View.VISIBLE);
+            public void onRetrievalComplete(ReleaseInfo releaseInfo) {
+                loading_CardView.setVisibility(View.GONE);
+                if (releaseInfo != null) {
+                    if (releaseInfo.getReleaseVersion() != BuildConfig.VERSION_NAME) {
+                        cardView_updateInfo.setVisibility(View.GONE);
                         setTitle("Update available.");
                         TextView currentVersionTextView = findViewById(R.id.textView_currentVersion);
                         TextView newVersionTextView = findViewById(R.id.textView_newVersion);
                         TextView changelogTextView = findViewById(R.id.textView_changelog);
                         currentVersionTextView.setText(BuildConfig.VERSION_NAME);
+                        newVersionTextView.setText(releaseInfo.getReleaseVersion());
                         changelogTextView.setText(releaseInfo.getReleaseNotes());
                         Button button_updateNow = findViewById(R.id.button_confirmUpdate);
+                        button_updateNow.setOnClickListener(v -> {
+                            DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                            Uri update_link = Uri.parse(releaseInfo.getDownloadUrl());
+                            DownloadManager.Request request = new DownloadManager.Request(update_link);
+                            request.setTitle("PriceCalc");
+                            request.setDescription("Downloading update for PriceCalc...");
+                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                            request.setDestinationUri(Uri.parse("file://" + getApplicationContext().getFilesDir() + "/pricecalc_update.apk"));
+                            downloadManager.enqueue(request);
+                        });
+                        Button button_dismiss = findViewById(R.id.button_updateLater);
+                        button_dismiss.setOnClickListener(v -> finish());
+                        cardView_updateInfo.setVisibility(View.VISIBLE);
                     } else {
                         setTitle("No new updates.");
                         cardView_noUpdates.setVisibility(View.VISIBLE);
                         Button button_dismiss = findViewById(R.id.button_dismissUpdateDialog);
                         button_dismiss.setOnClickListener(v -> finish());
                     }
-                } catch (Exception e) {
+
+                } else {
                     Error();
                 }
             }
+
+            @Override
+            public void onRetrievalError(String request) {
+                Error();
+            }
         });
-        thread.start();
     }
 
     /*    void LoadingComplete(String version) {
