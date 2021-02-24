@@ -11,14 +11,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import com.google.gson.JsonElement;
-import com.josephm101.pricecalc.API.GitHub;
-import com.josephm101.pricecalc.API.ReleaseInfo;
+import com.josephm101.pricecalc.Update.API.GitHub;
+import com.josephm101.pricecalc.Update.API.ReleaseInfo;
 
 public class CheckForUpdates extends AppCompatActivity {
-    public static final int progress_bar_type = 0;
-    String urlToPing = "https://api.github.com/repos/JosephM101/PriceCalc/releases/latest"; //Returns JSON summary of latest package
-    JsonElement response;
     CardView cardView_updateError;
     CardView cardView_noUpdates;
     CardView cardView_updateInfo;
@@ -29,6 +25,7 @@ public class CheckForUpdates extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_for_updates);
+        setTheme(android.R.style.Theme_DeviceDefault_DayNight);
         setTitle("Updates");
         loading_CardView = findViewById(R.id.cardView_checkingForUpdates);
         cardView_updateInfo = findViewById(R.id.cardView_updateInfo);
@@ -42,48 +39,51 @@ public class CheckForUpdates extends AppCompatActivity {
         release_repo = new GitHub("JosephM101", "PriceCalc", new GitHub.RetrievalListener() {
             @Override
             public void onRetrievalComplete(ReleaseInfo releaseInfo) {
-                loading_CardView.setVisibility(View.GONE);
-                if (releaseInfo != null) {
-                    if (releaseInfo.getReleaseVersion() != BuildConfig.VERSION_NAME) {
-                        cardView_updateInfo.setVisibility(View.GONE);
-                        setTitle("Update available.");
-                        TextView currentVersionTextView = findViewById(R.id.textView_currentVersion);
-                        TextView newVersionTextView = findViewById(R.id.textView_newVersion);
-                        TextView changelogTextView = findViewById(R.id.textView_changelog);
-                        currentVersionTextView.setText(BuildConfig.VERSION_NAME);
-                        newVersionTextView.setText(releaseInfo.getReleaseVersion());
-                        changelogTextView.setText(releaseInfo.getReleaseNotes());
-                        Button button_updateNow = findViewById(R.id.button_confirmUpdate);
-                        button_updateNow.setOnClickListener(v -> {
-                            DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-                            Uri update_link = Uri.parse(releaseInfo.getDownloadUrl());
-                            DownloadManager.Request request = new DownloadManager.Request(update_link);
-                            request.setTitle("PriceCalc");
-                            request.setDescription("Downloading update for PriceCalc...");
-                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                            request.setDestinationUri(Uri.parse("file://" + getApplicationContext().getFilesDir() + "/pricecalc_update.apk"));
-                            downloadManager.enqueue(request);
-                        });
-                        Button button_dismiss = findViewById(R.id.button_updateLater);
-                        button_dismiss.setOnClickListener(v -> finish());
-                        cardView_updateInfo.setVisibility(View.VISIBLE);
+                runOnUiThread(() -> {
+                    loading_CardView.setVisibility(View.GONE);
+                    if (releaseInfo != null) {
+                        if (releaseInfo.getReleaseVersion() != BuildConfig.VERSION_NAME) {
+                            cardView_updateInfo.setVisibility(View.GONE);
+                            setTitle("Update available.");
+                            TextView currentVersionTextView = findViewById(R.id.textView_currentVersion);
+                            TextView newVersionTextView = findViewById(R.id.textView_newVersion);
+                            TextView changelogTextView = findViewById(R.id.textView_changelog);
+                            currentVersionTextView.setText(BuildConfig.VERSION_NAME);
+                            newVersionTextView.setText(releaseInfo.getReleaseVersion());
+                            changelogTextView.setText(releaseInfo.getReleaseNotes());
+                            Button button_updateNow = findViewById(R.id.button_confirmUpdate);
+                            button_updateNow.setOnClickListener(v -> {
+                                DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                                Uri update_link = Uri.parse(releaseInfo.getDownloadUrl());
+                                DownloadManager.Request request = new DownloadManager.Request(update_link);
+                                request.setTitle("PriceCalc");
+                                request.setDescription("Downloading update for PriceCalc...");
+                                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                request.setDestinationUri(Uri.parse("file://" + getApplicationContext().getFilesDir() + "/pricecalc_update.apk"));
+                                downloadManager.enqueue(request);
+                            });
+                            Button button_dismiss = findViewById(R.id.button_updateLater);
+                            button_dismiss.setOnClickListener(v -> finish());
+                            cardView_updateInfo.setVisibility(View.VISIBLE);
+                        } else {
+                            setTitle("No new updates.");
+                            cardView_noUpdates.setVisibility(View.VISIBLE);
+                            Button button_dismiss = findViewById(R.id.button_dismissUpdateDialog);
+                            button_dismiss.setOnClickListener(v -> finish());
+                        }
                     } else {
-                        setTitle("No new updates.");
-                        cardView_noUpdates.setVisibility(View.VISIBLE);
-                        Button button_dismiss = findViewById(R.id.button_dismissUpdateDialog);
-                        button_dismiss.setOnClickListener(v -> finish());
+                        //runOnUiThread(() -> Error());
+                        Error();
                     }
-
-                } else {
-                    Error();
-                }
+                });
             }
 
             @Override
             public void onRetrievalError(String request) {
-                Error();
+                runOnUiThread(() -> Error());
             }
         });
+        release_repo.GetData();
     }
 
     /*    void LoadingComplete(String version) {
@@ -133,6 +133,7 @@ public class CheckForUpdates extends AppCompatActivity {
                     button_dismiss.setOnClickListener(v -> finish());
                 }
      */
+
     void Error() {
         loading_CardView.setVisibility(View.GONE);
         setTitle("Couldn't update.");
