@@ -12,7 +12,9 @@
         android:title="@string/add_new_entry" />
     <item
         android:id="@+id/deleteEntry_menuItem"
-        android:title="@string/delete_entry" />
+        android:title="@string/delete_entry"
+        android:visibility="gone"
+        android:visible="false" />
     <item
         android:id="@+id/clearList_menuItem"
         android:title="@string/clearList_ActionButton" />
