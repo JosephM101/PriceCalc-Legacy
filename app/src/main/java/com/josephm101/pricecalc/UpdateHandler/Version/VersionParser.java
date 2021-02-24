@@ -1,4 +1,4 @@
-package com.josephm101.pricecalc.Update.Version;
+package com.josephm101.pricecalc.UpdateHandler.Version;
 
 import java.util.List;
 

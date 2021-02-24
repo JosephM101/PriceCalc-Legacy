@@ -1,4 +1,4 @@
-package com.josephm101.pricecalc.Update.API;
+package com.josephm101.pricecalc.UpdateHandler.API;
 
 import java.util.Date;
 

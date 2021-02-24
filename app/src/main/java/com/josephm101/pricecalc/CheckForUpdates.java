@@ -11,10 +11,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import com.josephm101.pricecalc.Update.API.GitHub;
-import com.josephm101.pricecalc.Update.API.ReleaseInfo;
-import com.josephm101.pricecalc.Update.Version.VersionInfo;
-import com.josephm101.pricecalc.Update.Version.VersionParser;
+import com.josephm101.pricecalc.UpdateHandler.API.GitHub;
+import com.josephm101.pricecalc.UpdateHandler.API.ReleaseInfo;
+import com.josephm101.pricecalc.UpdateHandler.Version.VersionInfo;
+import com.josephm101.pricecalc.UpdateHandler.Version.VersionParser;
 
 public class CheckForUpdates extends AppCompatActivity {
     CardView cardView_updateError;
