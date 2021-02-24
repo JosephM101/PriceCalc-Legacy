@@ -105,7 +105,6 @@ public class AddItem extends AppCompatActivity {
         });
         taxDeductible = findViewById(R.id.isTaxDeductible_CheckBox);
         taxDeductible.setOnCheckedChangeListener((buttonView, isChecked) -> UpdateTotalLabel());
-        addItem_menuBar_totalCostLabel = findViewById(R.id.addItem_menuBar_totalCostLabel);
 
         floatingActionButton.setOnClickListener(v -> ConfirmAndExit());
     }
@@ -169,6 +168,7 @@ public class AddItem extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_additem, menu);
+        addItem_menuBar_totalCostLabel = menu.findItem(R.id.addItem_menuBar_totalCostLabel);
         return true;
     }
 

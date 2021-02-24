@@ -1,12 +1,10 @@
 package com.josephm101.pricecalc;
 
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -15,7 +13,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
-import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -27,15 +24,10 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -58,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     //private final String NewLine = "\r\n";
     private final String NewLineSeparator = "`";
     private final String splitChar = "§";
-    //private final int AddNew_RequestCode = 1;
     ListView listView;
     ExtendedFloatingActionButton addItem_FloatingActionButton;
     ProgressBar loadingProgressBar;
@@ -66,8 +57,13 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout noItems_CardView;
     Boolean inDeleteMode = false;
     Menu referencedMenu;
-    //CardView
+    CardView cardView;
+
+    //Preferences
+    boolean hideDock_preference;
+
     private String savedList_FileName;
+    private boolean Card_Hidden;
     final ActivityResultLauncher<Intent> NewItemActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -98,15 +94,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         String savedListFileName = "/saved_list.txt";
         savedList_FileName = getFilesDir().getParent() + savedListFileName;
-
         //Load layout based on settings
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean value = sharedPreferences.getBoolean("floatingDock_Preference", false);
-        if (value) {
-            setContentView(R.layout.activity_main_floating_toolbar);
-        } else {
+        boolean floatingDockPreference_value = sharedPreferences.getBoolean("floatingDock_Preference", false);
+        hideDock_preference = sharedPreferences.getBoolean("hideDock_preference", false);
+        if(!hideDock_preference) {
+            if (floatingDockPreference_value) {
+                setContentView(R.layout.activity_main_floating_toolbar);
+            } else {
+                setContentView(R.layout.activity_main);
+            }
+        }
+        else {
             setContentView(R.layout.activity_main);
         }
+        cardView = findViewById(R.id.cardView);
+        if(hideDock_preference) {
+            cardView.setVisibility(View.GONE);
+        }
+
         AppBeta.ShowBetaMessage(this);
 
         totalCostLabel = findViewById(R.id.totalCost_Label);
@@ -166,19 +172,19 @@ public class MainActivity extends AppCompatActivity {
                         //View layout = findViewById(R.id.mainConstraintLayout);
                         //Show snackbar
                         {
-                        //    Snackbar snackbar = Snackbar.make(coordinatorLayout, "Entry deleted", Snackbar.LENGTH_LONG)
-                        //            .setAction("UNDO", v1 -> {
-                        //                listItems.clear();
-                        //                for (DataModel item : listItems_BKP) {
-                        //                    listItems.add(item);
-                        //                }
-                        //                RefreshEverything(true);
-                        //                Snackbar snackbarUndone = Snackbar.make(coordinatorLayout, "Action undone", Snackbar.LENGTH_SHORT)
-                        //                        .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
-                        //                snackbarUndone.show();
-                        //            })
-                        //            .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
-                        //    snackbar.show();
+                            //    Snackbar snackbar = Snackbar.make(coordinatorLayout, "Entry deleted", Snackbar.LENGTH_LONG)
+                            //            .setAction("UNDO", v1 -> {
+                            //                listItems.clear();
+                            //                for (DataModel item : listItems_BKP) {
+                            //                    listItems.add(item);
+                            //                }
+                            //                RefreshEverything(true);
+                            //                Snackbar snackbarUndone = Snackbar.make(coordinatorLayout, "Action undone", Snackbar.LENGTH_SHORT)
+                            //                        .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
+                            //                snackbarUndone.show();
+                            //            })
+                            //            .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
+                            //    snackbar.show();
                         }
                         RefreshEverything(true);
                     })
@@ -186,6 +192,17 @@ public class MainActivity extends AppCompatActivity {
                     .setCancelable(true);
             materialAlertDialogBuilder.show();
             return true;
+        });
+
+        listView.setOnScrollChangeListener(new View.OnScrollChangeListener() { //Hide or show card if the ListView is scrolled.
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY > 0) {
+                    MainCardView_ChangeShowStatus(CardShowStatus.HIDE);
+                } else {
+                    MainCardView_ChangeShowStatus(CardShowStatus.SHOW);
+                }
+            }
         });
 
         loadingProgressBar = findViewById(R.id.progressBar2);
@@ -303,7 +320,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void SetDashText(String text) {
-        totalCostLabel.setText(text);
+        if (hideDock_preference) {
+            getActionBar().setSubtitle(text);
+        } else {
+            totalCostLabel.setText(text);
+        }
     }
 
     //Loads list items into list view
@@ -554,5 +575,27 @@ public class MainActivity extends AppCompatActivity {
         Animation fabAni = AnimationUtils.loadAnimation(this, R.anim.floating_action_button_scale_down_full_ani);
         fabAni.setFillAfter(true);
         addItem_FloatingActionButton.startAnimation(fabAni);
+    }
+
+    enum CardShowStatus {
+        HIDE,
+        SHOW
+    }
+
+    void MainCardView_ChangeShowStatus(CardShowStatus cardShowStatus) {
+        switch (cardShowStatus) {
+            case HIDE:
+                if (Card_Hidden == false) { //Make sure it's not already hidden.
+                    Card_Hidden = true;
+                    AnimateCardOut();
+                }
+                break;
+            case SHOW:
+                if (Card_Hidden == true) {
+                    Card_Hidden = false;
+                    AnimateCardIn();
+                }
+                break;
+        }
     }
 }

@@ -6,10 +6,13 @@
         android:checkable="false"
         android:icon="@drawable/ic_baseline_refresh_24"
         android:title="@string/refresh_actionButton"
+        android:visible="true"
         app:showAsAction="always|withText" />
     <item
         android:id="@+id/newEntry_menuItem"
-        android:title="@string/add_new_entry" />
+        android:icon="@drawable/ic_baseline_add_24"
+        android:title="@string/add_new_entry"
+        app:showAsAction="always" />
     <item
         android:id="@+id/deleteEntry_menuItem"
         android:title="@string/delete_entry"
