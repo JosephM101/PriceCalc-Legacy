@@ -76,7 +76,7 @@ public class CustomAdapter extends ArrayAdapter<DataModel> implements View.OnCli
 
         Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.up_from_bottom);
         animation.setFillAfter(true);
-        result.startAnimation(animation);
+        //result.startAnimation(animation);
         viewHolder.txtName.setText(dataModel.getItemName());
         String stringBuilder = "$" +
                 dataModel.getItemPrice() +
