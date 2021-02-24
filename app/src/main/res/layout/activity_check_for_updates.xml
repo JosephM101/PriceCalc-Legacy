@@ -283,7 +283,7 @@
                 android:id="@+id/textView22"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Couldn't check for updates. Please try again later." />
+                android:text="@string/checkForUpdate_errorMessage" />
 
             <LinearLayout
                 android:layout_width="match_parent"
