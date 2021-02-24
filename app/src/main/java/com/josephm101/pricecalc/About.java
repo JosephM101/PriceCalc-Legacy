@@ -3,11 +3,10 @@ package com.josephm101.pricecalc;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 /*
@@ -57,6 +56,7 @@ public class About extends AppCompatActivity {
             aboutActivity_checkForUpdatesButton.setOnClickListener(v -> {
                 Intent intent = new Intent(this, CheckForUpdates.class);
                 startActivity(intent);
+                finish();
             });
 
         } catch (PackageManager.NameNotFoundException e) {
