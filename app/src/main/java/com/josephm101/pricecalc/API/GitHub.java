@@ -28,17 +28,13 @@ public class GitHub {
     String apiCall_url_separator = "/";
     private JsonElement response;
 
-    public GitHub(String user_name, String repo_name) {
+    public GitHub(String user_name, String repo_name) throws IOException {
         userName = user_name;
         repoName = repo_name;
         //Make the API call.
-        try {
-            ReleaseInfo rInfo = GetData();
-            Log.d("GIT1", rInfo.getReleaseName());
-            Log.d("GIT2", rInfo.getDownloadUrl());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ReleaseInfo rInfo = GetData();
+        Log.d("GIT1", rInfo.getReleaseName());
+        Log.d("GIT2", rInfo.getDownloadUrl());
     }
 
     public ReleaseInfo GetData() throws IOException {

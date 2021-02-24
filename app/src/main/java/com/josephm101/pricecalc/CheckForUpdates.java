@@ -67,12 +67,29 @@ public class CheckForUpdates extends AppCompatActivity {
             public void run() {
                 try {
                     GitHub release_repo = new GitHub("JosephM101", "PriceCalc");
+                    ReleaseInfo releaseInfo = release_repo.GetData();
+                    String releaseName = releaseInfo.getReleaseVersion();
+                    if (releaseName != BuildConfig.VERSION_NAME) {
+                        loading_CardView.setVisibility(View.GONE);
+                        cardView_updateInfo.setVisibility(View.VISIBLE);
+                        setTitle("Update available.");
+                        TextView currentVersionTextView = findViewById(R.id.textView_currentVersion);
+                        TextView newVersionTextView = findViewById(R.id.textView_newVersion);
+                        TextView changelogTextView = findViewById(R.id.textView_changelog);
+                        currentVersionTextView.setText(BuildConfig.VERSION_NAME);
+                        changelogTextView.setText(releaseInfo.getReleaseNotes());
+                        Button button_updateNow = findViewById(R.id.button_confirmUpdate);
+                    } else {
+                        setTitle("No new updates.");
+                        cardView_noUpdates.setVisibility(View.VISIBLE);
+                        Button button_dismiss = findViewById(R.id.button_dismissUpdateDialog);
+                        button_dismiss.setOnClickListener(v -> finish());
+                    }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Error();
                 }
             }
         });
-
         thread.start();
     }
 

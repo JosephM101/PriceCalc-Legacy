@@ -1,5 +1,6 @@
 package com.josephm101.pricecalc;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -9,17 +10,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.github.javiersantos.appupdater.AppUpdater;
-import com.github.javiersantos.appupdater.AppUpdaterUtils;
-import com.github.javiersantos.appupdater.enums.AppUpdaterError;
-import com.github.javiersantos.appupdater.enums.Display;
-import com.github.javiersantos.appupdater.enums.UpdateFrom;
-import com.github.javiersantos.appupdater.objects.Update;
-
 /*
 Shows information about the app (app version, author, etc.)
-
-<-- MAY NOT BE IMPLEMENTED -->
  */
 
 public class About extends AppCompatActivity {
@@ -63,6 +55,8 @@ public class About extends AppCompatActivity {
             dismissButton.setOnClickListener(v -> finish());
             Button aboutActivity_checkForUpdatesButton = findViewById(R.id.aboutActivity_checkForUpdatesButton);
             aboutActivity_checkForUpdatesButton.setOnClickListener(v -> {
+                Intent intent = new Intent(this, CheckForUpdates.class);
+                startActivity(intent);
             });
 
         } catch (PackageManager.NameNotFoundException e) {
