@@ -36,6 +36,7 @@ import java.net.URLConnection;
 public class CheckForUpdates extends AppCompatActivity {
     public static final int progress_bar_type = 0;
     private ProgressDialog pDialog;
+    String urlToPing = "https://api.github.com/repos/JosephM101/PriceCalc/releases/latest"; //Returns JSON summary of latest package
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +56,8 @@ public class CheckForUpdates extends AppCompatActivity {
         /**
          * Initialize the updater
          */
-        AppUpdaterUtils appUpdater = new AppUpdaterUtils(this);
+        AppUpdaterUtils appUpdater = new AppUpdaterUtils(getApplicationContext());
         //AppUpdater appUpdater = new AppUpdater(getApplicationContext());
-        appUpdater.setGitHubUserAndRepo("JosephM101", "PriceCalc");
-        appUpdater.setUpdateFrom(UpdateFrom.GITHUB);
         //appUpdater.setButtonUpdate("Update");
         //appUpdater.setButtonDismiss("Not now");
         //appUpdater.setButtonDoNotShowAgain("Not interested at all.");
@@ -96,6 +95,7 @@ public class CheckForUpdates extends AppCompatActivity {
                         pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                         pDialog.setCancelable(false);
                         pDialog.show();
+                        new DownloadFileFromURL().execute(update.getUrlToDownload().toString());
                     });
                     Button button_dismiss = findViewById(R.id.button_updateLater);
                     button_dismiss.setOnClickListener(v -> finish());
@@ -118,6 +118,8 @@ public class CheckForUpdates extends AppCompatActivity {
             }
         });
         appUpdater.start();
+        appUpdater.setGitHubUserAndRepo("JosephM101", "PriceCalc");
+        appUpdater.setUpdateFrom(UpdateFrom.GITHUB);
     }
 
     class DownloadFileFromURL extends AsyncTask<String, String, String> {
@@ -128,7 +130,7 @@ public class CheckForUpdates extends AppCompatActivity {
 
         /**
          * Downloading file in background thread
-         * */
+         */
         @Override
         protected String doInBackground(String... f_url) {
             int count;
@@ -178,7 +180,7 @@ public class CheckForUpdates extends AppCompatActivity {
 
         /**
          * Updating progress bar
-         * */
+         */
         protected void onProgressUpdate(String... progress) {
             // setting progress percentage
             pDialog.setProgress(Integer.parseInt(progress[0]));
@@ -186,7 +188,7 @@ public class CheckForUpdates extends AppCompatActivity {
 
         /**
          * After completing background task Dismiss the progress dialog
-         * **/
+         **/
         @Override
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after the file was downloaded
