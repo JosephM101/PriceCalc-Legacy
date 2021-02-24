@@ -15,7 +15,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 @SuppressLint("NonConstantResourceId")
@@ -29,6 +28,7 @@ public class AddItem extends AppCompatActivity {
     Boolean isCancelling = true;
     FloatingActionButton floatingActionButton;
     Boolean somethingChanged = false; //Checked before activity exits. If true, the "Confirm exit & discard" warning dialog will be shown if the user tries to exit the activity.
+    MenuItem addItem_menuBar_totalCostLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,22 +105,26 @@ public class AddItem extends AppCompatActivity {
         });
         taxDeductible = findViewById(R.id.isTaxDeductible_CheckBox);
         taxDeductible.setOnCheckedChangeListener((buttonView, isChecked) -> UpdateTotalLabel());
+        addItem_menuBar_totalCostLabel = findViewById(R.id.addItem_menuBar_totalCostLabel);
 
         floatingActionButton.setOnClickListener(v -> ConfirmAndExit());
     }
 
     void UpdateTotalLabel() {
+        String result; //Stores the final string to write to the labels
         try {
             double defaultTaxRate = PriceHandling.getDefaultTaxRatePercentage(this);
             String itemCostText = itemCostEditText.getText().toString();
             if (taxDeductible.isChecked()) {
-                totalCostLabel.setText(PriceHandling.calculatePrice(Double.parseDouble(itemCostText), defaultTaxRate, Integer.parseInt(itemQuantityEditText.getText().toString())));
+                result = PriceHandling.calculatePrice(Double.parseDouble(itemCostText), defaultTaxRate, Integer.parseInt(itemQuantityEditText.getText().toString()));
             } else {
-                totalCostLabel.setText(PriceHandling.calculatePrice(Double.parseDouble(itemCostText), 0, Integer.parseInt(itemQuantityEditText.getText().toString())));
+                result = PriceHandling.calculatePrice(Double.parseDouble(itemCostText), 0, Integer.parseInt(itemQuantityEditText.getText().toString()));
             }
         } catch (Exception ex) {
-            totalCostLabel.setText(R.string.totalCost_zeroString);
+            result = getString(R.string.totalCost_zeroString);
         }
+        totalCostLabel.setText(result);
+        addItem_menuBar_totalCostLabel.setTitle(result);
         somethingChanged = true; //We're refreshing because the user changed something. Now, we set this to true so that the "Confirm discard" dialog shows if the user tries to leave the activity.
     }
 

@@ -12,6 +12,22 @@ public class BooleanHandling {
         }
     }
 
+    public static String BoolToString(Boolean b, String trueString, String falseString, String suffix) {
+        if (b) {
+            return trueString + suffix;
+        } else {
+            return falseString + suffix;
+        }
+    }
+
+    public static String BoolToString(Boolean b, String trueString, String falseString, String prefix, String suffix) {
+        if (b) {
+            return prefix + trueString + suffix;
+        } else {
+            return prefix + falseString + suffix;
+        }
+    }
+
     public static Boolean StringToBool(String b, String trueString) {
         return b.contains(trueString);
     }
@@ -26,10 +42,10 @@ public class BooleanHandling {
                     "False String: " + falseString);
         }
     }
-}
 
-class StringDoesNotMatch extends Exception {
-    public StringDoesNotMatch(String errorMessage) {
-        super(errorMessage);
+    public static class StringDoesNotMatch extends Exception {
+        public StringDoesNotMatch(String errorMessage) {
+            super(errorMessage);
+        }
     }
 }

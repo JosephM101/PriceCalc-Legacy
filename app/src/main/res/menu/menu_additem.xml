@@ -2,6 +2,12 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/addItem_menuBar_totalCostLabel"
+        android:checkable="false"
+        android:enabled="true"
+        android:title="$0.00"
+        app:showAsAction="always|withText" />
+    <item
         android:id="@+id/discard_actionButton"
         android:icon="@drawable/ic_baseline_clear_24"
         android:title="@string/discard"
@@ -12,6 +18,6 @@
         android:enabled="true"
         android:icon="@drawable/ic_baseline_check_24"
         android:title="@string/add_item"
-        android:visible="false"
+        android:visible="true"
         app:showAsAction="ifRoom" />
 </menu>
