@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="8dp"
     tools:context=".CheckForUpdates">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView_updatingNow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:visibility="gone"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="0dp"
         app:cardElevation="0dp"
@@ -106,7 +107,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="0dp"
         app:cardElevation="0dp"
@@ -187,9 +188,13 @@
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="150dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
+                android:elevation="8dp"
+                android:fadingEdgeLength="4dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 android:scrollbarStyle="insideInset">
 
                 <LinearLayout
@@ -234,7 +239,7 @@
                     android:id="@+id/button_updateLater"
                     style="@style/NegativeButtonStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="50dp"
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_weight="1"
@@ -244,7 +249,7 @@
                     android:id="@+id/button_confirmUpdate"
                     style="@style/PositiveButtonStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="50dp"
                     android:layout_marginStart="4dp"
                     android:layout_weight="1"
                     android:text="Update now" />
