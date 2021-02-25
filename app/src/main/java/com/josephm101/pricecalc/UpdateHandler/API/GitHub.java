@@ -63,7 +63,7 @@ public class GitHub {
                 Log.d("RESPONSE", url);
                 response = GetJsonResponse(generateApiCallURL());
                 JsonObject root = response.getAsJsonObject();
-                Thread.sleep(1000); //Sleep for a quick second before continuing to make sure all the data comes in.
+                Thread.sleep(2000); //Sleep for a quick second before continuing to make sure all the data comes in.
                 if (!(root.isJsonNull())) { //If the JsonObject 'root' is not null, then we can keep going.
                     ReleaseInfo releaseInfo = new ReleaseInfo(); //Create new instance of class ReleaseInfo to return when we're done.
                     releaseInfo.setDownloadUrl(root.getAsJsonArray("assets").get(0).getAsJsonObject().get("browser_download_url").getAsString()); //Get the download URL for the first available asset (most likely the executable package)
@@ -81,6 +81,7 @@ public class GitHub {
                     releaseInfo.setUploadDateString(currentTime.toString());
                     Log.d("GIT1", releaseInfo.getReleaseName());
                     Log.d("GIT2", releaseInfo.getDownloadUrl());
+                    Log.d("GIT_V", releaseInfo.getReleaseVersion());
                     if (listener != null)
                         listener.onRetrievalComplete(releaseInfo); //Everything worked. Return the final class to the listener.
                 } else {

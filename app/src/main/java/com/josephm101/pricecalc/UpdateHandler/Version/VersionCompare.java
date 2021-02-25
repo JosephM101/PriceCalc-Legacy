@@ -1,7 +1,7 @@
 package com.josephm101.pricecalc.UpdateHandler.Version;
 
 public class VersionCompare {
-    enum VersionComparison {
+    public enum VersionComparison {
         VERSION_SAME,
         VERSION_NEWER,
         VERSION_OLDER

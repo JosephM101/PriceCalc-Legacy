@@ -1,7 +1,5 @@
 package com.josephm101.pricecalc.UpdateHandler.Version;
 
-import java.util.List;
-
 public class VersionParser {
     String originalVersionString;
     String modifiedVersionString;
@@ -20,21 +18,26 @@ public class VersionParser {
     public static VersionInfo parse(String versionString) {
         VersionInfo versionInfo = new VersionInfo(); //Create an instance of the class to pass through when we're done.
         String formattedString = versionString.replaceAll("[^0-9.]", ""); //Remove every other character other than numbers 0-9 and '.', to properly format string for parsing.
-        List<String> numbers = List.of(formattedString.split(".")); //Split the string by the dot separator, so that we can get each value.
-        switch (numbers.size()) {
+        String[] numbers = formattedString.split("[.]"); //Split the string by the dot separator, so that we can get each value.
+        switch (numbers.length) {
             case 0:
                 versionInfo.setVersion(0, 0, 0);
                 break;
             case 1:
-                versionInfo.setVersion(Integer.parseInt(numbers.get(0)), 0, 0);
+                versionInfo.setVersion(Integer.parseInt(numbers[0]), 0, 0);
                 break;
             case 2:
-                versionInfo.setVersion(Integer.parseInt(numbers.get(0)), Integer.parseInt(numbers.get(1)), 0);
+                versionInfo.setVersion(Integer.parseInt(numbers[0]), Integer.parseInt(numbers[1]), 0);
                 break;
             case 3:
-                versionInfo.setVersion(Integer.parseInt(numbers.get(0)), Integer.parseInt(numbers.get(1)), Integer.parseInt(numbers.get(2)));
+                versionInfo.setVersion(Integer.parseInt(numbers[0]), Integer.parseInt(numbers[1]), Integer.parseInt(numbers[2]));
                 break;
         }
+        versionInfo.setOriginalVersionString(versionString);
+        //for(String number : numbers)
+        //{
+//
+        //}
         return versionInfo;
     }
 

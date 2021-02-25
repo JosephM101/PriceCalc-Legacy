@@ -1,54 +1,85 @@
 package com.josephm101.pricecalc;
 
-import android.app.DownloadManager;
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.FileProvider;
 
+import com.downloader.Error;
+import com.downloader.OnDownloadListener;
+import com.downloader.PRDownloader;
+import com.downloader.PRDownloaderConfig;
+import com.downloader.request.DownloadRequest;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.josephm101.pricecalc.UpdateHandler.API.GitHub;
 import com.josephm101.pricecalc.UpdateHandler.API.ReleaseInfo;
+import com.josephm101.pricecalc.UpdateHandler.Version.VersionCompare;
 import com.josephm101.pricecalc.UpdateHandler.Version.VersionInfo;
 import com.josephm101.pricecalc.UpdateHandler.Version.VersionParser;
+
+import java.io.File;
+import java.nio.file.Paths;
 
 public class CheckForUpdates extends AppCompatActivity {
     CardView cardView_updateError;
     CardView cardView_noUpdates;
     CardView cardView_updateInfo;
     CardView loading_CardView;
+    CardView updating_CardView;
     GitHub release_repo;
+    Context context;
+    //long downloadID;
+    //DownloadManager downloadManager;
+    //private Context mContext;
+    //private DownloadManager.Request downloadRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
+        PRDownloaderConfig config = PRDownloaderConfig.newBuilder()
+                .setDatabaseEnabled(false)
+                .build();
+        PRDownloader.initialize(getApplicationContext(), config);
+
         setContentView(R.layout.activity_check_for_updates);
         setTheme(android.R.style.Theme_DeviceDefault_DayNight);
         setTitle("Updates");
         loading_CardView = findViewById(R.id.cardView_checkingForUpdates);
+        updating_CardView = findViewById(R.id.cardView_updatingNow);
         cardView_updateInfo = findViewById(R.id.cardView_updateInfo);
         cardView_noUpdates = findViewById(R.id.cardView_noUpdates);
         cardView_updateError = findViewById(R.id.cardView_updateError);
 
         loading_CardView.setVisibility(View.VISIBLE);
+        updating_CardView.setVisibility(View.GONE);
         cardView_updateInfo.setVisibility(View.GONE);
         cardView_noUpdates.setVisibility(View.GONE);
         cardView_updateError.setVisibility(View.GONE);
+        //downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+
         release_repo = new GitHub("JosephM101", "PriceCalc", new GitHub.RetrievalListener() {
             @Override
             public void onRetrievalComplete(ReleaseInfo releaseInfo) {
                 runOnUiThread(() -> {
                     loading_CardView.setVisibility(View.GONE);
+                    VersionInfo releaseVersionInfo = VersionParser.parse(releaseInfo.getReleaseVersion());
+                    VersionInfo currentVersionInfo = VersionParser.parse(BuildConfig.VERSION_NAME);
+                    Log.d("CurrentVersion", currentVersionInfo.getOriginalVersionString());
+                    Log.d("RetrievedVersion", releaseVersionInfo.getOriginalVersionString());
                     if (releaseInfo != null) {
-                        if (releaseInfo.getReleaseVersion() != BuildConfig.VERSION_NAME) {
-                            VersionInfo currentVersionInfo = VersionParser.parse(releaseInfo.getReleaseVersion());
-                            VersionInfo releaseVersionInfo = VersionParser.parse(BuildConfig.VERSION_NAME);
-
-
+                        //if (releaseInfo.getReleaseVersion() != BuildConfig.VERSION_NAME) {
+                        VersionCompare.VersionComparison comparison = VersionCompare.CompareVersions(currentVersionInfo, releaseVersionInfo);
+                        if (comparison == VersionCompare.VersionComparison.VERSION_NEWER) {
                             setTitle("Update available.");
                             TextView currentVersionTextView = findViewById(R.id.textView_currentVersion);
                             TextView newVersionTextView = findViewById(R.id.textView_newVersion);
@@ -58,14 +89,75 @@ public class CheckForUpdates extends AppCompatActivity {
                             changelogTextView.setText(releaseInfo.getReleaseNotes());
                             Button button_updateNow = findViewById(R.id.button_confirmUpdate);
                             button_updateNow.setOnClickListener(v -> {
-                                DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-                                Uri update_link = Uri.parse(releaseInfo.getDownloadUrl());
-                                DownloadManager.Request request = new DownloadManager.Request(update_link);
-                                request.setTitle("PriceCalc");
-                                request.setDescription("Downloading update for PriceCalc...");
-                                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                                request.setDestinationUri(Uri.parse("file://" + getApplicationContext().getFilesDir() + "/pricecalc_update.apk"));
-                                downloadManager.enqueue(request);
+                                setTitle("Updating...");
+                                loading_CardView.setVisibility(View.GONE);
+                                updating_CardView.setVisibility(View.VISIBLE);
+                                cardView_updateInfo.setVisibility(View.GONE);
+                                cardView_noUpdates.setVisibility(View.GONE);
+                                cardView_updateError.setVisibility(View.GONE);
+                                CircularProgressIndicator circularProgressIndicator = findViewById(R.id.progressBarUpdating);
+                                TextView updateStatusTextView = findViewById(R.id.textView_currentUpdateStatus);
+                                String linkToRelease = releaseInfo.getDownloadUrl();
+                                Log.d("PATH", Paths.get(getFilesDir().getPath(), "PriceCalc_update.apk").toString());
+                                ContextWrapper c = new ContextWrapper(getApplicationContext());
+                                String pathRoot = c.getFilesDir().toString();
+                                DownloadRequest request = PRDownloader.download(linkToRelease, pathRoot, "PriceCalc_update.apk")
+                                        .build()
+                                        .setOnStartOrResumeListener(() -> {
+                                            updateStatusTextView.setText("Downloading update...");
+                                            circularProgressIndicator.setIndeterminate(false);
+                                        })
+                                        .setOnPauseListener(() -> {
+
+                                        })
+                                        .setOnCancelListener(() -> {
+
+                                        })
+                                        .setOnProgressListener(progress -> {
+                                            int percentage = (int) QuickMath.Companion.map(progress.currentBytes, 0, progress.totalBytes, 0, 100);
+                                            circularProgressIndicator.setProgress(percentage, false);
+                                        });
+                                long download_id = request.start(new OnDownloadListener() {
+                                    @Override
+                                    public void onDownloadComplete() {
+                                        Thread thread = new Thread(() -> {
+                                            try {
+                                                Thread.sleep(1000);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+                                            runOnUiThread(() -> {
+                                                updateStatusTextView.setText("Installing update...");
+                                                circularProgressIndicator.hide();
+                                                circularProgressIndicator.setIndeterminate(true);
+                                                circularProgressIndicator.show();
+                                            });
+                                            try {
+                                                Thread.sleep(1000); //Give things a chance to catch up
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+                                            runOnUiThread(() -> {
+                                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                                String path = Paths.get(pathRoot, request.getFileName()).toString();
+                                                Uri fileUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", new File(path));
+                                                Log.d("PackageManager", fileUri.getPath());
+                                                //intent.setDataAndType(Uri.fromFile(new File(getFilesDir().getParent() + "/PriceCalc_update.apk")), "application/vnd.android.package-archive");
+                                                intent.setDataAndType(fileUri, "application/vnd.android.package-archive");
+                                                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                startActivity(intent);
+                                            });
+                                        });
+                                        thread.start();
+                                    }
+
+                                    @Override
+                                    public void onError(Error error) {
+                                        Error();
+                                    }
+                                });
                             });
                             Button button_dismiss = findViewById(R.id.button_updateLater);
                             button_dismiss.setOnClickListener(v -> finish());
@@ -91,53 +183,53 @@ public class CheckForUpdates extends AppCompatActivity {
         release_repo.GetData();
     }
 
-    /*    void LoadingComplete(String version) {
-            loading_CardView.setVisibility(View.GONE);
-            if (isUpdateAvailable) {
-                setTitle("Update available.");
-                TextView currentVersionTextView = findViewById(R.id.textView_currentVersion);
-                TextView newVersionTextView = findViewById(R.id.textView_newVersion);
-                TextView changelogTextView = findViewById(R.id.textView_changelog);
-                currentVersionTextView.setText(BuildConfig.VERSION_NAME);
-                newVersionTextView.setText(update.getLatestVersion());
-                changelogTextView.setText(update.getReleaseNotes());
-                Button button_updateNow = findViewById(R.id.button_confirmUpdate);
-                button_updateNow.setOnClickListener(v -> {
-                    //DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-                    //Uri update_link = Uri.parse(update.getUrlToDownload().toString());
-                    //DownloadManager.Request request = new DownloadManager.Request(update_link);
-                    //request.setTitle("PriceCalc");
-                    //request.setDescription("Downloading update for PriceCalc...");
-                    //request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                    //request.setVisibleInDownloadsUi(false);
-                    //request.setDestinationUri(Uri.parse("file://" + getApplicationContext().getFilesDir() + "/pricecalc_update.apk"));
-                    pDialog = new ProgressDialog(getApplicationContext());
-                    pDialog.setMessage("Downloading update...");
-                    pDialog.setIndeterminate(false);
-                    pDialog.setMax(100);
-                    pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    pDialog.setCancelable(false);
-                    pDialog.show();
-                    new DownloadFileFromURL().execute(update.getUrlToDownload().toString());
-                });
-                Button button_dismiss = findViewById(R.id.button_updateLater);
-                button_dismiss.setOnClickListener(v -> finish());
-                cardView_updateInfo.setVisibility(View.VISIBLE);
-            } else {
-                setTitle("No new updates.");
-                cardView_noUpdates.setVisibility(View.VISIBLE);
-                Button button_dismiss = findViewById(R.id.button_dismissUpdateDialog);
-                button_dismiss.setOnClickListener(v -> finish());
-            }
 
-            public void onFailed(AppUpdaterError error) {
-                    loading_CardView.setVisibility(View.GONE);
-                    setTitle("Couldn't update.");
-                    cardView_updateError.setVisibility(View.VISIBLE);
-                    Button button_dismiss = findViewById(R.id.button_dismissFailedDialog);
-                    button_dismiss.setOnClickListener(v -> finish());
-                }
-     */
+    //downloadRequest = new DownloadManager.Request(update_link);
+    //downloadRequest.setTitle("PriceCalc");
+    //downloadRequest.setDescription("Downloading update for PriceCalc...");
+    //downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+    ////request.setDestinationUri(Uri.parse("file://" + getApplicationContext().getFilesDir() + "/pricecalc_update.apk"));
+    ////request.setDestinationUri(Uri.parse("file://" + getFilesDir().getParent() + "/pricecalc_update.apk"));
+    //registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+    //downloadID = downloadManager.enqueue(downloadRequest);
+
+
+    //BroadcastReceiver onComplete = new BroadcastReceiver() {
+    //    public void onReceive(Context context, Intent intent) {
+    //        long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+    //        if (id == -1)
+    //            return;
+    //        if (downloadID == id) {
+    //            Intent fileIntent = new Intent(Intent.ACTION_VIEW);
+    //            Uri mostRecentDownload = downloadManager.getUriForDownloadedFile(downloadID);
+    //            String mimeType = downloadManager.getMimeTypeForDownloadedFile(downloadID);
+    //            fileIntent.setDataAndType(mostRecentDownload, mimeType);
+    //            fileIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    //            //fileIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+    //            try {
+    //                getApplicationContext().startActivity(fileIntent);
+    //            } catch (ActivityNotFoundException e) {
+    //            }
+
+    //            //int uriIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
+    //            //String downloadedPackageUriString = cursor.getString(uriIndex);
+    //            //Intent open = new Intent(Intent.ACTION_VIEW);
+    //            //open.setDataAndType(Uri.parse(downloadedPackageUriString), mimeType);
+    //            //open.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+    //            //startActivity(open);
+    //            //String mimeType =
+    //            //        mDownloadManager.getMimeTypeForDownloadedFile(mDownloadedFileID);
+    //            //fileIntent.setDataAndType(mostRecentDownload, mimeType);
+    //            //fileIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    //            //try {
+    //            //    mContext.startActivity(fileIntent);
+    //            //} catch (ActivityNotFoundException e) {
+    //            //    Toast.makeText(mContext, "No handler for this type of file.",
+    //            //            Toast.LENGTH_LONG).show();
+    //            //}
+    //        }
+    //    }
+    //};
 
     void Error() {
         loading_CardView.setVisibility(View.GONE);

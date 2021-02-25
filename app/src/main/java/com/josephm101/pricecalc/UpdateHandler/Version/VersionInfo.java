@@ -26,6 +26,23 @@ public class VersionInfo {
     }
 
     private int majorVersion, minorVersion, patchVersion; //"major.minor.patch" (Ex. X.X.X or 1.5.3)
+
+    public void setMajorVersion(int majorVersion) {
+        this.majorVersion = majorVersion;
+    }
+
+    public void setMinorVersion(int minorVersion) {
+        this.minorVersion = minorVersion;
+    }
+
+    public void setPatchVersion(int patchVersion) {
+        this.patchVersion = patchVersion;
+    }
+
+    public void setOriginalVersionString(String versionString) {
+        this.versionString = versionString;
+    }
+
     String versionString, modifiedVersionString;
     Boolean containsMajorVersion;
     Boolean containsMinorVersion;
