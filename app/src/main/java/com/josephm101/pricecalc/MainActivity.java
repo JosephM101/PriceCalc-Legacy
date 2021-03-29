@@ -215,8 +215,8 @@ public class MainActivity extends AppCompatActivity {
         RefreshView();
 
         //Show the welcome screen (New, Beta)
-        Intent aboutBox_Intent = new Intent(this, WelcomeScreen.class);
-        startActivity(aboutBox_Intent);
+        Intent welcomeScreen_Intent = new Intent(this, WelcomeScreen.class);
+        startActivity(welcomeScreen_Intent);
     }
 
     @Deprecated

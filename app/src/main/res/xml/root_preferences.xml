@@ -25,6 +25,11 @@
             app:dialogTitle="Change app theme"
             app:defaultValue="1"
             app:entryValues="@array/theme_settings_val" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="show_welcome_screen"
+            android:summary="Display the welcome screen when the app is started."
+            android:title="Show welcome screen" />
 
     </PreferenceCategory>
     <PreferenceCategory android:title="Experimental (Changes require app restart)">
