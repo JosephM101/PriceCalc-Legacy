@@ -22,6 +22,16 @@
     <item
         android:id="@+id/clearList_menuItem"
         android:title="@string/clearList_ActionButton" />
+    <item android:title="@string/file">
+        <menu>
+            <item
+                android:id="@+id/openList_menuItem"
+                android:title="@string/open_list" />
+            <item
+                android:id="@+id/saveList_menuItem"
+                android:title="@string/save_list" />
+        </menu>
+    </item>
     <item android:title="@string/tools" >
         <menu >
             <item

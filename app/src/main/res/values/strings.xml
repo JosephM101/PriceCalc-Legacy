@@ -59,4 +59,7 @@
     <string name="latest_version">You have the latest version of the app.</string>
     <string name="new_version">New version</string>
     <string name="checkForUpdate_errorMessage">Something happened, and we couldn\'t check for updates. Please try again later, or check your connection.</string>
+    <string name="file">File</string>
+    <string name="open_list">Open List</string>
+    <string name="save_list">Save List</string>
 </resources>

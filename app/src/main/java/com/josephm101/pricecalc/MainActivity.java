@@ -213,6 +213,10 @@ public class MainActivity extends AppCompatActivity {
         noItems_CardView.setVisibility(View.GONE);
         LoadList();
         RefreshView();
+
+        //Show the welcome screen (New, Beta)
+        Intent aboutBox_Intent = new Intent(this, WelcomeScreen.class);
+        startActivity(aboutBox_Intent);
     }
 
     @Deprecated
