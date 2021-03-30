@@ -22,7 +22,9 @@
     <item
         android:id="@+id/clearList_menuItem"
         android:title="@string/clearList_ActionButton" />
-    <item android:title="@string/file">
+    <item
+        android:title="@string/file"
+        android:visible="false">
         <menu>
             <item
                 android:id="@+id/openList_menuItem"
