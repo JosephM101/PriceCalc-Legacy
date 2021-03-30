@@ -43,6 +43,10 @@ import java.util.Set;
 @SuppressLint("NonConstantResourceId")
 
 public class MainActivity extends AppCompatActivity {
+    //Show the welcome screen (New, Beta)
+    Intent welcomeScreen_Intent = new Intent(this, WelcomeScreen.class);
+    //startActivity(welcomeScreen_Intent);
+
     @SuppressLint("StaticFieldLeak")
     private static CustomAdapter adapter;
     ArrayList<DataModel> listItems = new ArrayList<>();
@@ -213,10 +217,6 @@ public class MainActivity extends AppCompatActivity {
         noItems_CardView.setVisibility(View.GONE);
         LoadList();
         RefreshView();
-
-        //Show the welcome screen (New, Beta)
-        Intent welcomeScreen_Intent = new Intent(this, WelcomeScreen.class);
-        startActivity(welcomeScreen_Intent);
     }
 
     @Deprecated

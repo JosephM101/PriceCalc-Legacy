@@ -195,6 +195,7 @@ public class VersionInfo {
         }
         return result;
     }
+
     /**
      * See if this VersionInfo is newer than another.
      *
