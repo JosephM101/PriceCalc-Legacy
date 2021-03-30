@@ -20,57 +20,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textView14"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="32dp"
-        android:text="Choose an option below to get started."
-        android:textSize="18sp"
-        tools:layout_editor_absoluteX="51dp"
-        tools:layout_editor_absoluteY="517dp" />
-
     <Button
         android:id="@+id/button3"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Continue (Default)"
-        android:tooltipText="Open the app with the default list (loaded when the app starts up)"
+        android:text="Get Started"
         app:icon="@drawable/ic_baseline_arrow_forward_24"
         tools:layout_editor_absoluteX="32dp"
         tools:layout_editor_absoluteY="574dp" />
-
-    <Button
-        android:id="@+id/button"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Create a new list"
-        android:tooltipText="Create a new list (doesn't affect default list)"
-        app:icon="@drawable/ic_baseline_add_24"
-        tools:layout_editor_absoluteX="32dp"
-        tools:layout_editor_absoluteY="622dp" />
-
-    <Button
-        android:id="@+id/button2"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:text="Open a saved list"
-        app:icon="@drawable/ic_baseline_folder_open_24"
-        tools:layout_editor_absoluteX="32dp"
-        tools:layout_editor_absoluteY="670dp" />
-
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:checked="true"
-        android:text="Show this welcome screen"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="782dp" />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>
