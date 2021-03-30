@@ -49,10 +49,6 @@ import static android.content.Intent.ACTION_OPEN_DOCUMENT;
 @SuppressLint("NonConstantResourceId")
 
 public class MainActivity extends AppCompatActivity {
-    //Show the welcome screen (New, Beta)
-    //Intent welcomeScreen_Intent = new Intent(this, WelcomeScreen.class);
-    //startActivity(welcomeScreen_Intent);
-
     @SuppressLint("StaticFieldLeak")
     private static CustomAdapter adapter;
     ArrayList<DataModel> listItems = new ArrayList<>();
@@ -107,6 +103,11 @@ public class MainActivity extends AppCompatActivity {
         actionBar = getSupportActionBar();
         assert actionBar != null;
         super.onCreate(savedInstanceState);
+
+        //Show the welcome screen (New, Beta)
+        Intent welcomeScreen_Intent = new Intent(this, WelcomeScreen.class);
+        startActivity(welcomeScreen_Intent);
+
         String savedListFileName = "/saved_list.txt";
         savedList_FileName = getFilesDir().getParent() + savedListFileName;
         //Load layout based on settings
