@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -37,14 +39,18 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Set;
+
+import static android.content.Intent.ACTION_OPEN_DOCUMENT;
+
 @SuppressWarnings("ALL")
 @SuppressLint("NonConstantResourceId")
 
 public class MainActivity extends AppCompatActivity {
     //Show the welcome screen (New, Beta)
-    Intent welcomeScreen_Intent = new Intent(this, WelcomeScreen.class);
+    //Intent welcomeScreen_Intent = new Intent(this, WelcomeScreen.class);
     //startActivity(welcomeScreen_Intent);
 
     @SuppressLint("StaticFieldLeak")
@@ -63,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     Menu referencedMenu;
     CardView cardView;
     androidx.appcompat.app.ActionBar actionBar;
+    Boolean isFromFile = false;
 
     //Preferences
     boolean hideDock_preference;
@@ -274,9 +281,32 @@ public class MainActivity extends AppCompatActivity {
             case R.id.cancelDeletion_menuItem:
                 LeaveDeleteMode(this);
                 break;
+            case R.id.openList_menuItem:
+                Intent openDocument = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                openDocument.addCategory(Intent.CATEGORY_OPENABLE);
+                openDocument.setType("*/*");
+                //intent.putExtra(Intent.EXTRA_TITLE, "");
+                startActivityForResult(openDocument, 2);
         }
         return super.onOptionsItemSelected(item);
     }
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if(requestCode == 2 && resultCode == Activity.RESULT_OK) {
+//            Uri uri = data.getData();
+//            try {
+//                OutputStream output = getContext().getContentResolver().openOutputStream(uri);
+//
+//                output.write(SOME_CONTENT.getBytes());
+//                output.flush();
+//                output.close();
+//            }
+//            catch(IOException e) {
+//                Toast.makeText(context, "Couldn't open the file.", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }
 
     void GetTotalCostFromList() {
         double TotalCost;
