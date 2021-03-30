@@ -13,6 +13,11 @@ public class Preferences {
         public static final String ENTRY_BETA_MODE_MSG_PREF = "doNotShowAgain";
     }
 
+    public static class WelcomeScreen {
+        public static final String PreferenceGroup = "WELCOME_SCREEN";
+        public static final String ENTRY_SHOWN = "shown";
+    }
+
     public static class DefaultValues {
         public static final String DefaultTaxRate = "6.25";
         public static final String DefaultTheme = "1";

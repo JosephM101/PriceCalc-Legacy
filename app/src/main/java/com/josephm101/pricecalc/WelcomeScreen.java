@@ -10,6 +10,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
@@ -57,6 +58,11 @@ public class WelcomeScreen extends AppCompatActivity {
                         .setMessage("PriceCalc needs some permissions to ensure that it works properly. If any need to be granted, they will be requested after you click OK.")
                         .setPositiveButton("OK", (dialog, which) -> {
                             ActivityCompat.requestPermissions(act, PERMISSIONS, PERMISSION_ALL);
+                            SharedPreferences settings1 = getApplicationContext().getSharedPreferences(Preferences.WelcomeScreen.PreferenceGroup, 0);
+                            SharedPreferences.Editor editor = settings1.edit();
+                            editor.putInt(Preferences.WelcomeScreen.ENTRY_SHOWN, 1);
+                            editor.apply();
+                            dialog.dismiss();
                             finish();
                         });
                 materialAlertDialogBuilder.show();
