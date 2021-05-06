@@ -3,6 +3,7 @@ package com.josephm101.pricecalc;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -58,6 +59,13 @@ public class ItemInfo extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_viewitem, menu);
         return true;
     }
 }
