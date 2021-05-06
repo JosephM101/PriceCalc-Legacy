@@ -1,16 +1,40 @@
 package com.josephm101.pricecalc;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ItemInfo extends AppCompatActivity {
     DataModel importedDataModel;
+
+    final ActivityResultLauncher<Intent> EditItemActivityLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    Bundle extras = null;
+                    if (data != null) {
+                        extras = data.getExtras();
+                    }
+                    if (extras != null) {
+                        //Build the entry
+                        DataModel item = new DataModel(extras.getString("itemName"), extras.getString("itemCost"), extras.getBoolean("isTaxDeductible"), extras.getString("itemQuantity"));
+                        Intent sendBack = new Intent();
+                        sendBack.putExtra("newEntry", item);
+                        setResult(RESULT_OK, sendBack);
+                        finish();
+                    }
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +78,7 @@ public class ItemInfo extends AppCompatActivity {
         ItemTotalCostLabel.setText(stringBuilder.toString());
         Log.i("ItemInfo_INIT", "Init done; calculations complete.");
         Log.i("ItemInfo_INIT", "All values printed.");
+        setResult(RESULT_FIRST_USER, null);
     }
 
     @Override
@@ -67,5 +92,17 @@ public class ItemInfo extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_viewitem, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.EditItem:
+                Intent editItem = new Intent(this, AddItem.class);
+                editItem.putExtra("dataModel", importedDataModel);
+                EditItemActivityLauncher.launch(editItem);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

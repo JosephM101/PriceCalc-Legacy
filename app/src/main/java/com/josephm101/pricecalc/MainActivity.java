@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         if (extras != null) {
                             //Build the entry
-                            DataModel item = new DataModel(extras.getString("itemName"), extras.getString("itemCost"), extras.getBoolean("isTaxDeductible"), extras.getString("itemQuantity"));
+                            DataModel item = (DataModel) extras.getSerializable("newEntry");
                             adapter.remove(adapter.getItem(listView_position)); //Delete the old entry
                             adapter.insert(item, listView_position); //Insert the new entry
                             RefreshEverything(true);
@@ -211,10 +211,11 @@ public class MainActivity extends AppCompatActivity {
         adapter.setNotifyOnChange(true);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            DataModel dataModel = listItems.get(position);
-            Intent i = new Intent(view.getContext(), ItemInfo.class);
-            i.putExtra("dataModel", dataModel);
-            startActivity(i);
+            listView_position = position;
+            DataModel dataModel = listItems.get(listView_position);
+            Intent itemInfo = new Intent(this, ItemInfo.class);
+            itemInfo.putExtra("dataModel", dataModel);
+            ItemInfoActivityLauncher.launch(itemInfo);
         });
 
         //listView.setOnItemLongClickListener(this::onItemLongClick);
@@ -687,7 +688,7 @@ public class MainActivity extends AppCompatActivity {
             ContextMenu.ContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
             listView_position = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
             MenuInflater inflater = getMenuInflater();
-            menu.setHeaderTitle("Item options");
+            //menu.setHeaderTitle("Item options");
             inflater.inflate(R.menu.menu_itemsmenu, menu);
         }
     }
