@@ -37,7 +37,7 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="hideDock_preference"
-            android:title="Hide the dock entirely"
+            android:title="Hide the dock entirely (Experimental)"
             app:summary="If enabled, the dock will be hidden, and its components will be moved to the app bar." />
     </PreferenceCategory>
 </PreferenceScreen>
