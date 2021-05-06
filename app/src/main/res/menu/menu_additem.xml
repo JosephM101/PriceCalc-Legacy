@@ -4,7 +4,7 @@
     <item
         android:id="@+id/addItem_menuBar_totalCostLabel"
         android:checkable="false"
-        android:enabled="true"
+        android:enabled="false"
         android:title="@string/defValue_Price"
         app:showAsAction="always|withText" />
     <item
