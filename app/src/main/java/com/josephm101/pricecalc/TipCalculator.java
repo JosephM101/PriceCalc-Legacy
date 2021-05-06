@@ -5,12 +5,10 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.SeekBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -19,8 +17,6 @@ import androidx.cardview.widget.CardView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputLayout;
-
-import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
