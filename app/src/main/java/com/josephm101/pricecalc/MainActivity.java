@@ -5,20 +5,21 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -26,10 +27,12 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -39,11 +42,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Set;
-
-import static android.content.Intent.ACTION_OPEN_DOCUMENT;
 
 @SuppressWarnings("ALL")
 @SuppressLint("NonConstantResourceId")
@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
     private static CustomAdapter adapter;
     ArrayList<DataModel> listItems = new ArrayList<>();
     ArrayList<DataModel> listItems_BKP = new ArrayList<>();
-    //private final String NewLine = "\r\n";
     private final String NewLineSeparator = "`";
     private final String splitChar = "§";
     ListView listView;
@@ -66,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     CardView cardView;
     androidx.appcompat.app.ActionBar actionBar;
     Boolean isFromFile = false;
+    int listView_position;
 
     //Preferences
     boolean hideDock_preference;
@@ -97,6 +97,50 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+    final ActivityResultLauncher<Intent> EditItemActivityLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        Bundle extras = null;
+                        if (data != null) {
+                            extras = data.getExtras();
+                        }
+                        if (extras != null) {
+                            //Build the entry
+                            DataModel item = new DataModel(extras.getString("itemName"), extras.getString("itemCost"), extras.getBoolean("isTaxDeductible"), extras.getString("itemQuantity"));
+                            adapter.remove(adapter.getItem(listView_position)); //Delete the old entry
+                            adapter.insert(item, listView_position); //Insert the new entry
+                            RefreshEverything(true);
+                        }
+                    }
+                }
+            });
+
+    final ActivityResultLauncher<Intent> ItemInfoActivityLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        Bundle extras = null;
+                        if (data != null) {
+                            extras = data.getExtras();
+                        }
+                        if (extras != null) {
+                            //Build the entry
+                            DataModel item = new DataModel(extras.getString("itemName"), extras.getString("itemCost"), extras.getBoolean("isTaxDeductible"), extras.getString("itemQuantity"));
+                            adapter.remove(adapter.getItem(listView_position)); //Delete the old entry
+                            adapter.insert(item, listView_position); //Insert the new entry
+                            RefreshEverything(true);
+                        }
+                    }
+                }
+            });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ThemeHandling.ApplyTheme(this); //Apply theme
@@ -111,8 +155,6 @@ public class MainActivity extends AppCompatActivity {
         //    Intent welcomeScreen_Intent = new Intent(this, WelcomeScreen.class);
         //    startActivity(welcomeScreen_Intent);
         //}
-
-
 
         String savedListFileName = "/saved_list.txt";
         savedList_FileName = getFilesDir().getParent() + savedListFileName;
@@ -159,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
+            ani.setFillAfter(true);
             addItem_FloatingActionButton.startAnimation(ani);
         });
         listView = findViewById(R.id.items_listBox);
@@ -174,45 +217,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(i);
         });
 
-        listView.setOnItemLongClickListener((parent, view, position, id) -> {
-            final DataModel dataModel = listItems.get(position);
-            MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(parent.getContext(), R.style.CustomTheme_MaterialComponents_MaterialAlertDialog)
-                    .setMessage("Are you sure you want to permanently delete this entry? \r\n" + dataModel.getItemName())
-                    .setTitle("Delete Entry?")
-                    .setIcon(R.drawable.ic_baseline_delete_forever_24)
-                    .setPositiveButton("Yes, delete it.", (dialog, which) -> {
-                        //Backup... just in case :)
-                        listItems_BKP.clear();
-                        for (DataModel item : listItems) {
-                            listItems_BKP.add(item);
-                        }
-                        listItems.remove(position);
-                        //ConstraintLayout coordinatorLayout = findViewById(R.id.mainConstraintLayout);
-                        //CardView cardView = findViewById(R.id.cardView);
-                        //View layout = findViewById(R.id.mainConstraintLayout);
-                        //Show snackbar
-                        {
-                            //    Snackbar snackbar = Snackbar.make(coordinatorLayout, "Entry deleted", Snackbar.LENGTH_LONG)
-                            //            .setAction("UNDO", v1 -> {
-                            //                listItems.clear();
-                            //                for (DataModel item : listItems_BKP) {
-                            //                    listItems.add(item);
-                            //                }
-                            //                RefreshEverything(true);
-                            //                Snackbar snackbarUndone = Snackbar.make(coordinatorLayout, "Action undone", Snackbar.LENGTH_SHORT)
-                            //                        .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
-                            //                snackbarUndone.show();
-                            //            })
-                            //            .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
-                            //    snackbar.show();
-                        }
-                        RefreshEverything(true);
-                    })
-                    .setNegativeButton("No, don't!", (dialog, which) -> dialog.dismiss())
-                    .setCancelable(true);
-            materialAlertDialogBuilder.show();
-            return true;
-        });
+        //listView.setOnItemLongClickListener(this::onItemLongClick);
 
         //if (floatingDockPreference_value) {
         //    cardView.setOnTouchListener(new View.OnTouchListener() {
@@ -229,6 +234,9 @@ public class MainActivity extends AppCompatActivity {
         loadingProgressBar.setVisibility(View.GONE);
         noItems_CardView = findViewById(R.id.noItems_View);
         noItems_CardView.setVisibility(View.GONE);
+
+        registerForContextMenu(listView);
+
         LoadList();
         RefreshView();
     }
@@ -462,7 +470,6 @@ public class MainActivity extends AppCompatActivity {
          * 3. Is item taxable? (Bool as String)
          * 4. Item Quantity
          */
-
         String[] stringArray = (String[]) stringSet.toArray();
         return new DataModel(stringArray[0], stringArray[1], BooleanHandling.StringToBool(stringArray[2], BooleanHandling.PositiveValue), stringArray[3]);
     }
@@ -564,7 +571,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Deprecated scaling method (inefficient & buggy; replaced by simpler AnimateCard methods
+     * Deprecated scaling method (inefficient & buggy; replaced by simpler AnimateCard methods)
      */
 /*    void AnimateCardIn(int duration) {
         CardView cardView = findViewById(R.id.cardView);
@@ -607,6 +614,12 @@ public class MainActivity extends AppCompatActivity {
         addItem_FloatingActionButton.startAnimation(fabAni);
     }
 
+    private boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        listView_position = position;
+        openOptionsMenu();
+        return true;
+    }
+
     enum CardShowStatus {
         HIDE,
         SHOW
@@ -625,6 +638,75 @@ public class MainActivity extends AppCompatActivity {
                     AnimateCardIn();
                 }
             }
+        }
+    }
+
+    void RunItemDeletionProcedure() {
+        final DataModel dataModel = listItems.get(listView_position);
+        MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(this, R.style.CustomTheme_MaterialComponents_MaterialAlertDialog)
+                .setMessage("Are you sure you want to permanently delete this entry? \r\n" + dataModel.getItemName())
+                .setTitle("Delete Entry?")
+                .setIcon(R.drawable.ic_baseline_delete_forever_24)
+                .setPositiveButton("Yes, delete it.", (dialog, which) -> {
+                    //Backup... just in case :)
+                    listItems_BKP.clear();
+                    for (DataModel item : listItems) {
+                        listItems_BKP.add(item);
+                    }
+                    listItems.remove(listView_position);
+                    ConstraintLayout coordinatorLayout = findViewById(R.id.mainConstraintLayout);
+                    CardView cardView = findViewById(R.id.cardView);
+                    View layout = findViewById(R.id.mainConstraintLayout);
+                    //Show snackbar
+                    {
+                        Snackbar snackbar = Snackbar.make(coordinatorLayout, "Entry deleted", Snackbar.LENGTH_LONG)
+                                .setAction("UNDO", v1 -> {
+                                    listItems.clear();
+                                    for (DataModel item : listItems_BKP) {
+                                        listItems.add(item);
+                                    }
+                                    RefreshEverything(true);
+                                    //Snackbar snackbarUndone = Snackbar.make(coordinatorLayout, "Action undone", Snackbar.LENGTH_SHORT)
+                                    //        .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
+                                    //snackbarUndone.show();
+                                })
+                                .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
+                        snackbar.show();
+                    }
+                    RefreshEverything(true);
+                })
+                .setNegativeButton("No, don't!", (dialog, which) -> dialog.dismiss())
+                .setCancelable(true);
+        materialAlertDialogBuilder.show();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if (v.getId() == R.id.items_listBox) {
+            ContextMenu.ContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            listView_position = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
+            MenuInflater inflater = getMenuInflater();
+            menu.setHeaderTitle("Item options");
+            inflater.inflate(R.menu.menu_itemsmenu, menu);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        DataModel dataModel = listItems.get(listView_position);
+        switch (item.getItemId()) {
+            case R.id.edit_item:
+                Intent editItem = new Intent(this, AddItem.class);
+                editItem.putExtra("dataModel", dataModel);
+                EditItemActivityLauncher.launch(editItem);
+                return true;
+            case R.id.delete_item:
+                RunItemDeletionProcedure();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
         }
     }
 }
