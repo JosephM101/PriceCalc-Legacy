@@ -8,10 +8,12 @@
         android:id="@+id/DeleteItem"
         android:icon="@drawable/ic_baseline_delete_forever_24"
         android:title="@string/delete_item_action_button"
+        android:visible="false"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/EditItem"
         android:icon="@drawable/ic_baseline_edit_24"
         android:title="@string/edit_item_action_button"
+        android:visible="true"
         app:showAsAction="ifRoom" />
 </menu>

@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PriceCalc">
-        <activity android:name=".WelcomeScreen"></activity>
+        <activity android:name=".WelcomeScreen" />
         <activity
             android:name=".CheckForUpdates"
             android:excludeFromRecents="true"
@@ -35,7 +35,9 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
+
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
             </intent-filter>
         </activity>
