@@ -18,6 +18,9 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 @SuppressLint("NonConstantResourceId")
 
 public class AddItem extends AppCompatActivity {
@@ -28,22 +31,25 @@ public class AddItem extends AppCompatActivity {
     EditText itemQuantityEditText;
     Boolean isCancelling = true;
     FloatingActionButton floatingActionButton;
-    Boolean somethingChanged = false; //Checked before activity exits. If true, the "Confirm exit & discard" warning dialog will be shown if the user tries to exit the activity.
+    Boolean somethingChanged = false; //This is checked when the activity is closing. If true, the "Confirm exit & discard" warning dialog will be shown if the user tries to exit the activity.
     MenuItem addItem_menuBar_totalCostLabel;
     CoordinatorLayout coordinatorLayout;
+    Boolean editMode = false;
+    DataModel importedDataModel;
+    Timer refreshTimer;
+    String result; //Stores the final string to write to the labels
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTitle(R.string.add_item);
+        super.onCreate(savedInstanceState);
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setSubtitle("Edit item details.");
         actionBar.setDisplayHomeAsUpEnabled(true);
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
         //Init Components
         floatingActionButton = findViewById(R.id.confirmFloatingActionButton);
-
         itemNameEditText = findViewById(R.id.itemNameEditText);
         itemNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -106,12 +112,38 @@ public class AddItem extends AppCompatActivity {
         });
         taxDeductible = findViewById(R.id.isTaxDeductible_CheckBox);
         taxDeductible.setOnCheckedChangeListener((buttonView, isChecked) -> UpdateTotalLabel());
-
         floatingActionButton.setOnClickListener(v -> ConfirmAndExit());
+        EditMode();
+        refreshTimer = new Timer();
+        refreshTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(() -> {
+                    if(addItem_menuBar_totalCostLabel != null) {
+                        addItem_menuBar_totalCostLabel.setTitle(result);
+                    }
+                });
+            }
+        }, 100, 50);
+    }
+
+    void EditMode() {
+        Intent i = getIntent();
+        if (i.hasExtra("dataModel")) {
+            setTitle("Edit Item");
+            importedDataModel = (DataModel) i.getSerializableExtra("dataModel");
+            editMode = true;
+            setTitle("Edit Item");
+            itemNameEditText.setText(importedDataModel.getItemName());
+            itemCostEditText.setText(importedDataModel.getItemPrice());
+            itemQuantityEditText.setText(importedDataModel.getItemQuantity());
+            taxDeductible.setChecked(importedDataModel.getIsTaxable());
+            UpdateTotalLabel();
+            setResult(RESULT_FIRST_USER, null);
+        }
     }
 
     void UpdateTotalLabel() {
-        String result; //Stores the final string to write to the labels
         try {
             double defaultTaxRate = PriceHandling.getDefaultTaxRatePercentage(this);
             String itemCostText = itemCostEditText.getText().toString();
@@ -124,7 +156,6 @@ public class AddItem extends AppCompatActivity {
             result = getString(R.string.totalCost_zeroString);
         }
         totalCostLabel.setText(result);
-        addItem_menuBar_totalCostLabel.setTitle(result);
         somethingChanged = true; //We're refreshing because the user changed something. Now, we set this to true so that the "Confirm discard" dialog shows if the user tries to leave the activity.
     }
 
@@ -149,8 +180,8 @@ public class AddItem extends AppCompatActivity {
         if (somethingChanged == true) {
             if (isCancelling) {
                 MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(this, R.style.CustomTheme_MaterialComponents_MaterialAlertDialog)
-                        .setMessage("Are you sure you want to discard this entry and go back?")
-                        .setTitle("Discard Entry?")
+                        .setMessage("Are you sure you want to discard unsaved changes?")
+                        .setTitle("Discard Changes?")
                         .setIcon(R.drawable.ic_baseline_cancel_24)
                         .setPositiveButton("Yes", (dialog, which) -> {
                             setResult(RESULT_CANCELED);
