@@ -105,12 +105,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         //Show the welcome screen (New, Beta)
-        SharedPreferences settings = getApplicationContext().getSharedPreferences(Preferences.WelcomeScreen.PreferenceGroup, 0);
-        int wasShown = settings.getInt(Preferences.WelcomeScreen.ENTRY_SHOWN, 0);
-        if(wasShown == 0) { //The Welcome screen was never shown; possibly a first start of the app.
-            Intent welcomeScreen_Intent = new Intent(this, WelcomeScreen.class);
-            startActivity(welcomeScreen_Intent);
-        }
+        //SharedPreferences settings = getApplicationContext().getSharedPreferences(Preferences.WelcomeScreen.PreferenceGroup, 0);
+        //int wasShown = settings.getInt(Preferences.WelcomeScreen.ENTRY_SHOWN, 0);
+        //if(wasShown == 0) { //The Welcome screen was never shown; possibly a first start of the app.
+        //    Intent welcomeScreen_Intent = new Intent(this, WelcomeScreen.class);
+        //    startActivity(welcomeScreen_Intent);
+        //}
+
+
 
         String savedListFileName = "/saved_list.txt";
         savedList_FileName = getFilesDir().getParent() + savedListFileName;
