@@ -39,15 +39,12 @@ public class About extends AppCompatActivity {
 
             packageName_textView.setText(packageName);
             fullPackageName_textView.setText(fullPackageName);
-/*
-              String appVersionString = version +
-                    " (" +
-                    buildType +
-                    " build)";
-*/
-            String appVersionString = version +
-                    "-" +
-                    buildType;
+
+            //String appVersionString = version +
+            //        "-" +
+            //        buildType;
+
+            String appVersionString = version;
 
             appVersion_textView.setText(appVersionString);
             Button dismissButton = findViewById(R.id.aboutActivity_dismissButton);
