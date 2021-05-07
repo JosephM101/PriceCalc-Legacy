@@ -1,5 +1,5 @@
 # PriceCalc
- A material design list-based price calculator for Android that also calculates tax.
+ A list-based price calculator for Android that also calculates tax.
 
 Supports Android 7.1 (SDK 25) and later.
 
