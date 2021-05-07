@@ -2,6 +2,8 @@
 **A list-based price calculator for Android that also calculates tax, with a focus on simplicity.**
 
 [Installing](#install)
+[Updating](#update)
+[Considerations for future updates](#considerations)
 
 ![Screenshot_20210507-105116 (Small)](https://user-images.githubusercontent.com/28277730/117469102-5df53800-af23-11eb-99a9-d2292b5d8854.png)
 
