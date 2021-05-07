@@ -36,7 +36,8 @@
 - - - -
 
 ### Considerations
-#### (aka. not guranteed to make it into a release)
+**(aka. not guranteed to make it into a release)**
+
 Consideration  | Status
 ------------- | -------------
 Add feature that allows retrieving information from Amazon  |
