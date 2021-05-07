@@ -1,9 +1,10 @@
 # PriceCalc
- A list-based price calculator for Android that also calculates tax.
+**A list-based price calculator for Android that also calculates tax.**
 
-Supports Android 7.1 (SDK 25) and later.
 
-Note: All .apk files under the "Releases" section are debug builds of PriceCalc.
+> Supports Android 7.1 (SDK 25) and later.
+> 
+> All .apk files under the "Releases" section are debug builds of PriceCalc. This is for simplicity, and there are no plans to change this in the future as that might break something.
 
 ## Install
 - Step 1: On your Android device, open your favorite web browser, and go to this repository.
