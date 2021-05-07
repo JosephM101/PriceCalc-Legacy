@@ -1,2 +1,24 @@
 # PriceCalc
- A price calculator for Android that also calculates tax. On top of that, it does it in (a bit of) style.
+ A material design list-based price calculator for Android that also calculates tax.
+
+Supports Android 7.1 (SDK 25) and later.
+
+Note: All .apk files under the "Releases" section are debug builds of PriceCalc.
+
+## Install
+- Step 1: On your Android device, open your favorite web browser, and go to this repository.
+- Step 2: Navigate to the [Releases](https://github.com/JosephM101/PriceCalc/releases/latest "Go to latest PriceCalc release") page.
+- Step 3: Under assets, download the *.apk* file (`PriceCalc_vX.apk`).
+- Step 4: Once the file is downloaded, open it from the browser. A dialog should pop up asking you to confirm installing PriceCalc. Tap "Install".
+
+**Please note:** Android may block the installation and ask you if you want to allow installing apps from unknown sources. In this case, tap the Settings button in that dialog, and toggle "Allow installing apps from unknown sources" in the Settings window that appears. Once done, tap the back button, and now you can tap "Install".
+
+- Step 5: Once the installation is finished, you can either dismiss the dialog, or tap "Open" to run PriceCalc immediately.
+
+## Updating
+#### PriceCalc has an update system built-in, and gets its updates through GitHub. It's not automatic, so here's how you can check for updates.
+
+- Step 1: In PriceCalc, tap the three dots in the top right corner to expand the menu, and tap "About".
+- Step 2: In the dialog that appears, tap "Check for updates". The app will then check for updates.
+
+**If an update is available, you will be presented with information on the new update, as well as the option to update now or later.**
