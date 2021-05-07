@@ -15,7 +15,7 @@ Note: All .apk files under the "Releases" section are debug builds of PriceCalc.
 
 - Step 5: Once the installation is finished, you can either dismiss the dialog, or tap "Open" to run PriceCalc immediately.
 
-## Updating
+## Update
 #### PriceCalc has an update system built-in, and gets its updates through GitHub. It's not automatic, so here's how you can check for updates.
 
 - Step 1: In PriceCalc, tap the three dots in the top right corner to expand the menu, and tap "About".
