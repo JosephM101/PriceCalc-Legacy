@@ -3,7 +3,7 @@
 
 [Installing](#install)
 [Updating](#update)
-[Considerations for future updates](#considerations)
+[Considerations for future updates](#Considerations (aka. not guranteed to make it into a release))
 
 ![Screenshot_20210507-105116 (Small)](https://user-images.githubusercontent.com/28277730/117469102-5df53800-af23-11eb-99a9-d2292b5d8854.png)
 
