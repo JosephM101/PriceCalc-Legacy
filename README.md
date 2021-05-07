@@ -3,7 +3,7 @@
 
 ![Screenshot_20210507-105116 (Small)](https://user-images.githubusercontent.com/28277730/117469102-5df53800-af23-11eb-99a9-d2292b5d8854.png)
 
-> Supports Android 7.1 (API level 25) and newer
+> Supports Android 8.0 (API level 26) and newer
 > 
 > All .apk files under the "Releases" section are debug builds of PriceCalc. This is for simplicity, and there are no plans to change this in the future as that might break something.
 
