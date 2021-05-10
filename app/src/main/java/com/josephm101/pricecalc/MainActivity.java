@@ -149,12 +149,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         //Show the welcome screen (New, Beta)
-        //SharedPreferences settings = getApplicationContext().getSharedPreferences(Preferences.WelcomeScreen.PreferenceGroup, 0);
-        //int wasShown = settings.getInt(Preferences.WelcomeScreen.ENTRY_SHOWN, 0);
-        //if(wasShown == 0) { //The Welcome screen was never shown; possibly a first start of the app.
-        //    Intent welcomeScreen_Intent = new Intent(this, WelcomeScreen.class);
-        //    startActivity(welcomeScreen_Intent);
-        //}
+        SharedPreferences settings = getApplicationContext().getSharedPreferences(Preferences.WelcomeScreen.PreferenceGroup, 0);
+        int wasShown = settings.getInt(Preferences.WelcomeScreen.ENTRY_SHOWN, 0);
+        if (wasShown == 0) { //The Welcome screen was never shown; possibly a first start of the app.
+            Intent welcomeScreen_Intent = new Intent(this, WelcomeScreen.class);
+            startActivity(welcomeScreen_Intent);
+        }
 
         String savedListFileName = "/saved_list.txt";
         savedList_FileName = getFilesDir().getParent() + savedListFileName;
@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.refreshView_menuItem:
                 RefreshEverything(false); //Don't save; we're just refreshing
-                //Toaster.pop(this, "Refreshed");
+                Toaster.pop(this, "Refreshed");
                 break;
             case R.id.settings_menuItem:
                 Intent intent = new Intent(this, SettingsActivity.class);
@@ -381,15 +381,6 @@ public class MainActivity extends AppCompatActivity {
 
     //Loads list items into list view
     void LoadList() {
-/*        SharedPreferences savedList = getApplicationContext().getSharedPreferences(Preferences.MainSettings.PreferenceGroup, 0);
-        for (int i = 0; i < savedList.getInt(Preferences.MainSettings.ItemCount, 0) + 1; i++) {
-            Set<String> stringSet = savedList.getStringSet(getSavedItemID(i), null);
-            if (stringSet != null) {
-                AddEntry(ProcessEntryInfo(stringSet));
-                adapter.notifyDataSetChanged(); //Do it every time...
-            }
-        }
- */
         try {
             ArrayList<DataModel> dataModels = GetEntries();
             for (int i = 0; i < dataModels.size(); i++) {
