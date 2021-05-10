@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.refreshView_menuItem:
                 RefreshEverything(false); //Don't save; we're just refreshing
-                Toaster.pop(this, "Refreshed");
+                Toaster.pop(this, "Refreshed", 200);
                 break;
             case R.id.settings_menuItem:
                 Intent intent = new Intent(this, SettingsActivity.class);
