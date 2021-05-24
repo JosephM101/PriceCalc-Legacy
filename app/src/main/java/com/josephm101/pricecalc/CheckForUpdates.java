@@ -183,54 +183,6 @@ public class CheckForUpdates extends AppCompatActivity {
         release_repo.GetData();
     }
 
-
-    //downloadRequest = new DownloadManager.Request(update_link);
-    //downloadRequest.setTitle("PriceCalc");
-    //downloadRequest.setDescription("Downloading update for PriceCalc...");
-    //downloadRequest.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-    ////request.setDestinationUri(Uri.parse("file://" + getApplicationContext().getFilesDir() + "/pricecalc_update.apk"));
-    ////request.setDestinationUri(Uri.parse("file://" + getFilesDir().getParent() + "/pricecalc_update.apk"));
-    //registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-    //downloadID = downloadManager.enqueue(downloadRequest);
-
-
-    //BroadcastReceiver onComplete = new BroadcastReceiver() {
-    //    public void onReceive(Context context, Intent intent) {
-    //        long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-    //        if (id == -1)
-    //            return;
-    //        if (downloadID == id) {
-    //            Intent fileIntent = new Intent(Intent.ACTION_VIEW);
-    //            Uri mostRecentDownload = downloadManager.getUriForDownloadedFile(downloadID);
-    //            String mimeType = downloadManager.getMimeTypeForDownloadedFile(downloadID);
-    //            fileIntent.setDataAndType(mostRecentDownload, mimeType);
-    //            fileIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    //            //fileIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-    //            try {
-    //                getApplicationContext().startActivity(fileIntent);
-    //            } catch (ActivityNotFoundException e) {
-    //            }
-
-    //            //int uriIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
-    //            //String downloadedPackageUriString = cursor.getString(uriIndex);
-    //            //Intent open = new Intent(Intent.ACTION_VIEW);
-    //            //open.setDataAndType(Uri.parse(downloadedPackageUriString), mimeType);
-    //            //open.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-    //            //startActivity(open);
-    //            //String mimeType =
-    //            //        mDownloadManager.getMimeTypeForDownloadedFile(mDownloadedFileID);
-    //            //fileIntent.setDataAndType(mostRecentDownload, mimeType);
-    //            //fileIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    //            //try {
-    //            //    mContext.startActivity(fileIntent);
-    //            //} catch (ActivityNotFoundException e) {
-    //            //    Toast.makeText(mContext, "No handler for this type of file.",
-    //            //            Toast.LENGTH_LONG).show();
-    //            //}
-    //        }
-    //    }
-    //};
-
     void Error() {
         loading_CardView.setVisibility(View.GONE);
         setTitle("Couldn't update.");

@@ -33,6 +33,11 @@ import androidx.preference.PreferenceManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.josephm101.pricecalc.UpdateHandler.API.GitHub;
+import com.josephm101.pricecalc.UpdateHandler.API.ReleaseInfo;
+import com.josephm101.pricecalc.UpdateHandler.Version.VersionCompare;
+import com.josephm101.pricecalc.UpdateHandler.Version.VersionInfo;
+import com.josephm101.pricecalc.UpdateHandler.Version.VersionParser;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -44,6 +49,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @SuppressWarnings("ALL")
 @SuppressLint("NonConstantResourceId")
@@ -141,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ThemeHandling.ApplyTheme(this); //Apply theme
@@ -149,12 +157,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         //Show the welcome screen (New, Beta)
-        SharedPreferences settings = getApplicationContext().getSharedPreferences(Preferences.WelcomeScreen.PreferenceGroup, 0);
-        int wasShown = settings.getInt(Preferences.WelcomeScreen.ENTRY_SHOWN, 0);
+        SharedPreferences WelcomeScreenSettings = getApplicationContext().getSharedPreferences(Preferences.WelcomeScreen.PreferenceGroup, 0);
+        int wasShown = WelcomeScreenSettings.getInt(Preferences.WelcomeScreen.ENTRY_SHOWN, 0);
         if (wasShown == 0) { //The Welcome screen was never shown; possibly a first start of the app.
             Intent welcomeScreen_Intent = new Intent(this, WelcomeScreen.class);
             startActivity(welcomeScreen_Intent);
         }
+
 
         String savedListFileName = "/saved_list.txt";
         savedList_FileName = getFilesDir().getParent() + savedListFileName;
@@ -231,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
         //        }
         //    });
         //}
+
         loadingProgressBar = findViewById(R.id.progressBar2);
         loadingProgressBar.setVisibility(View.GONE);
         noItems_CardView = findViewById(R.id.noItems_View);
@@ -240,6 +250,70 @@ public class MainActivity extends AppCompatActivity {
 
         LoadList();
         RefreshView();
+        Timer timer = new Timer();
+        Context thisContext = this;
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    public void run() {
+                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        if (sharedPreferences.getBoolean("autoCheckForUpdates", false) == true) {
+                            GitHub release_repo = new GitHub(GitHubParams.username, GitHubParams.repo_name, new GitHub.RetrievalListener() {
+                                @Override
+                                public void onRetrievalComplete(ReleaseInfo releaseInfo) {
+                                    VersionInfo releaseVersionInfo = VersionParser.parse(releaseInfo.getReleaseVersion());
+                                    VersionInfo currentVersionInfo = VersionParser.parse(BuildConfig.VERSION_NAME);
+                                    if (releaseInfo != null) {
+                                        SharedPreferences UpdateSettings = getApplicationContext().getSharedPreferences("AutomaticUpdater", 0);
+                                        VersionCompare.VersionComparison comparison = VersionCompare.CompareVersions(currentVersionInfo, releaseVersionInfo);
+                                        String savedVersion = UpdateSettings.getString("skip_version", "0.0.0");
+                                        String rVers = releaseInfo.getReleaseVersion();
+                                        if (comparison == VersionCompare.VersionComparison.VERSION_NEWER) {
+                                            if (rVers.contentEquals(savedVersion)) {
+
+                                            } else {
+                                                ConstraintLayout coordinatorLayout = findViewById(R.id.mainConstraintLayout);
+                                                Snackbar snackbar = Snackbar.make(coordinatorLayout, "Update available.", Snackbar.LENGTH_LONG)
+                                                        .setAction("VIEW", v1 -> {
+                                                            MaterialAlertDialogBuilder updateNotifierDialog = new MaterialAlertDialogBuilder(thisContext)
+                                                                    .setTitle("Update available")
+                                                                    .setMessage("An update for PriceCalc is available.")
+                                                                    .setPositiveButton("View update info", (dialog, which) -> {
+                                                                        Intent intent = new Intent(getApplicationContext(), CheckForUpdates.class);
+                                                                        startActivity(intent);
+                                                                    })
+                                                                    .setNegativeButton("Skip this version", (dialog, which) -> {
+                                                                        UpdateSettings.edit().putString("skip_version", releaseInfo.getReleaseVersion()).apply();
+                                                                        ShowDismissableSnackbar("You will no longer be notified of updates until the next release.");
+                                                                    })
+                                                                    .setNeutralButton("Disable automatic updates", (dialog, which) -> {
+                                                                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("autoCheckForUpdates", false).apply();
+                                                                        ShowDismissableSnackbar("Automatic updates disabled. You can re-enable it in Settings.");
+                                                                    })
+                                                                    .setCancelable(true);
+                                                            updateNotifierDialog.show();
+                                                            //Intent intent = new Intent(getApplicationContext(), CheckForUpdates.class);
+                                                            //startActivity(intent);
+                                                        })
+                                                        .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
+                                                snackbar.show();
+                                            }
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onRetrievalError(String request) {
+                                }
+                            });
+
+                            release_repo.GetData();
+                        }
+                    }
+                });
+            }
+        }, 1000);
     }
 
     @Deprecated
@@ -563,7 +637,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Deprecated scaling method (inefficient & buggy; replaced by simpler AnimateCard methods)
+     * Deprecated component scaling method (inefficient & buggy; replaced by simpler AnimateCard methods)
      */
 /*    void AnimateCardIn(int duration) {
         CardView cardView = findViewById(R.id.cardView);
@@ -646,11 +720,12 @@ public class MainActivity extends AppCompatActivity {
                         listItems_BKP.add(item);
                     }
                     listItems.remove(listView_position);
-                    ConstraintLayout coordinatorLayout = findViewById(R.id.mainConstraintLayout);
+                    //ConstraintLayout coordinatorLayout = findViewById(R.id.mainConstraintLayout);
                     CardView cardView = findViewById(R.id.cardView);
                     View layout = findViewById(R.id.mainConstraintLayout);
                     //Show snackbar
                     {
+                        ConstraintLayout coordinatorLayout = findViewById(R.id.mainConstraintLayout);
                         Snackbar snackbar = Snackbar.make(coordinatorLayout, "Entry deleted", Snackbar.LENGTH_LONG)
                                 .setAction("UNDO", v1 -> {
                                     listItems.clear();
@@ -700,5 +775,18 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onContextItemSelected(item);
         }
+    }
+
+    void ShowDismissableSnackbar(String text) {
+        ConstraintLayout coordinatorLayout = findViewById(R.id.mainConstraintLayout);
+        Snackbar dismissable_snackbar = Snackbar.make(coordinatorLayout, text, Snackbar.LENGTH_LONG)
+                .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
+        dismissable_snackbar.setAction("DISMISS", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissable_snackbar.dismiss();
+            }
+        });
+        dismissable_snackbar.show();
     }
 }

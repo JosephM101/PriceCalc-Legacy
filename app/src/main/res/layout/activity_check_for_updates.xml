@@ -107,7 +107,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="0dp"
         app:cardElevation="0dp"
@@ -276,7 +276,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="0dp"
         app:cardElevation="0dp"
@@ -298,25 +298,24 @@
                 android:id="@+id/textView18"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="4dp"
-                android:paddingEnd="4dp"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
                 android:paddingBottom="12dp"
                 android:text="You have the latest version of the app. \n \nYou can also download and install updates manually or download older versions of the app from the GitHub repository." />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="right"
                 android:orientation="horizontal">
-
-                <Space
-                    android:layout_width="208dp"
-                    android:layout_height="14dp" />
 
                 <Button
                     android:id="@+id/button_dismissUpdateDialog"
                     style="@style/PositiveButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
                     android:text="@string/ok" />
             </LinearLayout>
 

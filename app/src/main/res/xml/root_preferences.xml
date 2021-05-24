@@ -29,7 +29,8 @@
             android:defaultValue="false"
             android:key="autoCheckForUpdates"
             android:summary="Check for updates on app startup, and display a message if updates are available. To update manually, go to About > Check for Updates"
-            android:title="Check for Updates Automatically" />
+            android:title="Check for Updates Automatically"
+            android:visibility="invisible" />
 
     </PreferenceCategory>
     <PreferenceCategory android:title="Experimental Settings (Changes require app restart)">
