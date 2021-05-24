@@ -1,6 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory android:title="Values">
+    <PreferenceCategory android:title="Region-based Configuration">
 
         <EditTextPreference
             android:dialogTitle="Enter Tax Rate"
@@ -25,9 +25,14 @@
             app:dialogTitle="Change app theme"
             app:defaultValue="1"
             app:entryValues="@array/theme_settings_val" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="autoCheckForUpdates"
+            android:summary="Check for updates on app startup, and display a message if updates are available. To update manually, go to About > Check for Updates"
+            android:title="Check for Updates Automatically" />
 
     </PreferenceCategory>
-    <PreferenceCategory android:title="Experimental (Changes require app restart)">
+    <PreferenceCategory android:title="Experimental Settings (Changes require app restart)">
 
         <SwitchPreference
             android:defaultValue="false"
@@ -37,7 +42,7 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="hideDock_preference"
-            android:title="Hide the dock entirely (Experimental)"
+            android:title="Hide the dock entirely"
             app:summary="If enabled, the dock will be hidden, and its components will be moved to the app bar." />
     </PreferenceCategory>
 </PreferenceScreen>
