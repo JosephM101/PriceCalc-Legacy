@@ -28,7 +28,7 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="autoCheckForUpdates"
-            android:summary="Check for updates on app startup, and display a message if updates are available. To update manually, go to About > Check for Updates"
+            android:summary="Check for updates on app startup, and display a message if updates are available. To update manually, go to About > Check for Updates. WARNING: This may cause problems."
             android:title="Check for Updates Automatically"
             android:visibility="invisible" />
 

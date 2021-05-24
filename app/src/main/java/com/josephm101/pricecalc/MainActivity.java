@@ -3,6 +3,7 @@ package com.josephm101.pricecalc;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -314,6 +315,8 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }, 1000);
+
+        Cleanup();
     }
 
     @Deprecated
@@ -788,5 +791,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         dismissable_snackbar.show();
+    }
+
+    void Cleanup() {
+        try {
+            ContextWrapper c = new ContextWrapper(getApplicationContext());
+            String pathRoot = c.getFilesDir().toString();
+            c.deleteFile(pathRoot + "PriceCalc_update.apk");
+        } catch (Exception ignored) {
+
+        }
     }
 }
