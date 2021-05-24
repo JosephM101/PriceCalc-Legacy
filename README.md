@@ -45,4 +45,5 @@
 Consideration  | Status
 ------------- | -------------
 Add feature that allows for saving/opening lists instead of having just one  |  In progress
+Add automatic updating ability  |  In progress
 Add ability to change app's theme color(s)
