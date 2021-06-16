@@ -123,7 +123,7 @@ public class CheckForUpdates extends AppCompatActivity {
                                     public void onDownloadComplete() {
                                         Thread thread = new Thread(() -> {
                                             try {
-                                                Thread.sleep(1000);
+                                                Thread.sleep(1000); //Give things a chance to catch up
                                             } catch (InterruptedException e) {
                                                 e.printStackTrace();
                                             }
