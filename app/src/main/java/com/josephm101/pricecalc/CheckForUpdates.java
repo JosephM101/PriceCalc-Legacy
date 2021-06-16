@@ -37,6 +37,7 @@ public class CheckForUpdates extends AppCompatActivity {
     CardView updating_CardView;
     GitHub release_repo;
     Context context;
+    private Error error_info;
     //long downloadID;
     //DownloadManager downloadManager;
     //private Context mContext;
@@ -155,6 +156,7 @@ public class CheckForUpdates extends AppCompatActivity {
 
                                     @Override
                                     public void onError(Error error) {
+                                        error_info = error;
                                         Error();
                                     }
                                 });
@@ -186,6 +188,18 @@ public class CheckForUpdates extends AppCompatActivity {
     void Error() {
         loading_CardView.setVisibility(View.GONE);
         setTitle("Couldn't update.");
+        TextView updateErrorCode = findViewById(R.id.updater_errorCodeTextView);
+        if (error_info.isConnectionError()) {
+            updateErrorCode.setText("Connection error.");
+        } else {
+            String errorString = "HTTP: " +
+                    error_info.getResponseCode() +
+                    "\n" +
+                    "\n" +
+                    "Server message: " +
+                    error_info.getServerErrorMessage();
+            updateErrorCode.setText(errorString);
+        }
         cardView_updateError.setVisibility(View.VISIBLE);
         Button button_dismiss = findViewById(R.id.button_dismissFailedDialog);
         button_dismiss.setOnClickListener(v -> finish());

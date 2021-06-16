@@ -51,8 +51,16 @@
                     android:layout_height="match_parent"
                     android:layout_marginEnd="4dp"
                     android:gravity="center_vertical"
-                    android:text="Updating..." />
+                    tools:text="Updating..." />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="287dp"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/update_warning" />
 
         </LinearLayout>
 
@@ -97,7 +105,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="4dp"
                 android:gravity="center_vertical"
-                android:text="Checking for updates..." />
+                android:text="@string/updater_status_checking_for_updates" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -157,7 +165,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="current_version_string" />
+                    android:text="@string/current_version_string_placeholder" />
 
             </LinearLayout>
 
@@ -180,7 +188,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="new_version_string"
+                    android:text="@string/new_version_string_placeholder"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -192,7 +200,7 @@
                 android:layout_marginTop="16dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:text="Release notes" />
+                android:text="@string/release_notes" />
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -214,7 +222,7 @@
                         android:id="@+id/textView_changelog"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="changelog_string" />
+                        android:text="@string/changelog_string_placeholder" />
 
                 </LinearLayout>
             </ScrollView>
@@ -228,7 +236,7 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="8dp"
-                android:text="What would you like to do?" />
+                android:text="@string/update_options_question" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -254,7 +262,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:layout_weight="1"
-                    android:text="Maybe later" />
+                    android:text="@string/update_later" />
 
                 <Button
                     android:id="@+id/button_confirmUpdate"
@@ -263,7 +271,7 @@
                     android:layout_height="50dp"
                     android:layout_marginStart="4dp"
                     android:layout_weight="1"
-                    android:text="Update now" />
+                    android:text="@string/update_now" />
             </LinearLayout>
 
         </LinearLayout>
@@ -276,7 +284,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="0dp"
         app:cardElevation="0dp"
@@ -301,12 +309,12 @@
                 android:paddingStart="18dp"
                 android:paddingEnd="18dp"
                 android:paddingBottom="12dp"
-                android:text="You have the latest version of the app. \n \nYou can also download and install updates manually or download older versions of the app from the GitHub repository." />
+                android:text="You have the latest version of the app. \n \nYou can also download and install updates manually, or download older versions of the app from the GitHub repository." />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="right"
+                android:gravity="end"
                 android:orientation="horizontal">
 
                 <Button
@@ -329,7 +337,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="0dp"
         app:cardElevation="0dp"
@@ -354,7 +362,15 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="@string/checkForUpdate_errorMessage" />
+                android:text="Something happened, and we couldn\'t check for updates. Please try again later, or check your connection." />
+
+            <TextView
+                android:id="@+id/updater_errorCodeTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Error:" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
