@@ -189,16 +189,20 @@ public class CheckForUpdates extends AppCompatActivity {
         loading_CardView.setVisibility(View.GONE);
         setTitle("Couldn't update.");
         TextView updateErrorCode = findViewById(R.id.updater_errorCodeTextView);
-        if (error_info.isConnectionError()) {
-            updateErrorCode.setText("Connection error.");
-        } else {
-            String errorString = "HTTP: " +
-                    error_info.getResponseCode() +
-                    "\n" +
-                    "\n" +
-                    "Server message: " +
-                    error_info.getServerErrorMessage();
-            updateErrorCode.setText(errorString);
+        try {
+            if (error_info.isConnectionError()) {
+                updateErrorCode.setText("Connection error.");
+            } else {
+                String errorString = "HTTP: " +
+                        error_info.getResponseCode() +
+                        "\n" +
+                        "\n" +
+                        "Server message: " +
+                        error_info.getServerErrorMessage();
+                updateErrorCode.setText(errorString);
+            }
+        } catch (Exception ex) {
+            updateErrorCode.setText("Error unknown");
         }
         cardView_updateError.setVisibility(View.VISIBLE);
         Button button_dismiss = findViewById(R.id.button_dismissFailedDialog);

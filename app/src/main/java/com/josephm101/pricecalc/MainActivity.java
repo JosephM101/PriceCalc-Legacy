@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
             cardView.setVisibility(View.GONE);
         }
 
-        AppBeta.ShowBetaMessage(this);
+        //AppBeta.ShowBetaMessage(this);
 
         totalCostLabel = findViewById(R.id.totalCost_Label);
         addItem_FloatingActionButton = findViewById(R.id.addItem_floatingActionButton);

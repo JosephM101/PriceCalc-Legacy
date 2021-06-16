@@ -58,8 +58,16 @@
     <string name="new_version_available_header">A new version of PriceCalc is available.</string>
     <string name="latest_version">You have the latest version of the app.</string>
     <string name="new_version">New version</string>
-    <string name="checkForUpdate_errorMessage">Something happened, and we couldn\'t check for updates. Please try again later, or check your connection.</string>
     <string name="file">File</string>
     <string name="open_list">Open List</string>
     <string name="save_list">Save List</string>
+    <string name="current_version_string_placeholder">current_version_string</string>
+    <string name="release_notes">Release notes</string>
+    <string name="update_options_question">What would you like to do?</string>
+    <string name="update_now">Update now</string>
+    <string name="update_later">Maybe later</string>
+    <string name="update_warning">Please do not exit the app at any point during this process.</string>
+    <string name="changelog_string_placeholder">changelog_string</string>
+    <string name="new_version_string_placeholder">new_version_string</string>
+    <string name="updater_status_checking_for_updates">Checking for updates...</string>
 </resources>
