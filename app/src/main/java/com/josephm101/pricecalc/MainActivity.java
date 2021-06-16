@@ -316,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }, 1000);
 
-        Cleanup();
+        //Cleanup();
     }
 
     @Deprecated
@@ -796,7 +796,8 @@ public class MainActivity extends AppCompatActivity {
     void Cleanup() {
         try {
             ContextWrapper c = new ContextWrapper(getApplicationContext());
-            String pathRoot = c.getFilesDir().toString();
+            //String pathRoot = c.getFilesDir().toString();
+            String pathRoot = c.getCacheDir().toString();
             c.deleteFile(pathRoot + "PriceCalc_update.apk");
         } catch (Exception ignored) {
 

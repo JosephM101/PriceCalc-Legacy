@@ -66,7 +66,6 @@ public class CheckForUpdates extends AppCompatActivity {
         cardView_updateInfo.setVisibility(View.GONE);
         cardView_noUpdates.setVisibility(View.GONE);
         cardView_updateError.setVisibility(View.GONE);
-        //downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 
         release_repo = new GitHub("JosephM101", "PriceCalc", new GitHub.RetrievalListener() {
             @Override
@@ -99,9 +98,11 @@ public class CheckForUpdates extends AppCompatActivity {
                                 CircularProgressIndicator circularProgressIndicator = findViewById(R.id.progressBarUpdating);
                                 TextView updateStatusTextView = findViewById(R.id.textView_currentUpdateStatus);
                                 String linkToRelease = releaseInfo.getDownloadUrl();
-                                Log.d("PATH", Paths.get(getFilesDir().getPath(), "PriceCalc_update.apk").toString());
+                                //Log.d("PATH", Paths.get(getFilesDir().getPath(), "PriceCalc_update.apk").toString());
+                                Log.d("PATH", Paths.get(getCacheDir().getPath(), "PriceCalc_update.apk").toString());
                                 ContextWrapper c = new ContextWrapper(getApplicationContext());
-                                String pathRoot = c.getFilesDir().toString();
+                                //String pathRoot = c.getFilesDir().toString();
+                                String pathRoot = c.getCacheDir().toString();
                                 DownloadRequest request = PRDownloader.download(linkToRelease, pathRoot, "PriceCalc_update.apk")
                                         .build()
                                         .setOnStartOrResumeListener(() -> {
