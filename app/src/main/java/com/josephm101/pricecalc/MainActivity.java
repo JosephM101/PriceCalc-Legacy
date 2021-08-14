@@ -31,15 +31,18 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.preference.PreferenceManager;
 
-import com.downloader.BuildConfig;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.josephm101.pricecalc.UpdateHandler.API.GitHub;
-import com.josephm101.pricecalc.UpdateHandler.API.ReleaseInfo;
-import com.josephm101.pricecalc.UpdateHandler.Version.VersionCompare;
-import com.josephm101.pricecalc.UpdateHandler.Version.VersionInfo;
-import com.josephm101.pricecalc.UpdateHandler.Version.VersionParser;
+
+//For Auto-update checker
+
+//import com.downloader.BuildConfig;
+//import com.josephm101.pricecalc.UpdateHandler.API.GitHub;
+//import com.josephm101.pricecalc.UpdateHandler.API.ReleaseInfo;
+//import com.josephm101.pricecalc.UpdateHandler.Version.VersionCompare;
+//import com.josephm101.pricecalc.UpdateHandler.Version.VersionInfo;
+//import com.josephm101.pricecalc.UpdateHandler.Version.VersionParser;
 
 import org.jetbrains.annotations.NotNull;
 
