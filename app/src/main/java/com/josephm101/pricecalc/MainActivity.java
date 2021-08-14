@@ -257,9 +257,9 @@ public class MainActivity extends AppCompatActivity {
         RefreshView();
         Timer timer = new Timer();
         Context thisContext = this;
-        //timer.schedule(new TimerTask() {
-        //    @Override
-        //    public void run() {
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
         //        MainActivity.this.runOnUiThread(new Runnable() {
         //            public void run() {
         //                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -317,8 +317,8 @@ public class MainActivity extends AppCompatActivity {
         //                }
         //            }
         //        });
-        //    }
-        //}, 1000);
+            }
+        }, 1000);
 
         //Cleanup();
     }
