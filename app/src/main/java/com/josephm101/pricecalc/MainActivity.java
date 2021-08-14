@@ -469,6 +469,7 @@ public class MainActivity extends AppCompatActivity {
         RefreshEverything(false);
     }
 
+    //Retrieve entries from internal save
     public ArrayList<DataModel> GetEntries() throws IOException {
         ArrayList<DataModel> dataModels = new ArrayList<>();
         File logFile = new File(savedList_FileName);
@@ -553,6 +554,7 @@ public class MainActivity extends AppCompatActivity {
                 dataModel.getItemQuantity();
     }
 
+    //When called, empty the list and delete the save file.
     public void ClearAll() {
         File logFile = new File(savedList_FileName);
         try {
@@ -571,116 +573,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             noItems_CardView.setVisibility(View.GONE);
         }
-    }
-
-    public void scaleView(@NotNull View v, float startScale, float endScale) {
-        Animation anim = new ScaleAnimation(
-                1f, 1f, // Start and end values for the X axis scaling
-                startScale, endScale, // Start and end values for the Y axis scaling
-                Animation.RELATIVE_TO_SELF, 0f, // Pivot point of X scaling
-                Animation.RELATIVE_TO_SELF, 1f); // Pivot point of Y scaling
-        anim.setFillAfter(true); // Needed to keep the result of the animation
-        anim.setDuration(1000);
-        v.startAnimation(anim);
-    }
-
-    void AnimateFloatingActionButton_ScaleUp(Context context, @NotNull ExtendedFloatingActionButton fab) {
-        Animation ani = AnimationUtils.loadAnimation(context, R.anim.floating_action_button_scale_up_ani);
-        ani.setFillAfter(true);
-        fab.startAnimation(ani);
-        ani.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-    }
-
-    void AnimateFloatingActionButton_ScaleDown(Context context, ExtendedFloatingActionButton fab) {
-        Animation ani = AnimationUtils.loadAnimation(context, R.anim.floating_action_button_scale_down_ani);
-        ani.setFillAfter(true);
-        fab.startAnimation(ani);
-    }
-
-    void EnterDeleteMode(Context context) {
-        CardView cardView = findViewById(R.id.cardView);
-        Animation cardAni = AnimationUtils.loadAnimation(context, R.anim.card_hide_ani);
-        cardAni.setFillAfter(true);
-        cardView.startAnimation(cardAni);
-        //AnimateCardOut(1000);
-        setTitle("Delete items");
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE); //Allow multiple items to be selected & deleted.
-        referencedMenu.clear();
-        getMenuInflater().inflate(R.menu.menu_main_deleting_items, referencedMenu);
-        inDeleteMode = true;
-    }
-
-    void LeaveDeleteMode(Context context) {
-        Animation cardAni = AnimationUtils.loadAnimation(context, R.anim.card_show_ani);
-        cardAni.setFillAfter(true);
-        CardView cardView = findViewById(R.id.cardView);
-        cardView.startAnimation(cardAni);
-
-        //AnimateCardIn(1000);
-        setTitle(getString(R.string.app_name)); //Reset the menu bar title.
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); //Go back to only allowing a single item.
-        referencedMenu.clear();
-        getMenuInflater().inflate(R.menu.menu_main, referencedMenu);
-        inDeleteMode = false;
-    }
-
-    /**
-     * Deprecated component scaling method (inefficient & buggy; replaced by simpler AnimateCard methods)
-     */
-/*    void AnimateCardIn(int duration) {
-        CardView cardView = findViewById(R.id.cardView);
-        Rect rectf = new Rect();
-        cardView.getGlobalVisibleRect(rectf);
-        float target = rectf.bottom - rectf.height();
-        ObjectAnimator animation = ObjectAnimator.ofFloat(cardView, View.Y, target);
-        animation.setDuration(duration);
-        animation.start();
-    }
-
-    void AnimateCardOut(int duration) {
-        CardView cardView = findViewById(R.id.cardView);
-        Rect rectf = new Rect();
-        cardView.getGlobalVisibleRect(rectf);
-        float target = rectf.bottom + rectf.height();
-        cardView.setPadding(0, 64, 0, 0);
-        ObjectAnimator animation = ObjectAnimator.ofFloat(cardView, View.Y, target);
-        animation.setDuration(duration);
-        animation.start();
-    }*/
-
-    void AnimateCardIn() {
-        Animation cardAni = AnimationUtils.loadAnimation(this, R.anim.card_show_ani);
-        cardAni.setFillAfter(true);
-        //CardView cardView = findViewById(R.id.cardView);
-        cardView.startAnimation(cardAni);
-        Animation fabAni = AnimationUtils.loadAnimation(this, R.anim.floating_action_button_scale_up_full_ani);
-        fabAni.setFillAfter(true);
-        addItem_FloatingActionButton.startAnimation(fabAni);
-    }
-
-    void AnimateCardOut() {
-        Animation cardAni = AnimationUtils.loadAnimation(this, R.anim.card_hide_ani);
-        cardAni.setFillAfter(true);
-        //CardView cardView = findViewById(R.id.cardView);
-        cardView.startAnimation(cardAni);
-        Animation fabAni = AnimationUtils.loadAnimation(this, R.anim.floating_action_button_scale_down_full_ani);
-        fabAni.setFillAfter(true);
-        addItem_FloatingActionButton.startAnimation(fabAni);
     }
 
     private boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -802,5 +694,116 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception ignored) {
 
         }
+    }
+
+    //Animations
+    public void scaleView(@NotNull View v, float startScale, float endScale) {
+        Animation anim = new ScaleAnimation(
+                1f, 1f, // Start and end values for the X axis scaling
+                startScale, endScale, // Start and end values for the Y axis scaling
+                Animation.RELATIVE_TO_SELF, 0f, // Pivot point of X scaling
+                Animation.RELATIVE_TO_SELF, 1f); // Pivot point of Y scaling
+        anim.setFillAfter(true); // Needed to keep the result of the animation
+        anim.setDuration(1000);
+        v.startAnimation(anim);
+    }
+
+    void AnimateFloatingActionButton_ScaleUp(Context context, @NotNull ExtendedFloatingActionButton fab) {
+        Animation ani = AnimationUtils.loadAnimation(context, R.anim.floating_action_button_scale_up_ani);
+        ani.setFillAfter(true);
+        fab.startAnimation(ani);
+        ani.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    void AnimateFloatingActionButton_ScaleDown(Context context, ExtendedFloatingActionButton fab) {
+        Animation ani = AnimationUtils.loadAnimation(context, R.anim.floating_action_button_scale_down_ani);
+        ani.setFillAfter(true);
+        fab.startAnimation(ani);
+    }
+
+    /**
+     * Deprecated component scaling method (inefficient & buggy; replaced by simpler AnimateCard methods)
+     */
+/*    void AnimateCardIn(int duration) {
+        CardView cardView = findViewById(R.id.cardView);
+        Rect rectf = new Rect();
+        cardView.getGlobalVisibleRect(rectf);
+        float target = rectf.bottom - rectf.height();
+        ObjectAnimator animation = ObjectAnimator.ofFloat(cardView, View.Y, target);
+        animation.setDuration(duration);
+        animation.start();
+    }
+
+    void AnimateCardOut(int duration) {
+        CardView cardView = findViewById(R.id.cardView);
+        Rect rectf = new Rect();
+        cardView.getGlobalVisibleRect(rectf);
+        float target = rectf.bottom + rectf.height();
+        cardView.setPadding(0, 64, 0, 0);
+        ObjectAnimator animation = ObjectAnimator.ofFloat(cardView, View.Y, target);
+        animation.setDuration(duration);
+        animation.start();
+    }*/
+
+    void AnimateCardIn() {
+        Animation cardAni = AnimationUtils.loadAnimation(this, R.anim.card_show_ani);
+        cardAni.setFillAfter(true);
+        //CardView cardView = findViewById(R.id.cardView);
+        cardView.startAnimation(cardAni);
+        Animation fabAni = AnimationUtils.loadAnimation(this, R.anim.floating_action_button_scale_up_full_ani);
+        fabAni.setFillAfter(true);
+        addItem_FloatingActionButton.startAnimation(fabAni);
+    }
+
+    void AnimateCardOut() {
+        Animation cardAni = AnimationUtils.loadAnimation(this, R.anim.card_hide_ani);
+        cardAni.setFillAfter(true);
+        //CardView cardView = findViewById(R.id.cardView);
+        cardView.startAnimation(cardAni);
+        Animation fabAni = AnimationUtils.loadAnimation(this, R.anim.floating_action_button_scale_down_full_ani);
+        fabAni.setFillAfter(true);
+        addItem_FloatingActionButton.startAnimation(fabAni);
+    }
+
+    void EnterDeleteMode(Context context) {
+        CardView cardView = findViewById(R.id.cardView);
+        Animation cardAni = AnimationUtils.loadAnimation(context, R.anim.card_hide_ani);
+        cardAni.setFillAfter(true);
+        cardView.startAnimation(cardAni);
+        //AnimateCardOut(1000);
+        setTitle("Delete items");
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE); //Allow multiple items to be selected & deleted.
+        referencedMenu.clear();
+        getMenuInflater().inflate(R.menu.menu_main_deleting_items, referencedMenu);
+        inDeleteMode = true;
+    }
+
+    void LeaveDeleteMode(Context context) {
+        Animation cardAni = AnimationUtils.loadAnimation(context, R.anim.card_show_ani);
+        cardAni.setFillAfter(true);
+        CardView cardView = findViewById(R.id.cardView);
+        cardView.startAnimation(cardAni);
+
+        //AnimateCardIn(1000);
+        setTitle(getString(R.string.app_name)); //Reset the menu bar title.
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE); //Go back to only allowing a single item.
+        referencedMenu.clear();
+        getMenuInflater().inflate(R.menu.menu_main, referencedMenu);
+        inDeleteMode = false;
     }
 }
