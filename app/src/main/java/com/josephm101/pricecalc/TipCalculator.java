@@ -1,5 +1,6 @@
 package com.josephm101.pricecalc;
 
+import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.Editable;
@@ -135,6 +136,7 @@ public class TipCalculator extends AppCompatActivity {
         });
 
         tipPercentageSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @SuppressLint("DefaultLocale")
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 tipPercentageSeekBar_Label.setText(String.format("%d%%", progress));
