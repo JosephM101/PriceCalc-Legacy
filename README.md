@@ -5,7 +5,7 @@
 
 > Supports Android 8.0 (API level 26) and newer
 > 
-> All .apk files under the "Releases" section are debug builds of PriceCalc. This is for simplicity, and there are no plans to change this in the future as that might break something.
+> Please note that all `.apk` files under the "Releases" section are debug builds of PriceCalc.
 
 ## ToC
 
