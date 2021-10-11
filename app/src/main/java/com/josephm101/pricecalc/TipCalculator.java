@@ -30,6 +30,7 @@ public class TipCalculator extends AppCompatActivity {
     SeekBar tipPercentageSeekBar;
     TextView totalTip_label;
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -68,7 +69,7 @@ public class TipCalculator extends AppCompatActivity {
         tipPercentage_custom_card.setVisibility(View.INVISIBLE);
 
         List<String> list = Arrays.asList("10%", "15%", "20%", "Custom");
-        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.dropdown_list_item, list);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.dropdown_list_item, list);
         TextInputLayout textInputLayout = findViewById(R.id.tipPercentage_spinner);
         AutoCompleteTextView autoCompleteTextView = findViewById(R.id.tipPercentage_autoCompleteTextView);
         autoCompleteTextView.setAdapter(adapter);
@@ -156,6 +157,7 @@ public class TipCalculator extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     void RefreshTotalLabel() {
         try {
 //              if (!(billCost_EditText.getText().toString().length() <= 0)) {
