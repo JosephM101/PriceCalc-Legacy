@@ -1,4 +1,4 @@
-[![Android CI](https://github.com/JosephM101/PriceCalc/actions/workflows/android.yml/badge.svg)](https://github.com/JosephM101/PriceCalc/actions/workflows/android.yml)
+[![Gradle Build](https://github.com/JosephM101/PriceCalc/actions/workflows/android.yml/badge.svg)](https://github.com/JosephM101/PriceCalc/actions/workflows/android.yml)
 
 # PriceCalc
 **A list-based price calculator for Android that also calculates tax, with a focus on simplicity.**
