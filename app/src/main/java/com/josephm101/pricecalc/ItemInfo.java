@@ -55,6 +55,7 @@ public class ItemInfo extends AppCompatActivity {
         TextView ItemTaxDeductionLabel = findViewById(R.id.itemTaxableLabel);
         TextView ItemTotalCostLabel = findViewById(R.id.itemTotalCost);
         Log.i("ItemInfo_INIT", "Reading & writing values...");
+
         ItemNameLabel.setText(importedDataModel.getItemName());
         double itemPrice = Double.parseDouble(importedDataModel.getItemPrice());
         int itemQuantity = Integer.parseInt(importedDataModel.itemQuantity);
