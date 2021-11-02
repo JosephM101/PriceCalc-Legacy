@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/jmig2/Documents/GitHub/PriceCalc/app/src/main/res/layout/settings_activity.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/jmig2/Documents/GitHub/PriceCalc/app/src/main/res/menu/menu_main.xml" value="0.536" />
+        <entry key="..\:/Users/jmig2/Documents/GitHub/PriceCalc/app/src/main/res/xml/root_preferences.xml" value="0.536" />
       </map>
     </option>
   </component>
