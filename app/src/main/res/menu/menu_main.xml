@@ -21,7 +21,20 @@
         android:visible="false" />
     <item
         android:id="@+id/clearList_menuItem"
+        android:icon="@drawable/ic_baseline_clear_all_24"
         android:title="@string/clearList_ActionButton" />
+    <item android:title="@string/export_list" >
+        <menu >
+            <item
+                android:id="@+id/exportToCsv_menuItem"
+                android:icon="@drawable/ic_baseline_code_24"
+                android:title="@string/export_to_csv" />
+            <item
+                android:id="@+id/shareList_menuItem"
+                android:icon="@drawable/ic_baseline_share_24"
+                android:title="@string/share_list" />
+        </menu>
+    </item>
     <item
         android:title="@string/file"
         android:visible="false">
@@ -43,6 +56,7 @@
     </item>
     <item
         android:id="@+id/settings_menuItem"
+        android:icon="@drawable/ic_baseline_settings_24"
         android:title="@string/settings_actionButton" />
     <item
         android:id="@+id/aboutApplication_menuItem"

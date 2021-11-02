@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/jmig2/Documents/GitHub/PriceCalc/app/src/main/res/menu/menu_main.xml" value="0.536" />
+      </map>
+    </option>
+  </component>
   <component name="EntryPointsManager">
     <entry_points version="2.0">
       <entry_point TYPE="field" FQNAME="com.josephm101.pricecalc.MainActivity AddNew_RequestCode" />
