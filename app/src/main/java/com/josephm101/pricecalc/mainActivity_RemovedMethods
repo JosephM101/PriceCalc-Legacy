@@ -1,0 +1,64 @@
+Timer timer = new Timer();
+        Context thisContext = this;
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+        //        MainActivity.this.runOnUiThread(new Runnable() {
+        //            public void run() {
+        //                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        //                if (sharedPreferences.getBoolean("autoCheckForUpdates", false) == true) {
+        //                    GitHub release_repo = new GitHub(GitHubParams.username, GitHubParams.repo_name, new GitHub.RetrievalListener() {
+        //                        @Override
+        //                        public void onRetrievalComplete(ReleaseInfo releaseInfo) {
+        //                            VersionInfo releaseVersionInfo = VersionParser.parse(releaseInfo.getReleaseVersion());
+        //                            VersionInfo currentVersionInfo = VersionParser.parse(BuildConfig.VERSION_NAME);
+        //                            if (releaseInfo != null) {
+        //                                SharedPreferences UpdateSettings = getApplicationContext().getSharedPreferences("AutomaticUpdater", 0);
+        //                                VersionCompare.VersionComparison comparison = VersionCompare.CompareVersions(currentVersionInfo, releaseVersionInfo);
+        //                                String savedVersion = UpdateSettings.getString("skip_version", "0.0.0");
+        //                                String rVers = releaseInfo.getReleaseVersion();
+        //                                if (comparison == VersionCompare.VersionComparison.VERSION_NEWER) {
+        //                                    if (rVers.contentEquals(savedVersion)) {
+//
+        //                                    } else {
+        //                                        ConstraintLayout coordinatorLayout = findViewById(R.id.mainConstraintLayout);
+        //                                        Snackbar snackbar = Snackbar.make(coordinatorLayout, "Update available.", Snackbar.LENGTH_LONG)
+        //                                                .setAction("VIEW", v1 -> {
+        //                                                    MaterialAlertDialogBuilder updateNotifierDialog = new MaterialAlertDialogBuilder(thisContext)
+        //                                                            .setTitle("Update available")
+        //                                                            .setMessage("An update for PriceCalc is available.")
+        //                                                            .setPositiveButton("View update info", (dialog, which) -> {
+        //                                                                Intent intent = new Intent(getApplicationContext(), CheckForUpdates.class);
+        //                                                                startActivity(intent);
+        //                                                            })
+        //                                                            .setNegativeButton("Skip this version", (dialog, which) -> {
+        //                                                                UpdateSettings.edit().putString("skip_version", releaseInfo.getReleaseVersion()).apply();
+        //                                                                ShowDismissableSnackbar("You will no longer be notified of updates until the next release.");
+        //                                                            })
+        //                                                            .setNeutralButton("Disable automatic updates", (dialog, which) -> {
+        //                                                                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("autoCheckForUpdates", false).apply();
+        //                                                                ShowDismissableSnackbar("Automatic updates disabled. You can re-enable it in Settings.");
+        //                                                            })
+        //                                                            .setCancelable(true);
+        //                                                    updateNotifierDialog.show();
+        //                                                    //Intent intent = new Intent(getApplicationContext(), CheckForUpdates.class);
+        //                                                    //startActivity(intent);
+        //                                                })
+        //                                                .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
+        //                                        snackbar.show();
+        //                                    }
+        //                                }
+        //                            }
+        //                        }
+//
+        //                        @Override
+        //                        public void onRetrievalError(String request) {
+        //                        }
+        //                    });
+//
+        //                    release_repo.GetData();
+        //                }
+        //            }
+        //        });
+            }
+        }, 1000);
