@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -52,7 +53,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -153,6 +157,28 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+    final ActivityResultLauncher<Intent> ExportCSV_SaveFileActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Uri uri = result.getData().getData();
+                        try {
+                            CsvLib.ExportToCSV(getApplicationContext(), listItems, uri.getPath());
+                        } catch (IOException e) {
+                            MaterialAlertDialogBuilder errorAlertDialog = new MaterialAlertDialogBuilder(getApplicationContext(), R.style.CustomTheme_MaterialComponents_MaterialAlertDialog)
+                                    .setTitle("Error exporting")
+                                    .setMessage("Something happened, and we couldn't export the list.")
+                                    .setIcon(R.drawable.ic_baseline_error_24)
+                                    .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                                    .setCancelable(false);
+                            errorAlertDialog.show();
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -384,6 +410,37 @@ public class MainActivity extends AppCompatActivity {
                 openDocument.setType("*/*");
                 //intent.putExtra(Intent.EXTRA_TITLE, "");
                 startActivityForResult(openDocument, 2);
+                break;
+            case R.id.exportToCsv_menuItem:
+                Intent saveDocument = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                saveDocument.addCategory(Intent.CATEGORY_OPENABLE);
+                saveDocument.setType("csv");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss", Locale.getDefault());
+                String tempFileName = sdf.format(new Date()) + ".csv";
+                saveDocument.putExtra(Intent.EXTRA_TITLE, tempFileName);
+                ExportCSV_SaveFileActivityResultLauncher.launch(saveDocument);
+                break;
+            case R.id.shareList_menuItem:
+                try {
+                    File outputDir = getApplicationContext().getCacheDir();
+                    File outputFile = File.createTempFile("export", ".csv", outputDir);
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.setType("text/csv");
+                    shareIntent.putExtra(Intent.EXTRA_SUBJECT,"Share exported list");
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, "Share exported list");
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+outputFile.getPath()));
+                    startActivity(Intent.createChooser(shareIntent, "Share"));
+                } catch (IOException e) {
+                    MaterialAlertDialogBuilder errorAlertDialog = new MaterialAlertDialogBuilder(getApplicationContext(), R.style.CustomTheme_MaterialComponents_MaterialAlertDialog)
+                            .setTitle("Error sharing")
+                            .setMessage("Something happened, and we couldn't export the list.")
+                            .setIcon(R.drawable.ic_baseline_error_24)
+                            .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                            .setCancelable(false);
+                    errorAlertDialog.show();
+                    e.printStackTrace();
+                }
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
