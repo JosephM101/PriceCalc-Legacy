@@ -70,4 +70,7 @@
     <string name="changelog_string_placeholder">changelog_string</string>
     <string name="new_version_string_placeholder">new_version_string</string>
     <string name="updater_status_checking_for_updates">Checking for updates...</string>
+    <string name="export_to_csv">Export to CSV</string>
+    <string name="share_list">Share</string>
+    <string name="export_list">Export List</string>
 </resources>
