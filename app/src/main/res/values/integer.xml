@@ -3,7 +3,8 @@
     <integer name="card_flip_time_full">500</integer>
     <integer name="card_flip_time_half">250</integer>
 
-    <integer-array name="theme_settings_index" tools:keep="@array/theme_settings_index">
+    <!-- <integer-array name="theme_settings_index" tools:keep="@array/theme_settings_index"> !-->
+    <integer-array name="theme_settings_index">
         <item>0</item>
         <item>1</item>
         <item>2</item>

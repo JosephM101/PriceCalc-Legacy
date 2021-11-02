@@ -21,7 +21,7 @@
     <string name="add_a_new_item">Add a new item</string>
     <string name="appversion_placeholder">AppVersion</string>
 
-    <string-array name="theme_settings">\
+    <string-array name="theme_settings">
         <item>Use system theme</item>
         <item>Light mode</item>
         <item>Dark mode</item>

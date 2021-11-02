@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +37,7 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences.OnSharedPreferenceChangeListener prefListener = (prefs1, key) -> {
             switch (key) {
                 case "appTheme_Preference":
+                    Log.i("Settings", "Theme changed");
                     RefreshTheme();
                     break;
                 case "floatingDock_Preference":
@@ -52,7 +54,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     void RefreshTheme() {
-        ThemeHandling.ApplyTheme(this);
+        ThemeHandling.ApplyTheme(this.getApplicationContext());
     }
 
     @Override

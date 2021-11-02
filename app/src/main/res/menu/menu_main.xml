@@ -28,10 +28,11 @@
             <item
                 android:id="@+id/exportToCsv_menuItem"
                 android:icon="@drawable/ic_baseline_code_24"
-                android:title="@string/export_to_csv" />
+                android:title="@string/export_to_csv"
+                android:tooltipText="Export list to a .csv file for viewing in Excel or other spreadsheet applications." />
             <item
                 android:id="@+id/shareList_menuItem"
-                android:icon="@drawable/ic_baseline_share_24"
+                android:icon="@drawable/ic_baseline_share_24_dark"
                 android:title="@string/share_list" />
         </menu>
     </item>

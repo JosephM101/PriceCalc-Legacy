@@ -1,7 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory android:title="Region-based Configuration">
-
+    <PreferenceCategory android:title="General">
         <EditTextPreference
             android:dialogTitle="Enter Tax Rate"
             android:key="taxRate_Preference"
@@ -19,20 +18,33 @@
         <ListPreference
             android:defaultValue="1"
             android:entries="@array/theme_settings"
+            android:entryValues="@array/theme_settings_val"
             android:key="appTheme_Preference"
             android:summary="Change the theme of the app."
             android:title="App Theme"
-            app:dialogTitle="Change app theme"
             app:defaultValue="1"
+            app:dialogTitle="Change app theme"
             app:entryValues="@array/theme_settings_val" />
 
     </PreferenceCategory>
-    <PreferenceCategory android:title="Experimental Settings (Changes require app restart)">
+    <PreferenceCategory
+        android:summary="Choose how lists get exported"
+        android:title="Export Settings">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="csvExport_AddTotalToFile_Preference"
+            android:summary="When enabled, the overall cost is appended to the end of the spreadsheet when the list is exported."
+            android:title="Insert total overall cost" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:singleLineTitle="false"
+        android:title="Experimental Settings (Some settings may require an app restart to take effect)">
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="floatingDock_Preference"
-            android:summary="When enabled, the dock on the main screen containing the total price label and the Add Item button will appear in a rounded floating card. Enabling this setting may cause graphical issues on older versions of Android, and changes to this setting will require a restart of the app before they will take effect."
+            android:summary="When enabled, the dock at the bottom of the main screen will appear as a rounded floating card. Enabling this setting may cause some graphical issues on versions of Android older than Android 9 (Pie). Changes to this setting will require a restart of the app to take effect."
             android:title="Floating dock" />
         <SwitchPreference
             android:defaultValue="false"

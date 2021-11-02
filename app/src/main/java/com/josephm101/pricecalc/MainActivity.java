@@ -6,9 +6,14 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +32,8 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -35,9 +42,11 @@ import androidx.preference.PreferenceManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.opencsv.CSVWriter;
+import com.opencsv.CSVWriterBuilder;
+import com.opencsv.ICSVWriter;
 
 //For Auto-update checker
-
 //import com.downloader.BuildConfig;
 //import com.josephm101.pricecalc.UpdateHandler.API.GitHub;
 //import com.josephm101.pricecalc.UpdateHandler.API.ReleaseInfo;
@@ -50,12 +59,19 @@ import org.jetbrains.annotations.NotNull;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Set;
 import java.util.Timer;
@@ -81,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
     CardView cardView;
     androidx.appcompat.app.ActionBar actionBar;
     Boolean isFromFile = false;
+    Context current = this;
     int listView_position;
 
     //Preferences
@@ -165,9 +182,24 @@ public class MainActivity extends AppCompatActivity {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Uri uri = result.getData().getData();
                         try {
-                            CsvLib.ExportToCSV(getApplicationContext(), listItems, uri.getPath());
+                            File outputDir = getApplicationContext().getCacheDir();
+                            File outputFile = File.createTempFile("export-", ".csv", outputDir);
+                            String path = outputFile.getPath();
+                            String fName = outputFile.getName();
+                            ExportToCSV(current, listItems, path);
+
+                            InputStream is = new FileInputStream(outputFile);
+                            OutputStream os = getContentResolver().openOutputStream(uri);
+
+                            byte[] buffer = new byte[1024];
+                            int length;
+                            while ((length = is.read(buffer)) > 0) {
+                                os.write(buffer, 0, length);
+                            }
+                            os.close();
+                            is.close();
                         } catch (IOException e) {
-                            MaterialAlertDialogBuilder errorAlertDialog = new MaterialAlertDialogBuilder(getApplicationContext(), R.style.CustomTheme_MaterialComponents_MaterialAlertDialog)
+                            MaterialAlertDialogBuilder errorAlertDialog = new MaterialAlertDialogBuilder(current, R.style.CustomTheme_MaterialComponents_MaterialAlertDialog)
                                     .setTitle("Error exporting")
                                     .setMessage("Something happened, and we couldn't export the list.")
                                     .setIcon(R.drawable.ic_baseline_error_24)
@@ -182,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        ThemeHandling.ApplyTheme(this); //Apply theme
+        ThemeHandling.ApplyTheme(this.getApplicationContext()); //Apply theme
         actionBar = getSupportActionBar();
         assert actionBar != null;
         super.onCreate(savedInstanceState);
@@ -281,70 +313,6 @@ public class MainActivity extends AppCompatActivity {
 
         LoadList();
         RefreshView();
-        Timer timer = new Timer();
-        Context thisContext = this;
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-        //        MainActivity.this.runOnUiThread(new Runnable() {
-        //            public void run() {
-        //                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        //                if (sharedPreferences.getBoolean("autoCheckForUpdates", false) == true) {
-        //                    GitHub release_repo = new GitHub(GitHubParams.username, GitHubParams.repo_name, new GitHub.RetrievalListener() {
-        //                        @Override
-        //                        public void onRetrievalComplete(ReleaseInfo releaseInfo) {
-        //                            VersionInfo releaseVersionInfo = VersionParser.parse(releaseInfo.getReleaseVersion());
-        //                            VersionInfo currentVersionInfo = VersionParser.parse(BuildConfig.VERSION_NAME);
-        //                            if (releaseInfo != null) {
-        //                                SharedPreferences UpdateSettings = getApplicationContext().getSharedPreferences("AutomaticUpdater", 0);
-        //                                VersionCompare.VersionComparison comparison = VersionCompare.CompareVersions(currentVersionInfo, releaseVersionInfo);
-        //                                String savedVersion = UpdateSettings.getString("skip_version", "0.0.0");
-        //                                String rVers = releaseInfo.getReleaseVersion();
-        //                                if (comparison == VersionCompare.VersionComparison.VERSION_NEWER) {
-        //                                    if (rVers.contentEquals(savedVersion)) {
-//
-        //                                    } else {
-        //                                        ConstraintLayout coordinatorLayout = findViewById(R.id.mainConstraintLayout);
-        //                                        Snackbar snackbar = Snackbar.make(coordinatorLayout, "Update available.", Snackbar.LENGTH_LONG)
-        //                                                .setAction("VIEW", v1 -> {
-        //                                                    MaterialAlertDialogBuilder updateNotifierDialog = new MaterialAlertDialogBuilder(thisContext)
-        //                                                            .setTitle("Update available")
-        //                                                            .setMessage("An update for PriceCalc is available.")
-        //                                                            .setPositiveButton("View update info", (dialog, which) -> {
-        //                                                                Intent intent = new Intent(getApplicationContext(), CheckForUpdates.class);
-        //                                                                startActivity(intent);
-        //                                                            })
-        //                                                            .setNegativeButton("Skip this version", (dialog, which) -> {
-        //                                                                UpdateSettings.edit().putString("skip_version", releaseInfo.getReleaseVersion()).apply();
-        //                                                                ShowDismissableSnackbar("You will no longer be notified of updates until the next release.");
-        //                                                            })
-        //                                                            .setNeutralButton("Disable automatic updates", (dialog, which) -> {
-        //                                                                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("autoCheckForUpdates", false).apply();
-        //                                                                ShowDismissableSnackbar("Automatic updates disabled. You can re-enable it in Settings.");
-        //                                                            })
-        //                                                            .setCancelable(true);
-        //                                                    updateNotifierDialog.show();
-        //                                                    //Intent intent = new Intent(getApplicationContext(), CheckForUpdates.class);
-        //                                                    //startActivity(intent);
-        //                                                })
-        //                                                .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
-        //                                        snackbar.show();
-        //                                    }
-        //                                }
-        //                            }
-        //                        }
-//
-        //                        @Override
-        //                        public void onRetrievalError(String request) {
-        //                        }
-        //                    });
-//
-        //                    release_repo.GetData();
-        //                }
-        //            }
-        //        });
-            }
-        }, 1000);
 
         //Cleanup();
     }
@@ -412,26 +380,42 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(openDocument, 2);
                 break;
             case R.id.exportToCsv_menuItem:
-                Intent saveDocument = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-                saveDocument.addCategory(Intent.CATEGORY_OPENABLE);
-                saveDocument.setType("csv");
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss", Locale.getDefault());
-                String tempFileName = sdf.format(new Date()) + ".csv";
-                saveDocument.putExtra(Intent.EXTRA_TITLE, tempFileName);
-                ExportCSV_SaveFileActivityResultLauncher.launch(saveDocument);
+                try {
+                    Intent saveDocument = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                    saveDocument.addCategory(Intent.CATEGORY_OPENABLE);
+                    saveDocument.setType("text/csv");
+                    saveDocument.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss", Locale.getDefault());
+                    String tempFileName = sdf.format(new Date()) + ".csv";
+                    saveDocument.putExtra(Intent.EXTRA_TITLE, tempFileName);
+                    ExportCSV_SaveFileActivityResultLauncher.launch(saveDocument);
+                } catch (Exception e) {
+                    MaterialAlertDialogBuilder errorAlertDialog = new MaterialAlertDialogBuilder(current, R.style.CustomTheme_MaterialComponents_MaterialAlertDialog)
+                            .setTitle("Error exporting")
+                            .setMessage("Something happened, and we couldn't export the list.")
+                            .setIcon(R.drawable.ic_baseline_error_24)
+                            .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                            .setCancelable(false);
+                    errorAlertDialog.show();
+                    e.printStackTrace();
+                }
                 break;
             case R.id.shareList_menuItem:
                 try {
                     File outputDir = getApplicationContext().getCacheDir();
-                    File outputFile = File.createTempFile("export", ".csv", outputDir);
+                    File outputFile = File.createTempFile("export-", ".csv", outputDir);
+                    String path = outputFile.getPath();
+                    String fName = outputFile.getName();
+                    ExportToCSV(current, listItems, path);
+
                     Intent shareIntent = new Intent(Intent.ACTION_SEND);
                     shareIntent.setType("text/csv");
-                    shareIntent.putExtra(Intent.EXTRA_SUBJECT,"Share exported list");
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, "Share exported list");
-                    shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+outputFile.getPath()));
+                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, fName);
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, fName);
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, outputFile.getPath());
                     startActivity(Intent.createChooser(shareIntent, "Share"));
                 } catch (IOException e) {
-                    MaterialAlertDialogBuilder errorAlertDialog = new MaterialAlertDialogBuilder(getApplicationContext(), R.style.CustomTheme_MaterialComponents_MaterialAlertDialog)
+                    MaterialAlertDialogBuilder errorAlertDialog = new MaterialAlertDialogBuilder(current, R.style.CustomTheme_MaterialComponents_MaterialAlertDialog)
                             .setTitle("Error sharing")
                             .setMessage("Something happened, and we couldn't export the list.")
                             .setIcon(R.drawable.ic_baseline_error_24)
@@ -443,6 +427,58 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    // Gather all items, extract the data, and export everything to a .csv file.
+    public static boolean ExportToCSV (Context context, ArrayList<DataModel> data, String DestinationFile) throws IOException {
+        FileWriter fileWriter = new FileWriter(DestinationFile);
+        ICSVWriter csvWriter = new CSVWriterBuilder(fileWriter).withSeparator(CSVWriter.DEFAULT_SEPARATOR).withEscapeChar(CSVWriter.DEFAULT_ESCAPE_CHARACTER).build();
+        String[] headerRecord = {"Item Name", "Item Price", "Quantity", "Tax Cost", "Total"};
+        String[] emptyLine = {"", "", "", "", ""};
+        String[] endHeader = {"", "", "", "Total:", ""};
+
+        csvWriter.writeNext(headerRecord);
+
+        List<String[]> list = generateCsvData(data, context);
+        for (String[] item : list) {
+            csvWriter.writeNext(item);
+        }
+
+        // Add total to bottom of file if the setting "csvExport_AddTotalToFile_Preference" is set to true.
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        if (sharedPreferences.getBoolean("csvExport_AddTotalToFile_Preference", false)) {
+            // Empty line, followed by data
+            csvWriter.writeNext(emptyLine);
+            csvWriter.writeNext(endHeader);
+        }
+
+        csvWriter.close();
+        fileWriter.close();
+        return true;
+    }
+
+    static ArrayList<String[]> generateCsvData(ArrayList<DataModel> data, Context context) {
+        ArrayList<String[]> list = new ArrayList<String[]>();
+        for (DataModel dm : data) {
+            String itemName = dm.getItemName();
+            double itemPrice = Double.parseDouble(dm.getItemPrice());
+            int itemQuantity = Integer.parseInt(dm.getItemQuantity());
+            //boolean isItemTaxable = dm.getIsTaxable();
+
+            double priceWithQuantity = (itemPrice * itemQuantity);
+            double taxRate = PriceHandling.getDefaultTaxRatePercentage(context.getApplicationContext());
+            double priceTax = ((priceWithQuantity * taxRate) / 100);
+            double totalCostOverall = priceWithQuantity + priceTax;
+
+            // Convert values to strings
+            String str_itemPrice = PriceHandling.PriceToString(itemPrice);
+            String str_itemQuantity = String.valueOf(itemQuantity);
+            String str_priceTax = PriceHandling.PriceToString(priceTax);
+            String str_totalCost = PriceHandling.PriceToString(totalCostOverall);
+
+            list.add(new String[] {itemName, str_itemPrice, str_itemQuantity, str_priceTax, str_totalCost});
+        }
+        return list;
     }
 
 //    @Override
