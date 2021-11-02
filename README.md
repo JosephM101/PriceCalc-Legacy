@@ -46,6 +46,7 @@
 
 Consideration  | Status
 ------------- | -------------
-Add feature that allows for saving/opening lists instead of having just one  |  In progress
-Add "budgeting" feature |
-Add the ability to change the app's theme color(s) |
+Add feature for exporting lists to spreadsheet file  |  In progress
+Add feature that allows for saving/opening lists instead of having just one  |
+Add "budgeting" feature  |  
+Add the ability to change the app's theme color(s)  |  
