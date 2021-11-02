@@ -14,6 +14,7 @@ import androidx.preference.PreferenceManager;
 @SuppressWarnings("ALL")
 public class SettingsActivity extends AppCompatActivity {
     Context thisContext;
+    SharedPreferences prefs;
 
     @SuppressWarnings("EmptyTryBlock")
     @Override
@@ -32,7 +33,7 @@ public class SettingsActivity extends AppCompatActivity {
             actionBar.setDisplayShowHomeEnabled(true);
         }
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         //MessageHandling.ShowMessage(thisContext, "Restart required", "The app will need to be restarted for changes to take effect.", "OK", R.drawable.ic_baseline_info_24);
         SharedPreferences.OnSharedPreferenceChangeListener prefListener = (prefs1, key) -> {
             switch (key) {
