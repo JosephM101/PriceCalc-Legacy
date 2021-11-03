@@ -9,4 +9,16 @@
             android:title="Check for Updates Automatically"
             android:visibility="invisible" />
     </PreferenceCategory>
+
+    <PreferenceCategory app:title="User Interface">
+        <ListPreference
+            android:key="appTheme_Preference"
+            android:defaultValue="1"
+            android:entries="@array/theme_settings"
+            android:entryValues="@array/theme_settings_val"
+            android:summary="Change the theme of the app."
+            android:title="App Theme"
+            android:dialogTitle="Change app theme" />
+
+    </PreferenceCategory>
 </PreferenceScreen>

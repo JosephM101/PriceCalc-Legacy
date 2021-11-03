@@ -14,17 +14,7 @@
             app:singleLineTitle="true"
             app:title="Tax Rate" />
     </PreferenceCategory>
-    <PreferenceCategory app:title="User Interface">
-        <ListPreference
-            android:key="appTheme_Preference"
-            android:defaultValue="1"
-            android:entries="@array/theme_settings"
-            android:entryValues="@array/theme_settings_val"
-            android:summary="Change the theme of the app."
-            android:title="App Theme"
-            android:dialogTitle="Change app theme" />
 
-    </PreferenceCategory>
     <PreferenceCategory
         android:summary="Choose how lists get exported"
         android:title="Export Settings">
