@@ -4,22 +4,18 @@
     <string name="item_info">Item Info</string>
     <string name="note1" tools:keep="@string/note1">Start adding items to the list.</string>
     <string name="totalCost_zeroString">$0.00</string>
-    <string name="item_is_tax_deductible">Item Is Taxable</string>
 
-    <!--
-    Item name values for easier and more accurate referencing
-    !-->
     <string name="taxDeductible_Yes" tools:keep="@string/taxDeductible_Yes">Yes</string> <!-- If item is tax deductible !-->
     <string name="taxDeductible_No" tools:keep="@string/taxDeductible_No">No</string>
-    <string name="addItem_taxDeductibleInfo">If checked, item tax will automatically be applied to the final price of the item. You can change the tax rate in Settings.</string>
-    <string name="itemNameEditText_Hint">Name of the product (Example: Cup)</string>
-    <string name="AddItem_confirmButtonText" tools:keep="@string/AddItem_confirmButtonText">Add Item</string>
+
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="nullVal">null</string>
     <string name="quantity_minValue">1</string>
     <string name="discard">Discard</string>
     <string name="add_a_new_item">Add a new item</string>
     <string name="appversion_placeholder">AppVersion</string>
+
+    <string name="this_field_is_required">This field is required.</string>
 
     <string-array name="theme_settings">
         <item>Use system theme</item>

@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="itemNameHint">Item Name (not required)</string>
+    <string name="itemNameEditText_Hint">Name of the product (Example: Cup)</string>
     <string name="item_net_cost">Item Net Cost</string>
-    <string name="item_quantity">Item Quantity</string>
-    <string name="add_item_action_button" tools:keep="@string/add_item_action_button">Add Item</string>
-    <string name="this_field_is_required">This field is required.</string>
-    <string name="defValue">1</string>
-    <string name="quantity">Quantity</string>
-    <string name="defValue_Price">$0.00</string>
     <string name="ProductPriceLabelHint">Price of the product (Example: 1.99)</string>
+    <string name="item_quantity">Item Quantity</string>
+    <string name="quantity">Quantity</string>
+    <string name="item_is_tax_deductible">Item Is Taxable</string>
+    <string name="add_item_action_button" tools:keep="@string/add_item_action_button">Add Item</string>
+    <string name="defValue">1</string>
+    <string name="defValue_Price">$0.00</string>
+    <string name="addItem_taxDeductibleInfo">If checked, item tax will automatically be applied to the final price of the item. You can change the tax rate in Settings.</string>
+    <string name="AddItem_confirmButtonText" tools:keep="@string/AddItem_confirmButtonText">Add Item</string>
 </resources>

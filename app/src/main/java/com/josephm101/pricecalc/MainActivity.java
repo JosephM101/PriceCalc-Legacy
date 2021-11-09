@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextMenu;
+import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -315,6 +316,7 @@ public class MainActivity extends AppCompatActivity {
         RefreshView();
 
         //Cleanup();
+
     }
 
     @Deprecated
@@ -746,7 +748,7 @@ public class MainActivity extends AppCompatActivity {
             ContextMenu.ContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
             listView_position = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
             MenuInflater inflater = getMenuInflater();
-            //menu.setHeaderTitle("Item options");
+            menu.setHeaderTitle("Item properties");
             inflater.inflate(R.menu.menu_itemsmenu, menu);
         }
     }
