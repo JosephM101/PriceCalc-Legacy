@@ -2,6 +2,12 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/undo_menuItem"
+        android:icon="@drawable/ic_baseline_undo_24"
+        android:title="Undo"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/refreshView_menuItem"
         android:checkable="false"
         android:icon="@drawable/ic_baseline_refresh_24"
