@@ -5,6 +5,7 @@
         android:id="@+id/undo_menuItem"
         android:icon="@drawable/ic_baseline_undo_24"
         android:title="Undo"
+        android:visible="false"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/refreshView_menuItem"
