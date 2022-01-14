@@ -46,6 +46,6 @@
 
 Consideration  | Status
 ------------- | -------------
-Add feature that allows for saving/opening lists instead of having just one  |
+Add feature that allows for having multiple lists instead of just one  |  In progress
 Add "budgeting" feature  |  
 Add the ability to change the app's theme color(s)  |  
