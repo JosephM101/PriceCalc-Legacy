@@ -42,7 +42,7 @@
 - - - -
 
 ### Considerations
-**(aka. not guranteed to make it into a release)**
+**(aka. not guaranteed to make it into a release)**
 
 Consideration  | Status
 ------------- | -------------
