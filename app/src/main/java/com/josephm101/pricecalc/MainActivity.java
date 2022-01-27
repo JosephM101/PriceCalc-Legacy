@@ -6,16 +6,10 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.ContextMenu;
-import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,8 +27,6 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -68,24 +60,29 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 
 @SuppressWarnings("ALL")
 @SuppressLint("NonConstantResourceId")
 
 public class MainActivity extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
+
     private static CustomAdapter adapter;
+
     ArrayList<DataModel> listItems = new ArrayList<>();
     ArrayList<DataModel> listItems_BKP = new ArrayList<>();
+
+    // For undo functionality
+    ArrayList<ArrayList<DataModel>> listItems_undo = new ArrayList<>();
+    ArrayList<ArrayList<DataModel>> listItems_redo = new ArrayList<>();
+
+    int maxUndoCount = 10;
+    int maxRedoCount = 10;
+    
     private final String NewLineSeparator = "`";
     private final String splitChar = "§";
     ListView listView;
@@ -97,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     Menu referencedMenu;
     CardView cardView;
     androidx.appcompat.app.ActionBar actionBar;
-    Boolean isFromFile = false;
+    //Boolean isFromFile = false;
     Context current = this;
     int listView_position;
 
@@ -228,9 +225,18 @@ public class MainActivity extends AppCompatActivity {
             startActivity(welcomeScreen_Intent);
         }
 
-        //Load the saved list
-        String savedListFileName = "/saved_list.txt";
+        // Check if we're opening a custom list. If not, load the default.
+        String savedListFileName = "";
+        Intent i = getIntent();
+        // Retrieve the filename from the intent.
+        savedListFileName = (String) i.getSerializableExtra("customListFilename");
+        if (savedListFileName == null) {
+            // We're not loading a custom list. Select the default for loading.
+            savedListFileName = "/saved_list.txt";
+        }
+        // Load the selected list
         savedList_FileName = getFilesDir().getParent() + savedListFileName;
+
         //Load layout based on settings
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         floatingDockPreference_value = sharedPreferences.getBoolean("floatingDock_Preference", false);
@@ -426,6 +432,10 @@ public class MainActivity extends AppCompatActivity {
                     errorAlertDialog.show();
                     e.printStackTrace();
                 }
+                break;
+
+            case R.id.undo_menuItem:
+                ListItems_Undo();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -904,5 +914,100 @@ public class MainActivity extends AppCompatActivity {
         referencedMenu.clear();
         getMenuInflater().inflate(R.menu.menu_main, referencedMenu);
         inDeleteMode = false;
+    }
+
+    Boolean ListItems_CanUndo()
+    {
+        // Check if we can undo
+        if(listItems_undo.size() > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    Boolean ListItems_CanRedo()
+    {
+        // Check if we can redo
+        if(listItems_redo.size() > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    Boolean ListItems_Undo()
+    {
+        if(ListItems_CanUndo())
+        {
+            int index = listItems_undo.size() - 1;
+            // Add the item to undo to the redo list
+            listItems_redo.add(listItems_undo.get(index));
+            // Assign last index of undo to listItems array
+            listItems = listItems_undo.get(index);
+            // Remove last index of undo from undo array
+            listItems_undo.remove(index);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    Boolean ListItems_Redo()
+    {
+        if(ListItems_CanRedo())
+        {
+            int index = listItems_redo.size() - 1;
+            // Add the item to redo to the undo list
+            listItems_undo.add(listItems_redo.get(index));
+            // Assign last index of redo to listItems array
+            listItems = listItems_redo.get(index);
+            // Remove last index of redo from redo array
+            listItems_redo.remove(index);
+            ClipRedoCollection();
+            ClipUndoCollection();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    void SaveChangesToUndoCollection()
+    {
+        // Save the current listItems to the undo array
+        listItems_undo.add(listItems);
+        ClipUndoCollection();
+        // Clear the redo array
+        listItems_redo.clear();
+    }
+
+    void ClipUndoCollection()
+    {
+        // Check if the undo collection is greater than the undo limit
+        while (listItems_undo.size() > maxUndoCount)
+        {
+            // Remove the first item in the collection
+            listItems_undo.remove(0);
+        }
+    }
+
+    void ClipRedoCollection()
+    {
+        // Check if the redo collection is greater than the redo limit
+        while (listItems_redo.size() > maxRedoCount)
+        {
+            // Remove the first item in the collection
+            listItems_redo.remove(0);
+        }
     }
 }
