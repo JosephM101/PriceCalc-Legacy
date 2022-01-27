@@ -3,10 +3,7 @@
     package="com.josephm101.pricecalc">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <!-- For installing updates from GitHub !-->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -18,6 +15,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PriceCalc">
+        <activity
+            android:name=".OpenList_Activity"
+            android:exported="true" />
         <activity android:name=".WelcomeScreen" />
         <activity
             android:name=".CheckForUpdates"
