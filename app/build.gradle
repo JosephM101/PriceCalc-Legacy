@@ -61,6 +61,9 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.5.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.0"
     implementation 'com.opencsv:opencsv:5.5.2'
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    implementation 'org.jsoup:jsoup:1.14.3'
+
 }
 repositories {
     mavenCentral()
