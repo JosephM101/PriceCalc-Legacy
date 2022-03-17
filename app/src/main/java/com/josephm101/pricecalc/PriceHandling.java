@@ -7,26 +7,38 @@ import androidx.preference.PreferenceManager;
 
 import java.text.DecimalFormat;
 
-public class PriceHandling {
+public final class PriceHandling {
     private static final DecimalFormat priceFormat = new DecimalFormat("0.00");
 
+    // Return the default tax rate as defined in the app preferences. Not recommended for use, but a starter for a fallback value when the defined tax rate is potentially invalid.
     public static double getDefaultTaxRatePercentage(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-        String value = sharedPreferences.getString("taxRate_Preference", Preferences.DefaultValues.DefaultTaxRate); //Default tax rate for U.S.
+        String value = sharedPreferences.getString("taxRate_Preference", Preferences.DefaultValues.DefaultTaxRate); // Default tax rate for U.S.
         return Double.parseDouble(value);
     }
 
-    public static String calculatePrice(double itemCost, double taxRatePercentage) {
-        double taxPrice = getTaxCost(itemCost, taxRatePercentage);
-        double totalCost = itemCost + taxPrice;
-        return PriceToString(totalCost);
-    }
-
+    // Calculate the price using the tax rate, and return the final result as a double
     public static Double calculatePriceDouble(double itemCost, double taxRatePercentage) {
         double taxPrice = getTaxCost(itemCost, taxRatePercentage);
         return itemCost + taxPrice;
     }
 
+    // Calculate the price using the tax rate, and return the final result as a double
+    // Same as the above method, but factors in quantity
+    public static Double calculatePriceDouble(double itemCost, double taxRatePercentage, int quantity) {
+        double newCost = itemCost * quantity; // Multiply the cost by the quantity
+        double taxPrice = getTaxCost(newCost, taxRatePercentage); // Calculate the tax
+        return newCost + taxPrice; // Add tax to newCost, and return
+    }
+
+    // Calculate the price using the tax rate, and return the final result as a formatted string
+    public static String calculatePrice(double itemCost, double taxRatePercentage) {
+        // double taxPrice = getTaxCost(itemCost, taxRatePercentage);
+        // double totalCost = itemCost + taxPrice;
+        return PriceToString(calculatePriceDouble(itemCost, taxRatePercentage));
+    }
+
+    // Calculate the price using the tax rate, and return the final result as a formatted string
     public static String calculatePrice(double itemCost, double taxRatePercentage, int quantity) {
         double newCost = itemCost * quantity;
         double taxPrice = getTaxCost(newCost, taxRatePercentage);
