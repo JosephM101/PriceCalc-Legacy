@@ -7,7 +7,7 @@
             android:positiveButtonText="Save"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:summary="Edit the tax rate to match that of your current location. If you are unsure of yours, look up the tax rate for your state (Europe, U.S., etc.)"
+            android:summary="Edit the tax rate to match that of your current location. If you are unsure of yours, look up the tax rate for your state."
             android:title="Tax Rate"
             app:defaultValue="6.25"
             app:dialogMessage="Enter the tax rate below for your area. (Example: 6.25)"
@@ -15,18 +15,16 @@
             app:title="Tax Rate" />
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:summary="Choose how lists get exported"
-        android:title="Export Settings">
+    <PreferenceCategory android:title="Spreadsheet Export Options">
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="csvExport_AddTotalToFile_Preference"
-            android:summary="When enabled, the overall cost is appended to the end of the spreadsheet when the list is exported."
-            android:title="Insert total overall cost" />
+            android:summary="When enabled, the overall cost is appended to the end of the exported spreadsheet."
+            android:title="Insert total cost" />
     </PreferenceCategory>
     <PreferenceCategory
-        android:singleLineTitle="false"
+        android:singleLineTitle="true"
         android:title="Experimental Settings (Some settings may require an app restart to take effect)">
 
         <SwitchPreference
