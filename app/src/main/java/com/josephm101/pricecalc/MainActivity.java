@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
     int maxUndoCount = 10;
     int maxRedoCount = 10;
-    
+
     private final String NewLineSeparator = "`";
     private final String splitChar = "§";
     ListView listView;
@@ -322,7 +322,6 @@ public class MainActivity extends AppCompatActivity {
         RefreshView();
 
         //Cleanup();
-
     }
 
     @Deprecated
@@ -442,7 +441,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Gather all items, extract the data, and export everything to a .csv file.
-    public static boolean ExportToCSV (Context context, ArrayList<DataModel> data, String DestinationFile) throws IOException {
+    public static boolean ExportToCSV(Context context, ArrayList<DataModel> data, String DestinationFile) throws IOException {
         FileWriter fileWriter = new FileWriter(DestinationFile);
         ICSVWriter csvWriter = new CSVWriterBuilder(fileWriter).withSeparator(CSVWriter.DEFAULT_SEPARATOR).withEscapeChar(CSVWriter.DEFAULT_ESCAPE_CHARACTER).build();
         String[] headerRecord = {"Item Name", "Item Price", "Quantity", "Tax Cost", "Total"};
@@ -488,7 +487,7 @@ public class MainActivity extends AppCompatActivity {
             String str_priceTax = PriceHandling.PriceToString(priceTax);
             String str_totalCost = PriceHandling.PriceToString(totalCostOverall);
 
-            list.add(new String[] {itemName, str_itemPrice, str_itemQuantity, str_priceTax, str_totalCost});
+            list.add(new String[]{itemName, str_itemPrice, str_itemQuantity, str_priceTax, str_totalCost});
         }
         return list;
     }
@@ -916,36 +915,26 @@ public class MainActivity extends AppCompatActivity {
         inDeleteMode = false;
     }
 
-    Boolean ListItems_CanUndo()
-    {
+    Boolean ListItems_CanUndo() {
         // Check if we can undo
-        if(listItems_undo.size() > 0)
-        {
+        if (listItems_undo.size() > 0) {
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
 
-    Boolean ListItems_CanRedo()
-    {
+    Boolean ListItems_CanRedo() {
         // Check if we can redo
-        if(listItems_redo.size() > 0)
-        {
+        if (listItems_redo.size() > 0) {
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
 
-    Boolean ListItems_Undo()
-    {
-        if(ListItems_CanUndo())
-        {
+    Boolean ListItems_Undo() {
+        if (ListItems_CanUndo()) {
             int index = listItems_undo.size() - 1;
             // Add the item to undo to the redo list
             listItems_redo.add(listItems_undo.get(index));
@@ -954,17 +943,13 @@ public class MainActivity extends AppCompatActivity {
             // Remove last index of undo from undo array
             listItems_undo.remove(index);
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
 
-    Boolean ListItems_Redo()
-    {
-        if(ListItems_CanRedo())
-        {
+    Boolean ListItems_Redo() {
+        if (ListItems_CanRedo()) {
             int index = listItems_redo.size() - 1;
             // Add the item to redo to the undo list
             listItems_undo.add(listItems_redo.get(index));
@@ -975,15 +960,12 @@ public class MainActivity extends AppCompatActivity {
             ClipRedoCollection();
             ClipUndoCollection();
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
 
-    void SaveChangesToUndoCollection()
-    {
+    void SaveChangesToUndoCollection() {
         // Save the current listItems to the undo array
         listItems_undo.add(listItems);
         ClipUndoCollection();
@@ -991,21 +973,17 @@ public class MainActivity extends AppCompatActivity {
         listItems_redo.clear();
     }
 
-    void ClipUndoCollection()
-    {
+    void ClipUndoCollection() {
         // Check if the undo collection is greater than the undo limit
-        while (listItems_undo.size() > maxUndoCount)
-        {
+        while (listItems_undo.size() > maxUndoCount) {
             // Remove the first item in the collection
             listItems_undo.remove(0);
         }
     }
 
-    void ClipRedoCollection()
-    {
+    void ClipRedoCollection() {
         // Check if the redo collection is greater than the redo limit
-        while (listItems_redo.size() > maxRedoCount)
-        {
+        while (listItems_redo.size() > maxRedoCount) {
             // Remove the first item in the collection
             listItems_redo.remove(0);
         }
