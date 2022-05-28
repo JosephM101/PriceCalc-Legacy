@@ -12,4 +12,6 @@
     <string name="defValue_Price">$0.00</string>
     <string name="addItem_taxDeductibleInfo">If checked, item tax will automatically be applied to the final price of the item. You can change the tax rate in Settings.</string>
     <string name="AddItem_confirmButtonText" tools:keep="@string/AddItem_confirmButtonText">Add Item</string>
+    <string name="add_item_subtitle">Edit item details</string>
+    <string name="mode_edit_item">Edit Item</string>
 </resources>

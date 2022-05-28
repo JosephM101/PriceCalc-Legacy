@@ -32,7 +32,7 @@ public class AddItem extends AppCompatActivity {
     Boolean isCancelling = true;
     FloatingActionButton floatingActionButton;
     Boolean somethingChanged = false; //This is checked when the activity is closing. If true, the "Confirm exit & discard" warning dialog will be shown if the user tries to exit the activity.
-    MenuItem addItem_menuBar_totalCostLabel;
+    MenuItem menuBar_totalCostLabel;
     CoordinatorLayout coordinatorLayout;
     Boolean editMode = false;
     DataModel importedDataModel;
@@ -45,7 +45,7 @@ public class AddItem extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
-        actionBar.setSubtitle("Edit item details.");
+        actionBar.setSubtitle(getString(R.string.add_item_subtitle));
         actionBar.setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_add_item);
         //Init Components
@@ -119,8 +119,8 @@ public class AddItem extends AppCompatActivity {
             @Override
             public void run() {
                 runOnUiThread(() -> {
-                    if(addItem_menuBar_totalCostLabel != null) {
-                        addItem_menuBar_totalCostLabel.setTitle(result);
+                    if(menuBar_totalCostLabel != null) {
+                        menuBar_totalCostLabel.setTitle("TOTAL: " + result);
                     }
                 });
             }
@@ -130,10 +130,10 @@ public class AddItem extends AppCompatActivity {
     void EditMode() {
         Intent i = getIntent();
         if (i.hasExtra("dataModel")) {
-            setTitle("Edit Item");
+            setTitle(getString(R.string.mode_edit_item));
             importedDataModel = (DataModel) i.getSerializableExtra("dataModel");
             editMode = true;
-            setTitle("Edit Item");
+            setTitle(getString(R.string.mode_edit_item));
             itemNameEditText.setText(importedDataModel.getItemName());
             itemCostEditText.setText(importedDataModel.getItemPrice());
             itemQuantityEditText.setText(importedDataModel.getItemQuantity());
@@ -177,7 +177,7 @@ public class AddItem extends AppCompatActivity {
     }
 
     void ShowDiscardWarning() {
-        if (somethingChanged == true) {
+        if (somethingChanged) {
             if (isCancelling) {
                 MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(this, R.style.CustomTheme_MaterialComponents_MaterialAlertDialog)
                         .setMessage("Are you sure you want to discard unsaved changes?")
@@ -200,7 +200,7 @@ public class AddItem extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_additem, menu);
-        addItem_menuBar_totalCostLabel = menu.findItem(R.id.addItem_menuBar_totalCostLabel);
+        menuBar_totalCostLabel = menu.findItem(R.id.addItem_menuBar_totalCostLabel);
         return true;
     }
 
