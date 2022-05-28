@@ -148,7 +148,8 @@
                             android:clickable="true"
                             android:contentDescription="@string/add_item"
                             android:focusable="true"
-                            app:srcCompat="@drawable/ic_baseline_check_24" />
+                            app:srcCompat="@drawable/ic_baseline_check_24"
+                            tools:ignore="ImageContrastCheck" />
 
                         <TextView
                             android:id="@+id/totalCostLabel"
