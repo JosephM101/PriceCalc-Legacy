@@ -13,6 +13,11 @@
             app:dialogMessage="Enter the tax rate below for your area. (Example: 6.25)"
             app:singleLineTitle="true"
             app:title="Tax Rate" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="loadRecentListOnLaunch_Preference"
+            android:summary="When PriceCalc starts, load the list that was open before the app was last closed."
+            android:title="Open recent list on launch" />
     </PreferenceCategory>
 
     <PreferenceCategory
