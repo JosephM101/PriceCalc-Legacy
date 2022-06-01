@@ -104,6 +104,150 @@ public class MainActivity extends AppCompatActivity {
 
     private String savedList_FileName;
     private boolean Card_Hidden;
+
+    /*
+     * ┌───────────────────────────┬─────────────────────────────────┐
+     * │┼──────────────────────────┤                                 │
+     * ││** Start of application **│                                 │
+     * ├┴──────────────────────────┘                                 │
+     * │                                                             │
+     * │NOTE: As of initial multi-list support, this activity is no  │
+     * │longer the primary activity by default. The opening of this  │
+     * │activity is instead handled by the LoadList activity, which  │
+     * │appears as a dialog with a list of all of the lists created  │
+     * │by the user, including options to manage, create, delete,    │
+     * │rename and export lists. The default list CANNOT be deleted, │
+     * │and it will be automatically loaded if no other lists exist. │
+     * │                                                             │
+     * │The LoadList dialog can be opened in the following ways:     │
+     * │- [Welcome Screen] User presses the "Open List" button       │
+     * │- [Main Activity] User selects "Open List" from the app menu │
+     * │                                                             │
+     * │Only when the multi-list option is disabled in Settings will │
+     * │this activity be the primary activity. Additionally, if the  │
+     * │multi-list option remains enabled but the Welcome Screen is  │
+     * │disabled, the app will attempt to load the most recent list, │
+     * │should one exist. Otherwise, the LoadList dialog will be     │
+     * │presented to the user.                                       │
+     * └─────────────────────────────────────────────────────────────┘
+     */
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        ThemeHandling.ApplyTheme(this.getApplicationContext()); //Apply theme
+        actionBar = getSupportActionBar();
+        assert actionBar != null;
+        super.onCreate(savedInstanceState);
+
+        //Show the welcome screen (New, Beta)
+        SharedPreferences WelcomeScreenSettings = getApplicationContext().getSharedPreferences(Preferences.WelcomeScreen.PreferenceGroup, 0);
+        int wasShown = WelcomeScreenSettings.getInt(Preferences.WelcomeScreen.ENTRY_SHOWN, 0);
+        if (wasShown == 0) { //The Welcome screen was never shown; possibly a first start of the app.
+            Intent welcomeScreen_Intent = new Intent(this, WelcomeScreen.class);
+            startActivity(welcomeScreen_Intent);
+        }
+
+        // Check if we're opening a custom list. If not, load the default.
+        String savedListFileName = "";
+        Intent i = getIntent();
+        // Retrieve the filename from the intent.
+        savedListFileName = (String) i.getSerializableExtra("customListFilename");
+        if (savedListFileName == null) {
+            // We're not loading a custom list. Select the default for loading.
+            savedListFileName = Defaults.primarySavedListFileName;
+        }
+
+        // Load the list
+        savedList_FileName = getFilesDir().getParent() + savedListFileName;
+
+        // Load main view layout based on settings
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        floatingDockPreference_value = sharedPreferences.getBoolean("floatingDock_Preference", false);
+        hideDock_preference = sharedPreferences.getBoolean("hideDock_preference", false);
+        if (!hideDock_preference) {
+            if (floatingDockPreference_value) {
+                setContentView(R.layout.activity_main_floating_toolbar);
+            } else {
+                setContentView(R.layout.activity_main);
+            }
+        } else {
+            setContentView(R.layout.activity_main);
+        }
+        cardView = findViewById(R.id.cardView);
+        if (hideDock_preference) {
+            cardView.setVisibility(View.GONE);
+        }
+
+        //AppBeta.ShowBetaMessage(this);
+
+        totalCostLabel = findViewById(R.id.totalCost_Label);
+        addItem_FloatingActionButton = findViewById(R.id.addItem_floatingActionButton);
+        addItem_FloatingActionButton.setAnimateShowBeforeLayout(true);
+        addItem_FloatingActionButton.setOnClickListener(v -> {
+            loadingProgressBar.setVisibility(View.VISIBLE);
+            Animation ani = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.floating_action_button_scale_down_ani); //Shrink the FAB
+            ani.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    addItem_FloatingActionButton.setEnabled(false);
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    Intent addNew = new Intent(v.getContext(), AddItem.class);
+                    NewItemActivityLauncher.launch(addNew);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            ani.setFillAfter(true);
+            addItem_FloatingActionButton.startAnimation(ani);
+        });
+        listView = findViewById(R.id.items_listBox);
+        //RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        //recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+        adapter = new CustomAdapter(listItems, MainActivity.this);
+        adapter.setNotifyOnChange(true);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            listView_position = position;
+            DataModel dataModel = listItems.get(listView_position);
+            Intent itemInfo = new Intent(this, ItemInfo.class);
+            itemInfo.putExtra("dataModel", dataModel);
+            ItemInfoActivityLauncher.launch(itemInfo);
+        });
+
+        //listView.setOnItemLongClickListener(this::onItemLongClick);
+
+        //if (floatingDockPreference_value) {
+        //    cardView.setOnTouchListener(new View.OnTouchListener() {
+        //        @Override
+        //        public boolean onTouch(View v, MotionEvent event) {
+        //            if (event.getAction() == MotionEvent.AXIS_VSCROLL) {
+        //                MainCardView_ChangeShowStatus(false);
+        //            }
+        //            return true;
+        //        }
+        //    });
+        //}
+
+        loadingProgressBar = findViewById(R.id.progressBar2);
+        loadingProgressBar.setVisibility(View.GONE);
+        noItems_CardView = findViewById(R.id.noItems_View);
+        noItems_CardView.setVisibility(View.GONE);
+
+        registerForContextMenu(listView);
+
+        LoadList();
+        RefreshView();
+
+        //Cleanup();
+    }
+
+
     final ActivityResultLauncher<Intent> NewItemActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -209,120 +353,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        ThemeHandling.ApplyTheme(this.getApplicationContext()); //Apply theme
-        actionBar = getSupportActionBar();
-        assert actionBar != null;
-        super.onCreate(savedInstanceState);
-
-        //Show the welcome screen (New, Beta)
-        SharedPreferences WelcomeScreenSettings = getApplicationContext().getSharedPreferences(Preferences.WelcomeScreen.PreferenceGroup, 0);
-        int wasShown = WelcomeScreenSettings.getInt(Preferences.WelcomeScreen.ENTRY_SHOWN, 0);
-        if (wasShown == 0) { //The Welcome screen was never shown; possibly a first start of the app.
-            Intent welcomeScreen_Intent = new Intent(this, WelcomeScreen.class);
-            startActivity(welcomeScreen_Intent);
-        }
-
-        // Check if we're opening a custom list. If not, load the default.
-        String savedListFileName = "";
-        Intent i = getIntent();
-        // Retrieve the filename from the intent.
-        savedListFileName = (String) i.getSerializableExtra("customListFilename");
-        if (savedListFileName == null) {
-            // We're not loading a custom list. Select the default for loading.
-            savedListFileName = "/saved_list.txt";
-        }
-        // Load the selected list
-        savedList_FileName = getFilesDir().getParent() + savedListFileName;
-
-        //Load layout based on settings
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        floatingDockPreference_value = sharedPreferences.getBoolean("floatingDock_Preference", false);
-        hideDock_preference = sharedPreferences.getBoolean("hideDock_preference", false);
-        if (!hideDock_preference) {
-            if (floatingDockPreference_value) {
-                setContentView(R.layout.activity_main_floating_toolbar);
-            } else {
-                setContentView(R.layout.activity_main);
-            }
-        } else {
-            setContentView(R.layout.activity_main);
-        }
-        cardView = findViewById(R.id.cardView);
-        if (hideDock_preference) {
-            cardView.setVisibility(View.GONE);
-        }
-
-        //AppBeta.ShowBetaMessage(this);
-
-        totalCostLabel = findViewById(R.id.totalCost_Label);
-        addItem_FloatingActionButton = findViewById(R.id.addItem_floatingActionButton);
-        addItem_FloatingActionButton.setAnimateShowBeforeLayout(true);
-        addItem_FloatingActionButton.setOnClickListener(v -> {
-            loadingProgressBar.setVisibility(View.VISIBLE);
-            Animation ani = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.floating_action_button_scale_down_ani); //Shrink the FAB
-            ani.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                    addItem_FloatingActionButton.setEnabled(false);
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    Intent addNew = new Intent(v.getContext(), AddItem.class);
-                    NewItemActivityLauncher.launch(addNew);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
-            ani.setFillAfter(true);
-            addItem_FloatingActionButton.startAnimation(ani);
-        });
-        listView = findViewById(R.id.items_listBox);
-        //RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        //recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-        adapter = new CustomAdapter(listItems, MainActivity.this);
-        adapter.setNotifyOnChange(true);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener((parent, view, position, id) -> {
-            listView_position = position;
-            DataModel dataModel = listItems.get(listView_position);
-            Intent itemInfo = new Intent(this, ItemInfo.class);
-            itemInfo.putExtra("dataModel", dataModel);
-            ItemInfoActivityLauncher.launch(itemInfo);
-        });
-
-        //listView.setOnItemLongClickListener(this::onItemLongClick);
-
-        //if (floatingDockPreference_value) {
-        //    cardView.setOnTouchListener(new View.OnTouchListener() {
-        //        @Override
-        //        public boolean onTouch(View v, MotionEvent event) {
-        //            if (event.getAction() == MotionEvent.AXIS_VSCROLL) {
-        //                MainCardView_ChangeShowStatus(false);
-        //            }
-        //            return true;
-        //        }
-        //    });
-        //}
-
-        loadingProgressBar = findViewById(R.id.progressBar2);
-        loadingProgressBar.setVisibility(View.GONE);
-        noItems_CardView = findViewById(R.id.noItems_View);
-        noItems_CardView.setVisibility(View.GONE);
-
-        registerForContextMenu(listView);
-
-        LoadList();
-        RefreshView();
-
-        //Cleanup();
-    }
 
     @Deprecated
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
