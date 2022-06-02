@@ -2,15 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-//    signingConfigs {
-//        appsigning {
-//            storeFile file('C:\\Users\\jmig2\\Documents\\GitHub\\PriceCalc\\app\\build\\outputs\\apk\\release\\keyfile.jks')
-//            storePassword 'audacity'
-//            keyAlias 'key0'
-//            keyPassword 'audacity'
-//        }
-//    }
-
     compileSdkVersion 30
     buildToolsVersion '30.0.3'
 
