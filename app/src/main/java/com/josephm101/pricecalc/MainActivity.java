@@ -94,16 +94,16 @@ public class MainActivity extends AppCompatActivity {
     Menu referencedMenu;
     CardView cardView;
     androidx.appcompat.app.ActionBar actionBar;
-    //Boolean isFromFile = false;
+
     Context current = this;
     int listView_position;
 
-    //Preferences
-    boolean hideDock_preference;
-    boolean floatingDockPreference_value;
-
     private String savedList_FileName;
     private boolean Card_Hidden;
+
+    // Preferences
+    boolean hideDock_preference;
+    boolean floatingDockPreference_value;
 
     /*
      * ┌───────────────────────────┬─────────────────────────────────┐
