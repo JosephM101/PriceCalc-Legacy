@@ -19,3 +19,5 @@
 .idea/.name
 .idea/gradle.xml
 .idea/
+app/release
+app/build
