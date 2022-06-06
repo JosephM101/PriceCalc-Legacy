@@ -159,20 +159,18 @@ public class TipCalculator extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     void RefreshTotalLabel() {
+        String tip = "$0.00";
         try {
-//              if (!(billCost_EditText.getText().toString().length() <= 0)) {
             double billCost = Double.parseDouble(billCost_EditText.getText().toString());
             float numToMultiply = currentTipPercentage / 100;
             double finalCost = (billCost * numToMultiply);
             DecimalFormat df = new DecimalFormat("0.00");
             String formatted = df.format(finalCost);
-            totalTip_label.setText(String.format("$%s", formatted));
-//            } else {
-//                totalTip_label.setText("$0.00");
-//            }
+            tip = String.format("$%s", formatted);
         } catch (Exception ex) {
-            totalTip_label.setText("$0.00");
+
         }
+        totalTip_label.setText("Tip: " + tip);
     }
 
     @Override

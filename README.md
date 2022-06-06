@@ -23,8 +23,8 @@
 ## Install
 - Step 1: On your Android device, open your favorite web browser, and go to this repository.
 - Step 2: Navigate to the [Releases](https://github.com/JosephM101/PriceCalc/releases/latest "Go to latest PriceCalc release") page.
-- Step 3: Under assets, download the *.apk* file (`PriceCalc_vX.apk`).
-- Step 4: Once the file is downloaded, open it from the browser. A dialog should pop up asking you to confirm installing PriceCalc. Tap "Install".
+- Step 3: Under assets, download the APK file for the latest release/tag (`PriceCalc_vX.apk`).
+- Step 4: Once the APK file is downloaded, open it. A dialog should pop up asking you to confirm installing PriceCalc. Tap "Install".
 
 **Please note:** Android may block the installation and ask you if you want to allow installing apps from unknown sources. In this case, tap the Settings button in that dialog, and toggle "Allow installing apps from unknown sources" in the Settings window that appears. Once done, tap the back button, and now you can tap "Install".
 

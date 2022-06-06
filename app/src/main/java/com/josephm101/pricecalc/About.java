@@ -3,6 +3,7 @@ package com.josephm101.pricecalc;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
@@ -52,11 +53,18 @@ public class About extends AppCompatActivity {
             appVersion_textView.setText(appVersionString);
             Button dismissButton = findViewById(R.id.aboutActivity_dismissButton);
             dismissButton.setOnClickListener(v -> finish());
+
             Button aboutActivity_checkForUpdatesButton = findViewById(R.id.aboutActivity_checkForUpdatesButton);
             aboutActivity_checkForUpdatesButton.setOnClickListener(v -> {
                 Intent intent = new Intent(this, CheckForUpdates.class);
                 startActivity(intent);
                 finish();
+            });
+
+            Button aboutActivity_ghProjectHomepageButton = findViewById(R.id.aboutActivity_ghProjectHomepageButton);
+            aboutActivity_ghProjectHomepageButton.setOnClickListener(v -> {
+                Intent githubProjectHomepageIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/JosephM101/PriceCalc"));
+                startActivity(githubProjectHomepageIntent);
             });
 
         } catch (PackageManager.NameNotFoundException e) {
