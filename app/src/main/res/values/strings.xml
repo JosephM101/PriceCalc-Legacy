@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">Price Calc</string>
+    <string name="app_name">PriceCalc</string>
     <string name="add_item">Add Item</string>
     <string name="item_info">Item Info</string>
     <string name="note1" tools:keep="@string/note1">Start adding items to the list.</string>
