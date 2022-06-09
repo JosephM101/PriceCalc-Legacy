@@ -60,7 +60,7 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/aboutActivity_ghProjectHomepage"
+            android:id="@+id/aboutActivity_ghProjectHomepageButton"
             style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
