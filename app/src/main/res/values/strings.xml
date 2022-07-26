@@ -69,4 +69,6 @@
     <string name="export_to_csv">Export to CSV</string>
     <string name="share_list">Share</string>
     <string name="export_list">Export List</string>
+    <string name="rename_list">Rename List</string>
+    <string name="undo">Undo</string>
 </resources>

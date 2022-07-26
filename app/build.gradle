@@ -10,7 +10,7 @@ android {
         minSdkVersion 26
         targetSdkVersion 30
         versionCode 2
-        versionName '2.4.4'
+        versionName '2.5.0'
         android.defaultConfig.vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -19,6 +19,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
             applicationVariants.all { variant ->
                 variant.outputs.all {
                     // outputFileName = "PriceCalc_${variant.buildType.name}_v${defaultConfig.versionName}.apk"
@@ -43,6 +44,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
+    implementation 'javax.json:javax.json-api:1.1.4'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4-alpha06'
@@ -54,7 +56,7 @@ dependencies {
     implementation 'com.opencsv:opencsv:5.5.2'
     // https://mvnrepository.com/artifact/org.jsoup/jsoup
     implementation 'org.jsoup:jsoup:1.14.3'
-
+    implementation 'com.google.code.gson:gson:2.9.0'
 }
 repositories {
     mavenCentral()
