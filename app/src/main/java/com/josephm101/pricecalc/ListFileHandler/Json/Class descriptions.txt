@@ -1,0 +1,33 @@
+Here is an example of what the JSON file might look like:
+{
+    "lists": [
+        {
+            "uuid": "<uuid">,
+            "friendlyName": "<User-set friendly name>",
+            "data": <Serialized from DataModel>
+        },
+        {
+            "uuid": "<different uuid">,
+            "friendlyName": "<Other different user-friendly name>",
+            "data": <Serialized from DataModel>
+        }
+    ]
+}
+
+Theoretical benefits of using JSON format:
+- Items can be stored in a serialized format, simplifying saving/loading
+- The list instances can be easily iterated through, identified and updated by their UUIDs.
+
+NOTE: A non-unified approach may be taken if a unified approach ends up being clunky and problematic.
+What that would mean is, for example, instead of including all of the lists in a single file, they would be stored in individual files named by their UUIDs.
+If this ends up being the case, here's an example of what the contents would look like for each file. Assume filename = UUID.
+
+Here is an example of how individual JSON files might be formatted:
+{
+    "friendlyName": "<User-set friendly name>",
+    "data": <Serialized from DataModel>
+}
+
+Class descriptions:
+
+-- ListFileHandler: The roots of the operation. This is the class that interfaces with the file(s) that contain the JSON data for each list.
