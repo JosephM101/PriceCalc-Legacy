@@ -22,4 +22,9 @@ public class Preferences {
         public static final String DefaultTaxRate = "6.25";
         public static final String DefaultTheme = "1";
     }
+
+    public static class General {
+        public static final String PreferenceGroup = "GENERAL";
+        public static final String LastUuid_Pref = "LAST_UUID";
+    }
 }

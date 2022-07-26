@@ -16,8 +16,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PriceCalc">
         <activity
+            android:name=".TextPromptDialog"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.DayNight.Dialog"/>
+        <activity
             android:name=".OpenList_Activity"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/Theme.MaterialComponents.DayNight.Dialog"></activity>
         <activity android:name=".WelcomeScreen" />
         <activity
             android:name=".CheckForUpdates"

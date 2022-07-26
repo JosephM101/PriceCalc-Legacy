@@ -31,12 +31,12 @@ public class About extends AppCompatActivity {
         }
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
-            //Get info
+            // Get info
             version = BuildConfig.VERSION_NAME;
             buildType = BuildConfig.BUILD_TYPE;
             fullPackageName = BuildConfig.APPLICATION_ID;
             packageName = getString(R.string.app_name); //+ String.valueOf(BuildConfig.VERSION_CODE);
-            //Print info
+            // Print info
             TextView packageName_textView = findViewById(R.id.packageName_textView);
             TextView fullPackageName_textView = findViewById(R.id.fullPackageName_textView);
             TextView appVersion_textView = findViewById(R.id.appVersion_textView);
@@ -44,9 +44,9 @@ public class About extends AppCompatActivity {
             packageName_textView.setText(packageName);
             fullPackageName_textView.setText(fullPackageName);
 
-            //String appVersionString = version +
-            //        "-" +
-            //        buildType;
+            // String appVersionString = version +
+            //         "-" +
+            //         buildType;
 
             String appVersionString = version;
 

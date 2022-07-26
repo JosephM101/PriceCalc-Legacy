@@ -1,9 +1,12 @@
 package com.josephm101.pricecalc;
 
+import static com.josephm101.pricecalc.ExportToCsv.ExportToCSV;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -35,35 +38,22 @@ import androidx.preference.PreferenceManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.opencsv.CSVWriter;
-import com.opencsv.CSVWriterBuilder;
-import com.opencsv.ICSVWriter;
-
-//For Auto-update checker
-//import com.downloader.BuildConfig;
-//import com.josephm101.pricecalc.UpdateHandler.API.GitHub;
-//import com.josephm101.pricecalc.UpdateHandler.API.ReleaseInfo;
-//import com.josephm101.pricecalc.UpdateHandler.Version.VersionCompare;
-//import com.josephm101.pricecalc.UpdateHandler.Version.VersionInfo;
-//import com.josephm101.pricecalc.UpdateHandler.Version.VersionParser;
+import com.josephm101.pricecalc.ListFileHandler.Common.ListInstance;
+import com.josephm101.pricecalc.ListFileHandler.Json.ListFileHandler;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.UUID;
 
 @SuppressWarnings("ALL")
 @SuppressLint("NonConstantResourceId")
@@ -71,7 +61,7 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
 
-    private static CustomAdapter adapter;
+    private static CustomAdapter listAdapter;
 
     ArrayList<DataModel> listItems = new ArrayList<>();
     ArrayList<DataModel> listItems_BKP = new ArrayList<>();
@@ -79,12 +69,9 @@ public class MainActivity extends AppCompatActivity {
     // For undo functionality
     ArrayList<ArrayList<DataModel>> listItems_undo = new ArrayList<>();
     ArrayList<ArrayList<DataModel>> listItems_redo = new ArrayList<>();
-
     int maxUndoCount = 10;
     int maxRedoCount = 10;
 
-    private final String NewLineSeparator = "`";
-    private final String splitChar = "§";
     ListView listView;
     ExtendedFloatingActionButton addItem_FloatingActionButton;
     ProgressBar loadingProgressBar;
@@ -97,68 +84,43 @@ public class MainActivity extends AppCompatActivity {
 
     Context current = this;
     int listView_position;
-
-    private String savedList_FileName;
     private boolean Card_Hidden;
 
     // Preferences
     boolean hideDock_preference;
     boolean floatingDockPreference_value;
 
-    /*
-     * ┌───────────────────────────┬─────────────────────────────────┐
-     * │┼──────────────────────────┤                                 │
-     * ││** Start of application **│                                 │
-     * ├┴──────────────────────────┘                                 │
-     * │                                                             │
-     * │NOTE: As of initial multi-list support, this activity is no  │
-     * │longer the primary activity by default. The opening of this  │
-     * │activity is instead handled by the LoadList activity, which  │
-     * │appears as a dialog with a list of all of the lists created  │
-     * │by the user, including options to manage, create, delete,    │
-     * │rename and export lists. The default list CANNOT be deleted, │
-     * │and it will be automatically loaded if no other lists exist. │
-     * │                                                             │
-     * │The LoadList dialog can be opened in the following ways:     │
-     * │- [Welcome Screen] User presses the "Open List" button       │
-     * │- [Main Activity] User selects "Open List" from the app menu │
-     * │                                                             │
-     * │Only when the multi-list option is disabled in Settings will │
-     * │this activity be the primary activity. Additionally, if the  │
-     * │multi-list option remains enabled but the Welcome Screen is  │
-     * │disabled, the app will attempt to load the most recent list, │
-     * │should one exist. Otherwise, the LoadList dialog will be     │
-     * │presented to the user.                                       │
-     * └─────────────────────────────────────────────────────────────┘
-     */
+    ListInstance listInstance;
+    SharedPreferences Memory; // For remembering things :)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        ThemeHandling.ApplyTheme(this.getApplicationContext()); //Apply theme
+        ThemeHandling.ApplyTheme(this.getApplicationContext()); // Apply theme
         actionBar = getSupportActionBar();
+        // actionBar.setDisplayHomeAsUpEnabled(true);
         assert actionBar != null;
         super.onCreate(savedInstanceState);
 
-        //Show the welcome screen (New, Beta)
+        // Initialize classes
+        ContextTattletale.setLocalContext(getApplicationContext()); // Store the application context; MUST be done before ListFileHandler is initialized.
+        ListFileHandler.init(); // Tell ListFileHandler to initialize
+
+        // Show the welcome screen (New, Beta)
         SharedPreferences WelcomeScreenSettings = getApplicationContext().getSharedPreferences(Preferences.WelcomeScreen.PreferenceGroup, 0);
         int wasShown = WelcomeScreenSettings.getInt(Preferences.WelcomeScreen.ENTRY_SHOWN, 0);
-        if (wasShown == 0) { //The Welcome screen was never shown; possibly a first start of the app.
+        if (wasShown == 0) { // The Welcome screen was never shown; possibly a first start of the app.
             Intent welcomeScreen_Intent = new Intent(this, WelcomeScreen.class);
             startActivity(welcomeScreen_Intent);
         }
 
-        // Check if we're opening a custom list. If not, load the default.
-        String savedListFileName = "";
-        Intent i = getIntent();
-        // Retrieve the filename from the intent.
-        savedListFileName = (String) i.getSerializableExtra("customListFilename");
-        if (savedListFileName == null) {
-            // We're not loading a custom list. Select the default for loading.
-            savedListFileName = Defaults.primarySavedListFileName;
+        SharedPreferences FirstStartPref = getApplicationContext().getSharedPreferences("firststart", 0);
+        boolean isFirstStart = FirstStartPref.getBoolean("isFirstStart", true);
+        if (isFirstStart) {
+            FirstStart.DoFirstStartSetup(); // Run first-start functions
+            SharedPreferences.Editor e = FirstStartPref.edit();
+            e.putBoolean("isFirstStart", false);
+            e.apply();
         }
-
-        // Load the list
-        savedList_FileName = getFilesDir().getParent() + savedListFileName;
 
         // Load main view layout based on settings
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -178,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
             cardView.setVisibility(View.GONE);
         }
 
-        //AppBeta.ShowBetaMessage(this);
+        // AppBeta.ShowBetaMessage(this);
 
         totalCostLabel = findViewById(R.id.totalCost_Label);
         addItem_FloatingActionButton = findViewById(R.id.addItem_floatingActionButton);
@@ -207,32 +169,23 @@ public class MainActivity extends AppCompatActivity {
             addItem_FloatingActionButton.startAnimation(ani);
         });
         listView = findViewById(R.id.items_listBox);
-        //RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        //recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-        adapter = new CustomAdapter(listItems, MainActivity.this);
-        adapter.setNotifyOnChange(true);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener((parent, view, position, id) -> {
-            listView_position = position;
-            DataModel dataModel = listItems.get(listView_position);
-            Intent itemInfo = new Intent(this, ItemInfo.class);
-            itemInfo.putExtra("dataModel", dataModel);
-            ItemInfoActivityLauncher.launch(itemInfo);
-        });
+        // RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        // recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
 
-        //listView.setOnItemLongClickListener(this::onItemLongClick);
 
-        //if (floatingDockPreference_value) {
-        //    cardView.setOnTouchListener(new View.OnTouchListener() {
-        //        @Override
-        //        public boolean onTouch(View v, MotionEvent event) {
-        //            if (event.getAction() == MotionEvent.AXIS_VSCROLL) {
-        //                MainCardView_ChangeShowStatus(false);
-        //            }
-        //            return true;
-        //        }
-        //    });
-        //}
+        // listView.setOnItemLongClickListener(this::onItemLongClick);
+
+        // if (floatingDockPreference_value) {
+        //     cardView.setOnTouchListener(new View.OnTouchListener() {
+        //         @Override
+        //         public boolean onTouch(View v, MotionEvent event) {
+        //             if (event.getAction() == MotionEvent.AXIS_VSCROLL) {
+        //                 MainCardView_ChangeShowStatus(false);
+        //             }
+        //             return true;
+        //         }
+        //     });
+        // }
 
         loadingProgressBar = findViewById(R.id.progressBar2);
         loadingProgressBar.setVisibility(View.GONE);
@@ -241,12 +194,134 @@ public class MainActivity extends AppCompatActivity {
 
         registerForContextMenu(listView);
 
-        LoadList();
-        RefreshView();
+        // Figure out if we should (and can) restore the list that was open before the app was last closed
+        Memory = getApplicationContext().getSharedPreferences(Preferences.General.PreferenceGroup, 0);
+        if (sharedPreferences.getBoolean("loadRecentListOnLaunch_Preference", false)) {
+            String lastUuid = Memory.getString(Preferences.General.LastUuid_Pref, "");
+            if (!lastUuid.isEmpty()) {
+                // Check if this UUID exists
+                try {
+                    if (ListFileHandler.GetListUUIDs().contains(UUID.fromString(lastUuid))) {
+                        Load(lastUuid);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    ShowListPickerDialog();
+                }
+            } else {
+                ShowListPickerDialog();
+            }
+        } else {
+            ShowListPickerDialog();
+        }
 
-        //Cleanup();
+        // RefreshView();
+        // Cleanup();
     }
 
+    void ShowListPickerDialog() {
+        // Show dialog
+        Intent openListActivity = new Intent(this, OpenList_Activity.class);
+        OpenListActivityLauncher.launch(openListActivity);
+    }
+
+    void Load(String uuid) {
+        // Try and load list from UUID
+        try {
+            // Intent i = getIntent();
+            // UUID uuid = UUID.fromString(i.getStringExtra("uuid"));
+            // listInstance = ListFileHandler.getListInstanceFromUUID(uuid);
+
+            listInstance = ListFileHandler.getListInstanceFromUUID(UUID.fromString(uuid));
+            listItems = listInstance.ListItems;
+            actionBar.setSubtitle(listInstance.getListFriendlyName());
+
+            // Attach list adapter to new instance
+            listAdapter = new CustomAdapter(listItems, MainActivity.this);
+            listAdapter.setNotifyOnChange(true);
+            listView.setAdapter(listAdapter);
+            listView.setOnItemClickListener((parent, view, position, id) -> {
+                listView_position = position;
+                DataModel dataModel = listItems.get(listView_position);
+                Intent itemInfo = new Intent(this, ItemInfo.class);
+                itemInfo.putExtra("dataModel", dataModel);
+                ItemInfoActivityLauncher.launch(itemInfo);
+            });
+
+            // Save list UUID to "last UUID" preference
+            SharedPreferences.Editor editor = Memory.edit();
+            editor.putString(Preferences.General.LastUuid_Pref, uuid);
+            editor.apply();
+
+            RefreshEverything(false);
+            RefreshView();
+
+        } catch (Exception e) {
+            Log.e("M_LOAD-LIST", "onCreate: Failed to load list: " + e.getMessage());
+            e.printStackTrace();
+            MaterialAlertDialogBuilder errorAlertDialog = new MaterialAlertDialogBuilder(current, R.style.CustomTheme_MaterialComponents_MaterialAlertDialog)
+                    .setTitle("Error loading list")
+                    .setMessage("Something happened, and we couldn't open the list.")
+                    .setIcon(R.drawable.ic_baseline_error_24)
+                    .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                    .setCancelable(false);
+            errorAlertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    ShowListPickerDialog();
+                }
+            });
+            errorAlertDialog.show();
+        }
+    }
+
+    void UnloadList() {
+        actionBar = getSupportActionBar();
+        actionBar.setSubtitle("");
+
+        // Disconnect instance
+        listInstance = null;
+
+        // Clear all lists & reset all views
+        listAdapter.clear();
+        listAdapter.notifyDataSetChanged();
+        listItems.clear();
+        listItems_BKP.clear();
+
+        SharedPreferences.Editor editor = Memory.edit();
+        editor.clear(); // Reset
+        editor.apply(); // Save changes
+
+        ShowListPickerDialog();
+    }
+
+    final ActivityResultLauncher<Intent> OpenListActivityLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        Bundle extras = null;
+                        if (data != null) {
+                            extras = data.getExtras();
+                        }
+                        if (extras != null) {
+                            Load(extras.getString("uuid"));
+                        } else {
+                            TerminatePremature("\"Extras\" is null");
+                        }
+                    } else {
+                        finishAffinity();
+                    }
+                    // TerminatePremature("Result code was something other than \"RESULT_OK\"");
+                }
+            });
+
+    void TerminatePremature(String e) {
+        Log.e("PrematureTerminate", e);
+        finish();
+    }
 
     final ActivityResultLauncher<Intent> NewItemActivityLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -286,8 +361,8 @@ public class MainActivity extends AppCompatActivity {
                         if (extras != null) {
                             //Build the entry
                             DataModel item = new DataModel(extras.getString("itemName"), extras.getString("itemCost"), extras.getBoolean("isTaxDeductible"), extras.getString("itemQuantity"));
-                            adapter.remove(adapter.getItem(listView_position)); //Delete the old entry
-                            adapter.insert(item, listView_position); //Insert the new entry
+                            listAdapter.remove(listAdapter.getItem(listView_position)); //Delete the old entry
+                            listAdapter.insert(item, listView_position); //Insert the new entry
                             RefreshEverything(true);
                         }
                     }
@@ -306,10 +381,10 @@ public class MainActivity extends AppCompatActivity {
                             extras = data.getExtras();
                         }
                         if (extras != null) {
-                            //Build the entry
+                            // Build the entry
                             DataModel item = (DataModel) extras.getSerializable("newEntry");
-                            adapter.remove(adapter.getItem(listView_position)); //Delete the old entry
-                            adapter.insert(item, listView_position); //Insert the new entry
+                            listAdapter.remove(listAdapter.getItem(listView_position)); // Delete the old entry
+                            listAdapter.insert(item, listView_position); // Insert the new entry
                             RefreshEverything(true);
                         }
                     }
@@ -371,7 +446,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.refreshView_menuItem:
-                RefreshEverything(false); //Don't save; we're just refreshing
+                RefreshEverything(false); // Don't save; we're just refreshing
                 Toaster.pop(this, "Refreshed", 200);
                 break;
             case R.id.settings_menuItem:
@@ -400,21 +475,11 @@ public class MainActivity extends AppCompatActivity {
                 Intent addNew = new Intent(this, AddItem.class);
                 NewItemActivityLauncher.launch(addNew);
                 break;
-            case R.id.deleteEntry_menuItem:
-                EnterDeleteMode(this);
-                break;
             case R.id.confirmDeletion_menuItem:
                 LeaveDeleteMode(this);
                 break;
             case R.id.cancelDeletion_menuItem:
                 LeaveDeleteMode(this);
-                break;
-            case R.id.openList_menuItem:
-                Intent openDocument = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                openDocument.addCategory(Intent.CATEGORY_OPENABLE);
-                openDocument.setType("*/*");
-                //intent.putExtra(Intent.EXTRA_TITLE, "");
-                startActivityForResult(openDocument, 2);
                 break;
             case R.id.exportToCsv_menuItem:
                 try {
@@ -462,64 +527,17 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 break;
-
             case R.id.undo_menuItem:
                 ListItems_Undo();
                 break;
+            case R.id.openList_menuItem:
+                ShowListPickerDialog();
+                break;
+            case R.id.renameList_menuItem:
+                RenameList();
+                break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    // Gather all items, extract the data, and export everything to a .csv file.
-    public static boolean ExportToCSV(Context context, ArrayList<DataModel> data, String DestinationFile) throws IOException {
-        FileWriter fileWriter = new FileWriter(DestinationFile);
-        ICSVWriter csvWriter = new CSVWriterBuilder(fileWriter).withSeparator(CSVWriter.DEFAULT_SEPARATOR).withEscapeChar(CSVWriter.DEFAULT_ESCAPE_CHARACTER).build();
-        String[] headerRecord = {"Item Name", "Item Price", "Quantity", "Tax Cost", "Total"};
-        String[] emptyLine = {"", "", "", "", ""};
-        String[] endHeader = {"", "", "", "Total:", ""};
-
-        csvWriter.writeNext(headerRecord);
-
-        List<String[]> list = generateCsvData(data, context);
-        for (String[] item : list) {
-            csvWriter.writeNext(item);
-        }
-
-        // Add total to bottom of file if the setting "csvExport_AddTotalToFile_Preference" is set to true.
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-        if (sharedPreferences.getBoolean("csvExport_AddTotalToFile_Preference", false)) {
-            // Empty line, followed by data
-            csvWriter.writeNext(emptyLine);
-            csvWriter.writeNext(endHeader);
-        }
-
-        csvWriter.close();
-        fileWriter.close();
-        return true;
-    }
-
-    static ArrayList<String[]> generateCsvData(ArrayList<DataModel> data, Context context) {
-        ArrayList<String[]> list = new ArrayList<String[]>();
-        for (DataModel dm : data) {
-            String itemName = dm.getItemName();
-            double itemPrice = Double.parseDouble(dm.getItemPrice());
-            int itemQuantity = Integer.parseInt(dm.getItemQuantity());
-            //boolean isItemTaxable = dm.getIsTaxable();
-
-            double priceWithQuantity = (itemPrice * itemQuantity);
-            double taxRate = PriceHandling.getDefaultTaxRatePercentage(context.getApplicationContext());
-            double priceTax = ((priceWithQuantity * taxRate) / 100);
-            double totalCostOverall = priceWithQuantity + priceTax;
-
-            // Convert values to strings
-            String str_itemPrice = PriceHandling.PriceToString(itemPrice);
-            String str_itemQuantity = String.valueOf(itemQuantity);
-            String str_priceTax = PriceHandling.PriceToString(priceTax);
-            String str_totalCost = PriceHandling.PriceToString(totalCostOverall);
-
-            list.add(new String[]{itemName, str_itemPrice, str_itemQuantity, str_priceTax, str_totalCost});
-        }
-        return list;
     }
 
 //    @Override
@@ -538,6 +556,35 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        }
 //    }
+
+    void RenameList() {
+        Intent RenameList_TextPrompt = new Intent(this, TextPromptDialog.class);
+        RenameList_TextPrompt.putExtra("title", "Rename list");
+        RenameList_TextPrompt.putExtra("hint", "Enter list name");
+        RenameList_TextPrompt.putExtra("text", listInstance.getListFriendlyName());
+        RenameListActivityLauncher.launch(RenameList_TextPrompt);
+    }
+
+    final ActivityResultLauncher<Intent> RenameListActivityLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    Bundle extras = null;
+                    if (data != null) {
+                        extras = data.getExtras();
+                    }
+                    if (extras != null) {
+                        try {
+                            listInstance.setListFriendlyName(extras.getString("text"));
+                            RefreshEverything(true);
+                            RefreshView();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+            });
 
     void GetTotalCostFromList() {
         double TotalCost;
@@ -559,17 +606,17 @@ public class MainActivity extends AppCompatActivity {
     void AddEntry(String itemName, String itemPrice, Boolean isTaxDeductible, String quantity, @SuppressWarnings("SameParameterValue") Boolean CommitChanges) {
         //listItems.add(new DataModel(itemName, itemPrice, isTaxDeductible, quantity));
         DataModel dataModel = new DataModel(itemName, itemPrice, isTaxDeductible, quantity);
-        adapter.add(dataModel);
+        listAdapter.add(dataModel);
         RefreshEverything(CommitChanges);
     }
 
     void AddEntry(DataModel dataModel, @SuppressWarnings("SameParameterValue") Boolean CommitChanges) {
-        adapter.add(dataModel);
+        listAdapter.add(dataModel);
         RefreshEverything(CommitChanges);
     }
 
     void RefreshEverything(Boolean saveList) {
-        adapter.notifyDataSetChanged();
+        listAdapter.notifyDataSetChanged();
         try {
             GetTotalCostFromList();
         } catch (Exception ex) {
@@ -577,13 +624,15 @@ public class MainActivity extends AppCompatActivity {
         }
         if (saveList) {
             try {
-                SaveList();
+                // Save list instance
+                listInstance.ListItems = listItems;
+                ListFileHandler.SaveList(listInstance);
             } catch (IOException e) {
                 SetDashText("Save Error");
             }
         }
         RefreshView();
-        Log.d("VIEW_REFRESH", "View refreshed, " + BooleanHandling.BoolToString(saveList, "commits saved.", "file untouched."));
+        Log.i("VIEW_REFRESH", "View refreshed, " + BooleanHandling.BoolToString(saveList, "changes saved.", "file untouched."));
     }
 
     void SetDashText(String text) {
@@ -594,10 +643,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //Loads list items into list view
+    /*
+    // Loads list items into list view
     void LoadList() {
         try {
-            ArrayList<DataModel> dataModels = GetEntries();
+            // ArrayList<DataModel> dataModels = ListFileHandler.GetEntries(savedList_FileName);
             for (int i = 0; i < dataModels.size(); i++) {
                 AddEntry(dataModels.get(i), false);
             }
@@ -606,65 +656,7 @@ public class MainActivity extends AppCompatActivity {
         }
         RefreshEverything(false);
     }
-
-    //Retrieve entries from internal save
-    public ArrayList<DataModel> GetEntries() throws IOException {
-        ArrayList<DataModel> dataModels = new ArrayList<>();
-        File logFile = new File(savedList_FileName);
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(logFile));
-        StringBuilder everything = new StringBuilder();
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            everything.append(line);
-            Log.d("READ_FILE", line);
-        }
-        Log.d("STRING_HANDLING", StringHandling.combineStrings(everything.toString(), "Full String: "));
-        String[] lines = everything.toString().split(NewLineSeparator);
-        Log.d("STRING_HANDLING", StringHandling.combineStrings(String.valueOf(lines.length), "Lines: "));
-        for (String nextLine : lines) {
-            try {
-                Log.d("STRING_HANDLING", nextLine);
-                String[] splitString = nextLine.split(splitChar);
-                Log.d("STRING_HANDLING", "---LINE CONTENTS---");
-                Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[0]));
-                Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[1]));
-                Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[2]));
-                Log.d("STRING_HANDLING", StringHandling.combineStrings("", splitString[3]));
-                dataModels.add(new DataModel(splitString[0], splitString[1], BooleanHandling.StringToBool(splitString[2], BooleanHandling.PositiveValue), splitString[3]));
-            } catch (Exception ex) {
-                Log.e("LOAD_FILE", "Error parsing string/line in file. It may be empty.");
-            }
-        }
-        Log.d("STRING_HANDLING", StringHandling.combineStrings(String.valueOf(dataModels.size()), "DataModel Final Size: "));
-        return dataModels;
-    }
-
-    //Overwrites any information still saved, and writes in current list items.
-    void SaveList() throws IOException {
-        ArrayList<DataModel> dataModels = adapter.getDataSet();
-        File logFile = new File(savedList_FileName);
-        try {
-            final boolean delete = logFile.delete();
-        } catch (Exception ignored) {
-
-        }
-        final boolean newFile = logFile.createNewFile();
-        BufferedWriter writer = new BufferedWriter(new FileWriter(logFile, false));
-        Log.d("DataModelSize", String.valueOf(dataModels.size()));
-        for (int i = 0; i < dataModels.size(); i++) {
-            try {
-                writer.write(GenerateEntry(dataModels.get(i)));
-                //writer.newLine();
-                if (i < dataModels.size()) {
-                    writer.append(NewLineSeparator);
-                }
-                Log.d("SaveFileWriter", "Wrote Line " + i + ": " + GenerateEntry(dataModels.get(i)));
-            } catch (Exception ex) {
-                //throw ex;
-            }
-        }
-        writer.close();
-    }
+     */
 
     String getSavedItemID(int index) {
         return "entry" + index;
@@ -682,34 +674,26 @@ public class MainActivity extends AppCompatActivity {
         return new DataModel(stringArray[0], stringArray[1], BooleanHandling.StringToBool(stringArray[2], BooleanHandling.PositiveValue), stringArray[3]);
     }
 
-    public String GenerateEntry(@org.jetbrains.annotations.NotNull DataModel dataModel) {
-        return dataModel.getItemName() +
-                splitChar +
-                dataModel.getItemPrice() +
-                splitChar +
-                BooleanHandling.BoolToString(dataModel.getIsTaxable(), "Yes", "No") +
-                splitChar +
-                dataModel.getItemQuantity();
-    }
-
-    //When called, empty the list and delete the save file.
+    // Empty the list
     public void ClearAll() {
-        File logFile = new File(savedList_FileName);
-        try {
-            final boolean delete = logFile.delete();
-        } catch (Exception ignored) {
-
-        }
-        adapter.clear();
-        adapter.notifyDataSetChanged();
+        listAdapter.clear();
+        listAdapter.notifyDataSetChanged();
         RefreshEverything(true);
     }
 
     public void RefreshView() {
-        if (adapter.getCount() < 1) {
+        if (listAdapter.getCount() < 1) {
             noItems_CardView.setVisibility(View.VISIBLE);
         } else {
             noItems_CardView.setVisibility(View.GONE);
+        }
+
+        if (listInstance != null) {
+            actionBar = getSupportActionBar();
+            actionBar.setSubtitle(listInstance.getListFriendlyName());
+        } else {
+            actionBar = getSupportActionBar();
+            actionBar.setSubtitle("");
         }
     }
 
@@ -747,16 +731,16 @@ public class MainActivity extends AppCompatActivity {
                 .setTitle("Delete Entry?")
                 .setIcon(R.drawable.ic_baseline_delete_forever_24)
                 .setPositiveButton("Yes, delete it.", (dialog, which) -> {
-                    //Backup... just in case :)
+                    // Backup... just in case :)
                     listItems_BKP.clear();
                     for (DataModel item : listItems) {
                         listItems_BKP.add(item);
                     }
                     listItems.remove(listView_position);
-                    //ConstraintLayout coordinatorLayout = findViewById(R.id.mainConstraintLayout);
+                    // ConstraintLayout coordinatorLayout = findViewById(R.id.mainConstraintLayout);
                     CardView cardView = findViewById(R.id.cardView);
                     View layout = findViewById(R.id.mainConstraintLayout);
-                    //Show snackbar
+                    // Show snackbar
                     {
                         ConstraintLayout coordinatorLayout = findViewById(R.id.mainConstraintLayout);
                         Snackbar snackbar = Snackbar.make(coordinatorLayout, "Entry deleted", Snackbar.LENGTH_LONG)
@@ -766,9 +750,9 @@ public class MainActivity extends AppCompatActivity {
                                         listItems.add(item);
                                     }
                                     RefreshEverything(true);
-                                    //Snackbar snackbarUndone = Snackbar.make(coordinatorLayout, "Action undone", Snackbar.LENGTH_SHORT)
-                                    //        .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
-                                    //snackbarUndone.show();
+                                    // Snackbar snackbarUndone = Snackbar.make(coordinatorLayout, "Action undone", Snackbar.LENGTH_SHORT)
+                                    //         .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
+                                    // snackbarUndone.show();
                                 })
                                 .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE);
                         snackbar.show();
@@ -826,7 +810,6 @@ public class MainActivity extends AppCompatActivity {
     void Cleanup() {
         try {
             ContextWrapper c = new ContextWrapper(getApplicationContext());
-            //String pathRoot = c.getFilesDir().toString();
             String pathRoot = c.getCacheDir().toString();
             c.deleteFile(pathRoot + "PriceCalc_update.apk");
         } catch (Exception ignored) {
@@ -834,7 +817,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //Animations
+    // Animations
     public void scaleView(@NotNull View v, float startScale, float endScale) {
         Animation anim = new ScaleAnimation(
                 1f, 1f, // Start and end values for the X axis scaling
