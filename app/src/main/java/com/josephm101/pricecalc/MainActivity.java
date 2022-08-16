@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences FirstStartPref = getApplicationContext().getSharedPreferences("firststart", 0);
         boolean isFirstStart = FirstStartPref.getBoolean("isFirstStart", true);
         if (isFirstStart) {
-            FirstStart.DoFirstStartSetup(); // Run first-start functions
+            // FirstStart.DoFirstStartSetup(); // Run first-start functions
             SharedPreferences.Editor e = FirstStartPref.edit();
             e.putBoolean("isFirstStart", false);
             e.apply();
