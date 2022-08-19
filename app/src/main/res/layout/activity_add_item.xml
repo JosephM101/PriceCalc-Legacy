@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linearLayout2"
+    android:id="@+id/addItem_constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -10,10 +10,13 @@
     tools:context=".AddItem">
 
         <ScrollView
-            android:id="@+id/scrollView2"
+            android:id="@+id/addItem_scrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/coordinatorLayoutA"
+            android:layout_marginBottom="96dp"
+            android:fadeScrollbars="false"
+            android:scrollIndicators="right"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -39,6 +42,7 @@
 
                         <EditText
                             android:id="@+id/itemNameEditText"
+                            style="@style/Widget.AppCompat.EditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints=""
@@ -61,12 +65,14 @@
 
                         <EditText
                             android:id="@+id/itemCostEditText"
+                            style="@style/Widget.AppCompat.EditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ems="10"
                             android:hint="@string/ProductPriceLabelHint"
                             android:importantForAutofill="no"
                             android:inputType="numberDecimal"
+                            android:longClickable="false"
                             android:maxLength="50"
                             android:maxLines="1"
                             android:singleLine="true"
@@ -115,6 +121,30 @@
                                     android:text="@string/addItem_taxDeductibleInfo"
                                     android:visibility="invisible" />
                         </LinearLayout>
+
+                        <EditText
+                            android:id="@+id/itemUrlEditText"
+                            style="@style/Widget.AppCompat.EditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="60dp"
+                            android:ems="10"
+                            android:hint="Item URL (optional)"
+                            android:inputType="textUri" />
+
+                        <EditText
+                            android:id="@+id/itemNotesEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="60dp"
+                            android:layout_marginBottom="8dp"
+                            android:ems="10"
+                            android:gravity="start|top"
+                            android:hint="Notes"
+                            android:inputType="textMultiLine"
+                            android:minHeight="96dp" />
 
                 </LinearLayout>
         </ScrollView>

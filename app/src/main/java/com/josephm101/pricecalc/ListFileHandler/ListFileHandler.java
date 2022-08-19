@@ -50,7 +50,7 @@ public class ListFileHandler {
                 Log.d(LoggerName, StringHandling.combineStrings("", splitString[1]));
                 Log.d(LoggerName, StringHandling.combineStrings("", splitString[2]));
                 Log.d(LoggerName, StringHandling.combineStrings("", splitString[3]));
-                dataModels.add(new DataModel(splitString[0], splitString[1], BooleanHandling.StringToBool(splitString[2], BooleanHandling.PositiveValue), splitString[3]));
+                dataModels.add(new DataModel(splitString[0], splitString[1], BooleanHandling.StringToBool(splitString[2], BooleanHandling.PositiveValue), splitString[3], "", ""));
             } catch (Exception ex) {
                 ex.printStackTrace();
                 Log.e("LOAD_FILE", "Error parsing string/line in file. It may be empty.");

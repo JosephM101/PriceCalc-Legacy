@@ -29,6 +29,9 @@ public class AddItem extends AppCompatActivity {
     EditText itemCostEditText;
     CheckBox taxDeductible;
     EditText itemQuantityEditText;
+    EditText itemUrlEditText;
+    EditText itemNotesEditText;
+
     Boolean isCancelling = true;
     FloatingActionButton floatingActionButton;
     Boolean somethingChanged = false; //This is checked when the activity is closing. If true, the "Confirm exit & discard" warning dialog will be shown if the user tries to exit the activity.
@@ -48,7 +51,7 @@ public class AddItem extends AppCompatActivity {
         actionBar.setSubtitle(getString(R.string.add_item_subtitle));
         actionBar.setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_add_item);
-        //Init Components
+        // Init UI
         floatingActionButton = findViewById(R.id.confirmFloatingActionButton);
         itemNameEditText = findViewById(R.id.itemNameEditText);
         itemNameEditText.addTextChangedListener(new TextWatcher() {
@@ -110,6 +113,9 @@ public class AddItem extends AppCompatActivity {
             }
             //UpdateTotalLabel();
         });
+        itemUrlEditText = findViewById(R.id.itemUrlEditText);
+        itemNotesEditText = findViewById(R.id.itemNotesEditText);
+
         taxDeductible = findViewById(R.id.isTaxDeductible_CheckBox);
         taxDeductible.setOnCheckedChangeListener((buttonView, isChecked) -> UpdateTotalLabel());
         floatingActionButton.setOnClickListener(v -> ConfirmAndExit());
@@ -138,6 +144,8 @@ public class AddItem extends AppCompatActivity {
             itemCostEditText.setText(importedDataModel.getItemPrice());
             itemQuantityEditText.setText(importedDataModel.getItemQuantity());
             taxDeductible.setChecked(importedDataModel.getIsTaxable());
+            itemUrlEditText.setText(importedDataModel.getItemUrl());
+            itemNotesEditText.setText(importedDataModel.getItemNotes());
             UpdateTotalLabel();
             setResult(RESULT_FIRST_USER, null);
         }
@@ -168,6 +176,8 @@ public class AddItem extends AppCompatActivity {
             //String isTaxDeductibleString = BooleanHandling.BoolToString(taxDeductible.isChecked(), getString(R.string.taxDeductible_Yes), getString(R.string.taxDeductible_No));
             data.putExtra("isTaxDeductible", taxDeductible.isChecked());
             data.putExtra("itemQuantity", itemQuantityEditText.getText().toString());
+            data.putExtra("itemUrl", itemUrlEditText.getText().toString());
+            data.putExtra("itemNotes", itemNotesEditText.getText().toString());
             setResult(RESULT_OK, data);
             finish();
         } else {

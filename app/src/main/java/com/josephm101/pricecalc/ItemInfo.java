@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -24,8 +25,8 @@ public class ItemInfo extends AppCompatActivity {
                         extras = data.getExtras();
                     }
                     if (extras != null) {
-                        //Build the entry
-                        DataModel item = new DataModel(extras.getString("itemName"), extras.getString("itemCost"), extras.getBoolean("isTaxDeductible"), extras.getString("itemQuantity"));
+                        // Build the entry
+                        DataModel item = new DataModel(extras.getString("itemName"), extras.getString("itemCost"), extras.getBoolean("isTaxDeductible"), extras.getString("itemQuantity"), extras.getString("itemUrl"), extras.getString("itemNotes"));
                         Intent sendBack = new Intent();
                         sendBack.putExtra("newEntry", item);
                         setResult(RESULT_OK, sendBack);
@@ -39,7 +40,7 @@ public class ItemInfo extends AppCompatActivity {
         setTitle(R.string.item_info);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_info);
-        //Init Action Bar
+        // Init Action Bar
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -54,6 +55,8 @@ public class ItemInfo extends AppCompatActivity {
         TextView ItemQuantityLabel = findViewById(R.id.itemQuantityLabel);
         TextView ItemTaxDeductionLabel = findViewById(R.id.itemTaxableLabel);
         TextView ItemTotalCostLabel = findViewById(R.id.itemTotalCost);
+        TextView ItemUrlLabel = findViewById(R.id.itemUrlLabel);
+        TextView ItemNotesLabel = findViewById(R.id.itemNotesLabel);
         Log.i("ItemInfo_INIT", "Reading & writing values...");
 
         ItemNameLabel.setText(importedDataModel.getItemName());
@@ -62,6 +65,7 @@ public class ItemInfo extends AppCompatActivity {
         ItemPriceLabel.setText(PriceHandling.PriceToString(itemPrice));
         ItemQuantityLabel.setText(StringHandling.combineStrings(importedDataModel.itemQuantity, "Quantity: "));
         ItemTaxDeductionLabel.setText(StringHandling.combineStrings(BooleanHandling.BoolToString(importedDataModel.getIsTaxable(), "Yes", "No"), "Is taxable: "));
+
         StringBuilder stringBuilder = new StringBuilder();
         double priceWithQuantity = (itemPrice * itemQuantity);
         stringBuilder.append(PriceHandling.PriceToString(itemPrice * itemQuantity));
@@ -75,6 +79,28 @@ public class ItemInfo extends AppCompatActivity {
         double totalCostOverall = priceWithQuantity + priceTax;
         stringBuilder.append(PriceHandling.PriceToString(totalCostOverall));
         ItemTotalCostLabel.setText(stringBuilder.toString());
+
+        String _itemUrl = importedDataModel.getItemUrl();
+        if(_itemUrl.isEmpty())
+        {
+            ItemUrlLabel.setVisibility(View.GONE);
+        }
+        else
+        {
+            ItemUrlLabel.setText(_itemUrl);
+        }
+
+        String _itemNotes = importedDataModel.getItemNotes();
+        if(_itemNotes.isEmpty())
+        {
+            ItemNotesLabel.setVisibility(View.GONE);
+            findViewById(R.id.item_notes_header_label).setVisibility(View.GONE);
+        }
+        else
+        {
+            ItemNotesLabel.setText(_itemNotes);
+        }
+
         Log.i("ItemInfo_INIT", "Init done; calculations complete.");
         Log.i("ItemInfo_INIT", "All values printed.");
         setResult(RESULT_FIRST_USER, null);

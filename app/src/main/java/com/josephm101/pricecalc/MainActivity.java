@@ -4,6 +4,8 @@ import static com.josephm101.pricecalc.ExportToCsv.ExportToCSV;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
@@ -41,6 +43,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.josephm101.pricecalc.ListFileHandler.Common.ListInstance;
 import com.josephm101.pricecalc.ListFileHandler.Json.ListFileHandler;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -48,11 +51,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Set;
 import java.util.UUID;
 
 @SuppressWarnings("ALL")
@@ -341,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
                             extras = data.getExtras();
                         }
                         if (extras != null) {
-                            AddEntry(extras.getString("itemName"), extras.getString("itemCost"), extras.getBoolean("isTaxDeductible"), extras.getString("itemQuantity"), true);
+                            AddEntry(extras.getString("itemName"), extras.getString("itemCost"), extras.getBoolean("isTaxDeductible"), extras.getString("itemQuantity"), extras.getString("itemUrl"), extras.getString("itemNotes"), true);
                         }
                     }
                 }
@@ -359,10 +363,10 @@ public class MainActivity extends AppCompatActivity {
                             extras = data.getExtras();
                         }
                         if (extras != null) {
-                            //Build the entry
-                            DataModel item = new DataModel(extras.getString("itemName"), extras.getString("itemCost"), extras.getBoolean("isTaxDeductible"), extras.getString("itemQuantity"));
-                            listAdapter.remove(listAdapter.getItem(listView_position)); //Delete the old entry
-                            listAdapter.insert(item, listView_position); //Insert the new entry
+                            // Build the entry
+                            DataModel item = new DataModel(extras.getString("itemName"), extras.getString("itemCost"), extras.getBoolean("isTaxDeductible"), extras.getString("itemQuantity"), extras.getString("itemUrl"), extras.getString("itemNotes"));
+                            listAdapter.remove(listAdapter.getItem(listView_position)); // Delete the old entry
+                            listAdapter.insert(item, listView_position); // Insert the new entry
                             RefreshEverything(true);
                         }
                     }
@@ -603,9 +607,9 @@ public class MainActivity extends AppCompatActivity {
         SetDashText(PriceHandling.PriceToString(TotalCost));
     }
 
-    void AddEntry(String itemName, String itemPrice, Boolean isTaxDeductible, String quantity, @SuppressWarnings("SameParameterValue") Boolean CommitChanges) {
+    void AddEntry(String itemName, String itemPrice, Boolean isTaxDeductible, String quantity, String itemUrl, String itemNotes, @SuppressWarnings("SameParameterValue") Boolean CommitChanges) {
         //listItems.add(new DataModel(itemName, itemPrice, isTaxDeductible, quantity));
-        DataModel dataModel = new DataModel(itemName, itemPrice, isTaxDeductible, quantity);
+        DataModel dataModel = new DataModel(itemName, itemPrice, isTaxDeductible, quantity, itemUrl, itemNotes);
         listAdapter.add(dataModel);
         RefreshEverything(CommitChanges);
     }
@@ -662,17 +666,19 @@ public class MainActivity extends AppCompatActivity {
         return "entry" + index;
     }
 
-    DataModel ProcessEntryInfo(Set<String> stringSet) {
-        /*
-         * Entry Order:
-         * 1. Item Name
-         * 2. Item Price
-         * 3. Is item taxable? (Bool as String)
-         * 4. Item Quantity
-         */
-        String[] stringArray = (String[]) stringSet.toArray();
-        return new DataModel(stringArray[0], stringArray[1], BooleanHandling.StringToBool(stringArray[2], BooleanHandling.PositiveValue), stringArray[3]);
-    }
+    // DataModel ProcessEntryInfo(Set<String> stringSet) {
+    //     /*
+    //      * Entry Order:
+    //      * 0. Item Name
+    //      * 1. Item Price
+    //      * 2. Is item taxable? (Bool as String)
+    //      * 3. Item Quantity
+    //      * 4. Item URL
+    //      * 5. Item notes
+    //      */
+    //     String[] stringArray = (String[]) stringSet.toArray();
+    //     return new DataModel(stringArray[0], stringArray[1], BooleanHandling.StringToBool(stringArray[2], BooleanHandling.PositiveValue), stringArray[3], stringArray[4], stringArray[5]);
+    // }
 
     // Empty the list
     public void ClearAll() {
@@ -770,9 +776,24 @@ public class MainActivity extends AppCompatActivity {
         if (v.getId() == R.id.items_listBox) {
             ContextMenu.ContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
             listView_position = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
+            DataModel dataModel = listItems.get(listView_position);
             MenuInflater inflater = getMenuInflater();
             menu.setHeaderTitle("Item properties");
-            inflater.inflate(R.menu.menu_itemsmenu, menu);
+
+            String itemUrl = dataModel.getItemUrl();
+            if(!itemUrl.isEmpty())
+            {
+                try {
+                    URL url = new URL(itemUrl);
+                    inflater.inflate(R.menu.menu_itemsmenu_url, menu); // URL is valid
+                } catch (MalformedURLException e) {
+                    inflater.inflate(R.menu.menu_itemsmenu, menu); // URL is not valid; inflate default context list
+                }
+            }
+            else
+            {
+                inflater.inflate(R.menu.menu_itemsmenu, menu); // No URL; inflate default context list
+            }
         }
     }
 
@@ -789,6 +810,17 @@ public class MainActivity extends AppCompatActivity {
             case R.id.delete_item:
                 RunItemDeletionProcedure();
                 return true;
+            case R.id.open_item_url:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dataModel.getItemUrl()));
+                startActivity(browserIntent);
+                return true;
+            case R.id.copy_item_url:
+                String url = dataModel.getItemUrl(); // Get URL
+                ClipboardManager systemClipboard; // Create clipboard manager
+                systemClipboard = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE); // Establish connection with system clipboard
+                // ClipData item_url = ClipData.newRawUri(url, Uri.parse(url)); // Set URI as clip data
+                ClipData item_url = ClipData.newPlainText(url, url);
+                systemClipboard.setPrimaryClip(item_url); // Set new clip data as primary clip
             default:
                 return super.onContextItemSelected(item);
         }
